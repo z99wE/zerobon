@@ -1,198 +1,94 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Lightbulb, X } from 'lucide-react';
 
-export const ArchitectureDiagram: React.FC = () => {
+export const ArchitectureBulb: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div className="w-full space-y-8 animate-fadeIn">
-      {/* High-Contrast Architectural Blueprint Shell */}
-      <div className="card-dashboard-chrome p-6 sm:p-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5 mb-8">
-          <div>
-            <h3 className="font-heading-lg text-white mt-1">
-              High-Contrast Zerobon 4.0 Infrastructure Blueprint
-            </h3>
-            <p className="font-body-md text-xs text-white/70 mt-0.5">
-              Multi-tenant distributed edge, Google Gemini GenAI pipeline, deterministic Rust/WASM solver, and Three.js client ecosystem.
+    <>
+      {/* Sleek Minimal Bulb Button in Navigation / Header */}
+      <button
+        onClick={() => setIsOpen(true)}
+        aria-label="View architectural notes"
+        className="p-2 rounded-full hover:bg-[#f6f9fc] text-[#64748d] hover:text-[#533afd] border border-transparent hover:border-[#e3e8ee] transition-all flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#533afd]"
+        title="System Architecture Insights"
+      >
+        <Lightbulb className="w-4 h-4 text-[#533afd]" />
+      </button>
+
+      {/* Clean Minimalist Modal */}
+      {isOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="arch-bulb-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d253d]/50 backdrop-blur-sm animate-fadeIn"
+        >
+          <div className="relative w-full max-w-lg bg-white rounded-2xl p-6 sm:p-8 border border-[#e3e8ee] shadow-2xl">
+            <button
+              onClick={() => setIsOpen(false)}
+              aria-label="Close architecture notes"
+              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#64748d] hover:text-[#0d253d] flex items-center justify-center transition-all text-xs focus:ring-2 focus:ring-[#533afd]"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-6 h-6 rounded-full bg-[#533afd]/10 flex items-center justify-center text-[#533afd]">
+                <Lightbulb className="w-3.5 h-3.5" />
+              </div>
+              <h2 id="arch-bulb-title" className="font-heading-sm text-base text-[#0d253d] font-normal">
+                Architecture Blueprint
+              </h2>
+            </div>
+
+            <p className="font-body-md text-xs text-[#64748d] mb-4 leading-relaxed">
+              Zerobon decouples deterministic mathematical physics from generative language models to guarantee zero hallucinations and instantaneous edge execution.
             </p>
-          </div>
 
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-[#34d399]/20 text-[#34d399] font-tabular text-xs font-medium">
-              Sub-5ms Edge CPU • Zero-Trust LLM
-            </span>
-          </div>
-        </div>
+            <div className="space-y-3 border-t border-[#e3e8ee] pt-4 text-xs">
+              <div className="flex items-start gap-2.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#533afd] mt-1.5 shrink-0" />
+                <div>
+                  <strong className="text-[#0d253d] font-medium">Deterministic Physics Engine (WASM)</strong>
+                  <p className="text-[#64748d] mt-0.5 font-light">
+                    Differential mass-balance solver calculating exact indoor PM2.5 infiltration and lung dose counterfactuals without LLM arithmetic.
+                  </p>
+                </div>
+              </div>
 
-        {/* 5-Stage High-Contrast Flowchart Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 relative">
-          {/* Stage 1: Ingestion */}
-          <div className="p-5 rounded-xl bg-[#1c1e54] border-2 border-[#fbbf24] shadow-lg flex flex-col justify-between">
-            <div>
-              <span className="text-[10px] font-mono text-[#fbbf24] uppercase tracking-wider font-semibold">1. Telemetry Ingestion</span>
-              <h4 className="font-heading-sm text-sm text-white mt-1 mb-3">Planetary Spatial Feed</h4>
-              <ul className="space-y-2 text-xs text-white/80 font-light">
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#fbbf24] font-bold">›</span>
-                  <span>Google Earth Engine & Satellite AOD</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#fbbf24] font-bold">›</span>
-                  <span>Open-Meteo Inversion & PBL Heights</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#fbbf24] font-bold">›</span>
-                  <span>OpenAQ v3 Ground PM₂.₅ Truth</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#fbbf24] font-bold">›</span>
-                  <span>NASA FIRMS Upwind Plume Beacons</span>
-                </li>
-              </ul>
-            </div>
-            <div className="mt-4 pt-3 border-t border-white/10 font-tabular text-[10px] text-[#fbbf24]">
-              Automated Hourly Telemetry Ingestion
-            </div>
-          </div>
+              <div className="flex items-start gap-2.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#533afd] mt-1.5 shrink-0" />
+                <div>
+                  <strong className="text-[#0d253d] font-medium">5-Layer Anti-Hijacking Copilot</strong>
+                  <p className="text-[#64748d] mt-0.5 font-light">
+                    Cryptographic tag delimiters, input sanitization, strict Zod schema validation, and egress canary monitoring.
+                  </p>
+                </div>
+              </div>
 
-          {/* Stage 2: Edge Layer */}
-          <div className="p-5 rounded-xl bg-[#0d253d] border-2 border-[#533afd] shadow-lg flex flex-col justify-between">
-            <div>
-              <span className="text-[10px] font-mono text-[#b9b9f9] uppercase tracking-wider font-semibold">2. Multi-Tenant Edge</span>
-              <h4 className="font-heading-sm text-sm text-white mt-1 mb-3">Distributed Edge Workers</h4>
-              <ul className="space-y-2 text-xs text-white/80 font-light">
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#533afd] font-bold">›</span>
-                  <span>Multi-Tenant Hostname Routing</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#533afd] font-bold">›</span>
-                  <span>TenantScopedDB (Isolated SQL Partition)</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#533afd] font-bold">›</span>
-                  <span>Global KV Spatial Telemetry Cache</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#533afd] font-bold">›</span>
-                  <span>Composite Index: idx_ledger_tenant_h3</span>
-                </li>
-              </ul>
+              <div className="flex items-start gap-2.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#533afd] mt-1.5 shrink-0" />
+                <div>
+                  <strong className="text-[#0d253d] font-medium">Multi-Tenant Partitioning</strong>
+                  <p className="text-[#64748d] mt-0.5 font-light">
+                    Strict boundary isolation across B2C families, schools, and enterprise campuses indexed by Uber H3 cells.
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="mt-4 pt-3 border-t border-white/10 font-tabular text-[10px] text-[#b9b9f9]">
-              &lt; 3ms Median Edge CPU Time
-            </div>
-          </div>
 
-          {/* Stage 3: Google Gemini GenAI */}
-          <div className="p-5 rounded-xl bg-[#1c1e54] border-2 border-[#533afd] shadow-lg flex flex-col justify-between">
-            <div>
-              <span className="text-[10px] font-mono text-[#533afd] uppercase tracking-wider font-semibold">3. GenAI Intelligence</span>
-              <h4 className="font-heading-sm text-sm text-white mt-1 mb-3">Google Gemini Flash</h4>
-              <ul className="space-y-2 text-xs text-white/80 font-light">
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#533afd] font-bold">›</span>
-                  <span>Google Gemini 2.5 Flash API</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#533afd] font-bold">›</span>
-                  <span>5-Layer Prompt-Injection Firewall</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#533afd] font-bold">›</span>
-                  <span>Zod Schema Lock (intent_valid)</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#533afd] font-bold">›</span>
-                  <span>Rotating Canary Egress Filter</span>
-                </li>
-              </ul>
-            </div>
-            <div className="mt-4 pt-3 border-t border-white/10 font-tabular text-[10px] text-[#b9b9f9]">
-              100% Injection Block Guarantee
-            </div>
-          </div>
-
-          {/* Stage 4: Rust/WASM Physics */}
-          <div className="p-5 rounded-xl bg-[#064e3b] border-2 border-[#34d399] shadow-lg flex flex-col justify-between">
-            <div>
-              <span className="text-[10px] font-mono text-[#34d399] uppercase tracking-wider font-semibold">4. Deep-Tech Physics</span>
-              <h4 className="font-heading-sm text-sm text-white mt-1 mb-3">Rust / WASM Engine</h4>
-              <ul className="space-y-2 text-xs text-white/90 font-light">
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#34d399] font-bold">›</span>
-                  <span>Mass-Balance Differential Solver</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#34d399] font-bold">›</span>
-                  <span>Analytical Step: Cin(t) Infiltration</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#34d399] font-bold">›</span>
-                  <span>Deterministic Inhaled Lung Dose D(t)</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#34d399] font-bold">›</span>
-                  <span>IPCC Emission Avoidance Receipts</span>
-                </li>
-              </ul>
-            </div>
-            <div className="mt-4 pt-3 border-t border-white/10 font-tabular text-[10px] text-[#34d399]">
-              Zero-Hallucination Math Isolation
-            </div>
-          </div>
-
-          {/* Stage 5: 3D Three.js Client */}
-          <div className="p-5 rounded-xl bg-[#4c0519] border-2 border-[#ea2261] shadow-lg flex flex-col justify-between">
-            <div>
-              <span className="text-[10px] font-mono text-[#ea2261] uppercase tracking-wider font-semibold">5. 3D WebGL Client</span>
-              <h4 className="font-heading-sm text-sm text-white mt-1 mb-3">Living Terrarium PWA</h4>
-              <ul className="space-y-2 text-xs text-white/90 font-light">
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#ea2261] font-bold">›</span>
-                  <span>Three.js Lumi Fox Bio-Indicator</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#ea2261] font-bold">›</span>
-                  <span>3D Airflow Streamline Scrubbing</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#ea2261] font-bold">›</span>
-                  <span>Isometric Uber H3 Res-7 Biome</span>
-                </li>
-                <li className="flex items-start gap-1.5">
-                  <span className="text-[#ea2261] font-bold">›</span>
-                  <span>Rayleigh Optical Sky Turbidity Analyzer</span>
-                </li>
-              </ul>
-            </div>
-            <div className="mt-4 pt-3 border-t border-white/10 font-tabular text-[10px] text-[#f96bee]">
-              60 FPS Adaptive Power Scaling
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => setIsOpen(false)}
+                className="button-primary-pill text-xs px-4 py-1.5"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
-
-        {/* High-Contrast Interactive Data Contract Specs */}
-        <div className="mt-8 pt-6 border-t border-white/10 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
-          <div className="p-4 rounded-xl bg-[#0f112e] border border-white/10 font-mono text-white/80">
-            <span className="text-[#533afd] font-semibold">// Tenant Partition Composite Index Constraint</span>
-            <p className="mt-1 text-white">
-              CREATE INDEX idx_ledger_tenant_h3 ON impact_ledger(tenant_id, h3_cell, logged_at);
-            </p>
-            <p className="mt-2 text-white/60 text-[11px]">
-              Guarantees zero cross-tenant leakage between B2C households, RWAs, and school campuses.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-[#0f112e] border border-white/10 font-mono text-white/80">
-            <span className="text-[#34d399] font-semibold">// Deterministic Inhaled Dose Equation (Rust WASM)</span>
-            <p className="mt-1 text-white">
-              D = ∫ C(t) · V_E · (1 - η_mask) dt  →  1 cig ≈ 22 µg PM2.5
-            </p>
-            <p className="mt-2 text-white/60 text-[11px]">
-              Computed deterministically without LLM arithmetic to guarantee zero hallucinations.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };

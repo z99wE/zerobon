@@ -7,14 +7,13 @@ import { InversionRadar } from './components/InversionRadar';
 import { HardenedCopilot } from './components/HardenedCopilot';
 import { OpticalHazeEstimator } from './components/OpticalHazeEstimator';
 import { MultiTenantAdmin } from './components/MultiTenantAdmin';
-import { ArchitectureDiagram } from './components/ArchitectureDiagram';
 import { BreathReceiptModal } from './components/BreathReceiptModal';
 import { DEMO_TENANTS } from './engine/tenancy';
 import { DEFAULT_PHYSICS_PARAMS, stepAnalytical, computeBreathReceipt } from './engine/physics';
 import { TenantConfig, BreathReceipt, MassBalanceParams } from './types';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin' | 'architecture'>('terrarium');
+  const [activeTab, setActiveTab] = useState<'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin'>('terrarium');
   const [selectedTenant, setSelectedTenant] = useState<TenantConfig>(DEMO_TENANTS[0] ?? {
     id: 'tenant-family-chen',
     name: 'The Chen Household',
@@ -217,47 +216,13 @@ export const App: React.FC = () => {
             </div>
           </div>
 
-          <div className="max-w-3xl mb-6">
+          <div className="max-w-3xl">
             <h2 className="font-heading-lg sm:font-display-md text-[#0d253d] font-light tracking-tight mb-3">
               Intelligent atmospheric defense for homes and neighborhoods.
             </h2>
             <p className="font-body-lg text-[#273951] font-light leading-relaxed">
               When severe winter inversions trap toxic urban smog, Zerobon’s generative AI copilot guides your household through the crisis. Get dynamic routine swaps reshaped around clean air windows, discover proven indoor hacks that scrub particulates without costly hardware, and embrace sustainable lifestyle alternatives tailored to your floor level and daily commute—all backed by deterministic receipts that prove the exact lung dose you protect and emissions you prevent.
             </p>
-          </div>
-
-          <div className="pt-6 border-t border-[#e3e8ee] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-            <div className="p-3.5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
-              <span className="font-micro-cap text-[#533afd]">GenAI Edge Copilot</span>
-              <p className="font-heading-sm text-xs text-[#0d253d] mt-1 mb-0.5">Context-Aware Guidance</p>
-              <p className="font-body-md text-[#64748d] text-[11px] leading-relaxed">
-                Hardened with a 5-layer anti-hijacking firewall to provide safe, verified IAQ interventions.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
-              <span className="font-micro-cap text-[#533afd]">Inversion-Aware Routines</span>
-              <p className="font-heading-sm text-xs text-[#0d253d] mt-1 mb-0.5">Thermal Window Scheduling</p>
-              <p className="font-body-md text-[#64748d] text-[11px] leading-relaxed">
-                Shifts school runs, outdoor exercise, and ventilation into golden midday boundary layer mixing windows.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
-              <span className="font-micro-cap text-[#533afd]">Indoor Air Quality Hacks</span>
-              <p className="font-heading-sm text-xs text-[#0d253d] mt-1 mb-0.5">Physics-Driven Sanctuaries</p>
-              <p className="font-body-md text-[#64748d] text-[11px] leading-relaxed">
-                Test DIY Corsi-Rosenthal boxes, draft sash sealing, and exhaust purges on a living 3D terrarium.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
-              <span className="font-micro-cap text-[#533afd]">Deterministic Impact</span>
-              <p className="font-heading-sm text-xs text-[#0d253d] mt-1 mb-0.5">Breath-Cost Accounting</p>
-              <p className="font-body-md text-[#64748d] text-[11px] leading-relaxed">
-                Prints verifiable receipts for avoided PM₂.₅ lung doses, cigarette equivalents, and carbon reductions.
-              </p>
-            </div>
           </div>
         </section>
         {/* Active Tab Subsystem */}
@@ -326,12 +291,6 @@ export const App: React.FC = () => {
         {activeTab === 'turbidity' && (
           <div className="animate-fadeIn">
             <OpticalHazeEstimator onApplyEstimatedOutdoorPm25={(pm) => setOutdoorPm25(pm)} />
-          </div>
-        )}
-
-        {activeTab === 'architecture' && (
-          <div className="animate-fadeIn">
-            <ArchitectureDiagram />
           </div>
         )}
 

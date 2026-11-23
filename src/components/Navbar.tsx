@@ -1,10 +1,11 @@
 import React from 'react';
 import { TenantConfig } from '../types';
 import { DEMO_TENANTS } from '../engine/tenancy';
+import { ArchitectureBulb } from './ArchitectureDiagram';
 
 interface NavbarProps {
-  activeTab: 'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin' | 'architecture';
-  onSelectTab: (tab: 'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin' | 'architecture') => void;
+  activeTab: 'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin';
+  onSelectTab: (tab: 'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin') => void;
   selectedTenant: TenantConfig;
   onSelectTenant: (tenant: TenantConfig) => void;
   outdoorPm25: number;
@@ -64,7 +65,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               { id: 'radar', label: 'Inversion Radar' },
               { id: 'copilot', label: 'Zero-Trust Copilot' },
               { id: 'turbidity', label: 'Optical Sky' },
-              { id: 'architecture', label: 'Architecture' },
               { id: 'admin', label: 'Tenant Admin' },
             ] as const
           ).map((item) => (
@@ -85,6 +85,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right Voltage CTA & Tabular Figure Status */}
         <div className="flex items-center gap-3">
+          {/* Small Architecture Bulb */}
+          <ArchitectureBulb />
           <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#f6f9fc] border border-[#e3e8ee]">
             <span className={`w-1.5 h-1.5 rounded-full ${outdoorPm25 < 75 ? 'bg-[#34d399]' : 'bg-[#ea2261] animate-pulse'}`} />
             <span className="font-tabular text-xs text-[#64748d]">
@@ -111,7 +113,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             { id: 'radar', label: 'Inversion Radar' },
             { id: 'copilot', label: 'Copilot' },
             { id: 'turbidity', label: 'Optical Sky' },
-            { id: 'architecture', label: 'Architecture' },
             { id: 'admin', label: 'Tenant Admin' },
           ] as const
         ).map((item) => (
