@@ -150,7 +150,7 @@ export const App: React.FC = () => {
           </h1>
 
           <p className="font-body-lg text-[#273951] max-w-2xl leading-relaxed mb-6">
-            A physics-informed indoor mass-balance engine bound to a living 3D atmospheric familiar. Deterministic breath-cost receipts, multi-tenant isolation, and zero-trust LLM security on Cloudflare edge.
+            A physics-informed indoor mass-balance engine bound to a living 3D atmospheric familiar. Deterministic breath-cost receipts, multi-tenant isolation, and zero-trust LLM security at the global edge.
           </p>
 
           {/* Single-Voltage CTA: Electric Indigo Pill + Secondary Pill */}
@@ -351,7 +351,7 @@ export const App: React.FC = () => {
             <span>• Stripe Inspired Atmospheric Architecture</span>
           </div>
           <div className="font-tabular text-[12px] text-[#64748d]">
-            100% Cloudflare Free Tier • Rust/WASM Mass-Balance • Sub-5ms Edge CPU
+            Global Edge Network • Rust/WASM Mass-Balance • Sub-5ms CPU Latency
           </div>
         </div>
       </footer>

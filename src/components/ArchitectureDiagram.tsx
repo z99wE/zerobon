@@ -11,7 +11,7 @@ export const ArchitectureDiagram: React.FC = () => {
               High-Contrast Zerobon 4.0 Infrastructure Blueprint
             </h3>
             <p className="font-body-md text-xs text-white/70 mt-0.5">
-              Multi-tenant Cloudflare edge, Google Gemini GenAI pipeline, deterministic Rust/WASM solver, and Three.js client ecosystem.
+              Multi-tenant distributed edge, Google Gemini GenAI pipeline, deterministic Rust/WASM solver, and Three.js client ecosystem.
             </p>
           </div>
 
@@ -49,23 +49,23 @@ export const ArchitectureDiagram: React.FC = () => {
               </ul>
             </div>
             <div className="mt-4 pt-3 border-t border-white/10 font-tabular text-[10px] text-[#fbbf24]">
-              Hourly Cloudflare Cron Ingestion
+              Automated Hourly Telemetry Ingestion
             </div>
           </div>
 
-          {/* Stage 2: Cloudflare Edge */}
+          {/* Stage 2: Edge Layer */}
           <div className="p-5 rounded-xl bg-[#0d253d] border-2 border-[#533afd] shadow-lg flex flex-col justify-between">
             <div>
               <span className="text-[10px] font-mono text-[#b9b9f9] uppercase tracking-wider font-semibold">2. Multi-Tenant Edge</span>
-              <h4 className="font-heading-sm text-sm text-white mt-1 mb-3">Cloudflare Workers</h4>
+              <h4 className="font-heading-sm text-sm text-white mt-1 mb-3">Distributed Edge Workers</h4>
               <ul className="space-y-2 text-xs text-white/80 font-light">
                 <li className="flex items-start gap-1.5">
                   <span className="text-[#533afd] font-bold">›</span>
-                  <span>Hono Multi-Tenant Hostname Router</span>
+                  <span>Multi-Tenant Hostname Routing</span>
                 </li>
                 <li className="flex items-start gap-1.5">
                   <span className="text-[#533afd] font-bold">›</span>
-                  <span>TenantScopedDB (D1 SQLite Enforced)</span>
+                  <span>TenantScopedDB (Isolated SQL Partition)</span>
                 </li>
                 <li className="flex items-start gap-1.5">
                   <span className="text-[#533afd] font-bold">›</span>
@@ -173,7 +173,7 @@ export const ArchitectureDiagram: React.FC = () => {
         {/* High-Contrast Interactive Data Contract Specs */}
         <div className="mt-8 pt-6 border-t border-white/10 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
           <div className="p-4 rounded-xl bg-[#0f112e] border border-white/10 font-mono text-white/80">
-            <span className="text-[#533afd] font-semibold">// Cloudflare D1 Composite Index Isolation Constraint</span>
+            <span className="text-[#533afd] font-semibold">// Tenant Partition Composite Index Constraint</span>
             <p className="mt-1 text-white">
               CREATE INDEX idx_ledger_tenant_h3 ON impact_ledger(tenant_id, h3_cell, logged_at);
             </p>

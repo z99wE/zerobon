@@ -24,7 +24,7 @@ export const MultiTenantAdmin: React.FC<MultiTenantAdminProps> = ({ tenant }) =>
             {tenant.name}
           </h3>
           <p className="font-body-md text-xs text-[#64748d] mt-0.5">
-            Subdomain: <code className="text-[#533afd] font-mono">{tenant.subdomain}</code> • Isolation: <span className="text-[#34d399] font-medium">TenantScopedDB (D1 SQLite)</span>
+            Subdomain: <code className="text-[#533afd] font-mono">{tenant.subdomain}</code> • Isolation: <span className="text-[#34d399] font-medium">TenantScopedDB (Isolated Partition)</span>
           </p>
         </div>
 
@@ -148,16 +148,16 @@ export const MultiTenantAdmin: React.FC<MultiTenantAdminProps> = ({ tenant }) =>
         </div>
       </div>
 
-      {/* Cloudflare D1 Logical Isolation Blueprint */}
+      {/* Multi-Tenant Cryptographic Partitioning Contract */}
       <div className="pt-6 border-t border-[#e3e8ee]">
-        <span className="font-micro-cap text-[#64748d] mb-2 block">D1 SQLite Isolation Contract</span>
+        <span className="font-micro-cap text-[#475569] mb-2 block">Tenant Data Isolation Contract</span>
         <div className="p-4 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee] font-mono text-xs text-[#273951] space-y-1">
-          <p className="text-[#533afd]">// Cloudflare D1 Tenant Composite Index</p>
+          <p className="text-[#533afd]">// Tenant Partition Composite Index</p>
           <p className="text-[#0d253d]">
             CREATE INDEX idx_ledger_tenant_h3 ON impact_ledger(tenant_id, h3_cell, logged_at);
           </p>
-          <p className="text-[#64748d] text-[11px]">
-            Scoped Repository Pattern structurally binds WHERE tenant_id = ? on workerd edge.
+          <p className="text-[#475569] text-[11px]">
+            Scoped Repository Pattern strictly enforces tenant boundaries (WHERE tenant_id = ?) across all requests.
           </p>
         </div>
       </div>

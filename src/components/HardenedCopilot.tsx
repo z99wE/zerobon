@@ -54,8 +54,8 @@ export const HardenedCopilot: React.FC<HardenedCopilotProps> = ({ indoorPm25, ou
           <h3 className="font-heading-lg text-[#0d253d] mt-1">
             Hardened Hybrid Edge + Local Copilot
           </h3>
-          <p className="font-body-md text-[#64748d] mt-0.5">
-            5-Layer anti-hijacking pipeline with Zod structured output enforcement on Cloudflare edge.
+          <p className="font-body-md text-[#475569] mt-0.5">
+            5-Layer anti-hijacking pipeline with Zod structured output enforcement at the edge.
           </p>
         </div>
 
