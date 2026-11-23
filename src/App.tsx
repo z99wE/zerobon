@@ -7,13 +7,14 @@ import { InversionRadar } from './components/InversionRadar';
 import { HardenedCopilot } from './components/HardenedCopilot';
 import { OpticalHazeEstimator } from './components/OpticalHazeEstimator';
 import { MultiTenantAdmin } from './components/MultiTenantAdmin';
+import { ArchitectureDiagram } from './components/ArchitectureDiagram';
 import { BreathReceiptModal } from './components/BreathReceiptModal';
 import { DEMO_TENANTS } from './engine/tenancy';
 import { DEFAULT_PHYSICS_PARAMS, stepAnalytical, computeBreathReceipt } from './engine/physics';
 import { TenantConfig, BreathReceipt, MassBalanceParams } from './types';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin'>('terrarium');
+  const [activeTab, setActiveTab] = useState<'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin' | 'architecture'>('terrarium');
   const [selectedTenant, setSelectedTenant] = useState<TenantConfig>(DEMO_TENANTS[0]!);
 
   // Ambient & Indoor Physics State
@@ -306,6 +307,12 @@ export const App: React.FC = () => {
         {activeTab === 'turbidity' && (
           <div className="animate-fadeIn">
             <OpticalHazeEstimator onApplyEstimatedOutdoorPm25={(pm) => setOutdoorPm25(pm)} />
+          </div>
+        )}
+
+        {activeTab === 'architecture' && (
+          <div className="animate-fadeIn">
+            <ArchitectureDiagram />
           </div>
         )}
 

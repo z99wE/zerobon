@@ -3,8 +3,8 @@ import { TenantConfig } from '../types';
 import { DEMO_TENANTS } from '../engine/tenancy';
 
 interface NavbarProps {
-  activeTab: 'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin';
-  onSelectTab: (tab: 'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin') => void;
+  activeTab: 'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin' | 'architecture';
+  onSelectTab: (tab: 'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin' | 'architecture') => void;
   selectedTenant: TenantConfig;
   onSelectTenant: (tenant: TenantConfig) => void;
   outdoorPm25: number;
@@ -53,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Center Primary Nav (Thin Söhne / Inter 300) */}
-        <nav className="hidden lg:flex items-center gap-6">
+        <nav className="hidden lg:flex items-center gap-5">
           {(
             [
               { id: 'terrarium', label: '3D Terrarium' },
@@ -61,6 +61,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               { id: 'radar', label: 'Inversion Radar' },
               { id: 'copilot', label: 'Zero-Trust Copilot' },
               { id: 'turbidity', label: 'Optical Sky' },
+              { id: 'architecture', label: 'Architecture' },
               { id: 'admin', label: 'Tenant Admin' },
             ] as const
           ).map((item) => (
@@ -106,6 +107,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             { id: 'radar', label: 'Inversion Radar' },
             { id: 'copilot', label: 'Copilot' },
             { id: 'turbidity', label: 'Optical Sky' },
+            { id: 'architecture', label: 'Architecture' },
             { id: 'admin', label: 'Tenant Admin' },
           ] as const
         ).map((item) => (

@@ -1,16 +1,86 @@
 # Zerobon (v4.0)
 ### Multi-Tenant, 3D Gamified & Prompt-Injection-Proof Clean Air Infrastructure
 
+> **Live Production Website**: [https://zerobon.pages.dev](https://zerobon.pages.dev)  
+> **GitHub Repository**: [https://github.com/z99wE/zerobon](https://github.com/z99wE/zerobon)  
+> **Official Description**: Multi-tenant, 3D gamified & prompt-injection-proof clean air infrastructure powered by Google Gemini, Rust/WASM, and Cloudflare edge.  
+> **Design Language**: Stripe Inspired System ([`DESIGN.md`](DESIGN.md)) with Electric Indigo `#533afd`, Söhne/Inter Thin 300, Tabular Figures (`tnum`), and Deep Navy `#1c1e54` Dashboard Chrome.
+
 [![Live Cloudflare Deployment](https://img.shields.io/badge/Deployed-Cloudflare%20Pages%20%26%20Edge-533afd?style=flat&logo=cloudflare)](https://zerobon.pages.dev)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-z99wE%2Fzerobon-1c1e54?style=flat&logo=github)](https://github.com/z99wE/zerobon.git)
 [![Design System](https://img.shields.io/badge/Design%20System-Stripe%20Inspired%20(DESIGN.md)-533afd?style=flat)](DESIGN.md)
 [![Rust WASM Engine](https://img.shields.io/badge/Rust%20WASM-100%25%20Verified%20Tests-34d399?style=flat&logo=rust)](packages/physics-wasm/)
 [![License](https://img.shields.io/badge/License-MIT-0d253d?style=flat)](LICENSE)
 
-> **Live Production URL**: [https://zerobon.pages.dev](https://zerobon.pages.dev)  
-> **Source Repository**: [https://github.com/z99wE/zerobon.git](https://github.com/z99wE/zerobon.git)  
-> **Deployment Target**: 100% Full-Stack on Cloudflare (Free Tier) + Rust/WASM + Three.js  
-> **Design Language**: Stripe Inspired System (Electric Indigo `#533afd`, Söhne/Inter Thin 300, Atmospheric Gradient Mesh, Tabular Figures `tnum`, Deep Navy `#1c1e54` Dashboard Chrome)
+---
+
+## 🏛️ High-Contrast End-to-End System Architecture
+
+```mermaid
+flowchart TD
+    subgraph INGESTION ["1. Atmospheric Telemetry & Spatial Ingestion"]
+        GEE["Google Earth Engine & Satellite AOD (MODIS/VIIRS)"]
+        METEO["Open-Meteo & PBL Altitude Inversion Feeds"]
+        AQ["OpenAQ v3 Ground PM2.5 Sensors"]
+        FIRMS["NASA FIRMS Upwind Biomass Fire Beacons"]
+    end
+
+    subgraph EDGE ["2. Cloudflare Edge Multi-Tenant Routing (Sub-5ms CPU)"]
+        ROUTER["Hono Tenant Router (Resolves Subdomain / JWT)"]
+        FIREWALL["5-Layer Anti-Hijacking Firewall (Strip / Tag / Guard)"]
+        D1["Cloudflare D1 (SQLite + FTS5) - TenantScopedDB (tenant_id Indexed)"]
+        KV["Cloudflare KV (global:aq:hex:* Spatial Cache)"]
+    end
+
+    subgraph GENAI ["3. Google Gemini Intelligence & Hardened Copilot"]
+        GEMINI["Google Gemini 2.5 Flash (Structured JSON Mode)"]
+        RAG["Static Git-Versioned FTS5 IAQ Playbooks (Zero Untrusted Text)"]
+        SCHEMA["Zod Output Schema Lock (intent_valid, iaq_hack_ids, pet_state)"]
+        CANARY["Canary Egress Filter (CANARY_ZEROBON_SEC_99F3B Guard)"]
+    end
+
+    subgraph PHYSICS ["4. Deterministic Rust / WASM Physics Engine"]
+        WASM["Differential Mass-Balance Solver (dCin/dt Analytical Step)"]
+        RECEIPT["Deterministic Breath-Cost & IPCC Emission Calculator"]
+    end
+
+    subgraph CLIENT ["5. 3D WebGL PWA & Interactive Client Ecosystem"]
+        TERRARIUM["3D Glass Terrarium & Lumi the Fox Bio-Indicator (Three.js)"]
+        AIRFLOW["Real-Time 3D Airflow Vortex Scrubbing Streamlines"]
+        BIOME["Isometric 3D Uber H3 Res-7 Neighborhood Biome"]
+        RADAR["24-Hour Thermal Inversion & Clean Air Window Radar"]
+        OPTICAL["Zero-Hardware Optical Sky Turbidity Analyzer (WebGPU/Canvas)"]
+    end
+
+    INGESTION --> ROUTER
+    ROUTER --> D1
+    ROUTER --> KV
+    ROUTER --> FIREWALL
+    FIREWALL --> GEMINI
+    RAG --> GEMINI
+    GEMINI --> SCHEMA
+    SCHEMA --> CANARY
+    CANARY --> CLIENT
+    CLIENT <--> WASM
+    WASM --> RECEIPT
+    RECEIPT --> TERRARIUM
+    TERRARIUM --> AIRFLOW
+    CLIENT --> BIOME
+    CLIENT --> RADAR
+    CLIENT --> OPTICAL
+
+    classDef dark fill:#0d253d,stroke:#533afd,stroke-width:2px,color:#ffffff;
+    classDef indigo fill:#533afd,stroke:#ffffff,stroke-width:2px,color:#ffffff;
+    classDef emerald fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#ffffff;
+    classDef ruby fill:#4c0519,stroke:#ea2261,stroke-width:2px,color:#ffffff;
+    classDef amber fill:#451a03,stroke:#fbbf24,stroke-width:2px,color:#ffffff;
+
+    class GEE,METEO,AQ,FIRMS amber;
+    class ROUTER,D1,KV,FIREWALL dark;
+    class GEMINI,RAG,SCHEMA,CANARY indigo;
+    class WASM,RECEIPT emerald;
+    class TERRARIUM,AIRFLOW,BIOME,RADAR,OPTICAL ruby;
+```
 
 ---
 
