@@ -184,40 +184,59 @@ export const App: React.FC = () => {
 
       {/* Main Content Surface */}
       <main className="relative z-10 flex-1 max-w-[1200px] w-full mx-auto px-4 sm:px-6 pb-20 flex flex-col gap-10">
-        {/* Formal Mission & Problem Statement Section (Cleanly Scrapeable) */}
+        {/* Problem Statement Reimagined as High-Impact Stripe-Style Marketing Copy */}
         <section
           id="problem-statement"
-          data-problem-statement="Create a GenAI-powered assistant that helps families and communities navigate severe winter smog and urban air pollution. The application should suggest low-emission daily routines, indoor air quality hacks, and sustainable alternatives tailored to their location and lifestyle, while clearly explaining the direct impact of their choices."
-          className="card-feature-light p-6 sm:p-8 bg-white border border-[#e3e8ee] shadow-sm relative overflow-hidden"
+          className="card-feature-light p-6 sm:p-8 md:p-10 bg-white border border-[#e3e8ee] shadow-sm relative overflow-hidden"
         >
-          <div className="flex items-center justify-between gap-4 mb-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#533afd]" />
-              <span className="font-micro-cap text-[#533afd]">Mission & Problem Statement</span>
+              <span className="font-micro-cap text-[#533afd]">The Zerobon Mandate</span>
             </div>
-            <span className="pill-tag-soft">Soloknuckle Benchmark: 100/100</span>
+            <span className="pill-tag-soft">AI-Powered Atmospheric Intelligence</span>
           </div>
 
-          <blockquote className="font-heading-md text-[#0d253d] font-light leading-relaxed border-l-2 border-[#533afd] pl-4 sm:pl-6 my-3 italic">
-            "Create a GenAI-powered assistant that helps families and communities navigate severe winter smog and urban air pollution. The application should suggest low-emission daily routines, indoor air quality hacks, and sustainable alternatives tailored to their location and lifestyle, while clearly explaining the direct impact of their choices."
-          </blockquote>
+          <div className="max-w-3xl mb-6">
+            <h2 className="font-heading-lg sm:font-display-md text-[#0d253d] font-light tracking-tight mb-3">
+              Intelligent atmospheric defense for homes and neighborhoods.
+            </h2>
+            <p className="font-body-lg text-[#273951] font-light leading-relaxed">
+              When severe winter inversions trap toxic urban smog, Zerobon’s generative AI copilot guides your household through the crisis. Get dynamic routine swaps reshaped around clean air windows, discover proven indoor hacks that scrub particulates without costly hardware, and embrace sustainable lifestyle alternatives tailored to your floor level and daily commute—all backed by deterministic receipts that prove the exact lung dose you protect and emissions you prevent.
+            </p>
+          </div>
 
-          <div className="mt-5 pt-4 border-t border-[#e3e8ee] grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-            <div>
-              <span className="font-micro-cap text-[#64748d]">GenAI Assistant</span>
-              <p className="font-body-md text-[#0d253d] text-xs mt-0.5 font-medium">5-Layer Prompt-Injection Firewall</p>
+          <div className="pt-6 border-t border-[#e3e8ee] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            <div className="p-3.5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
+              <span className="font-micro-cap text-[#533afd]">GenAI Edge Copilot</span>
+              <p className="font-heading-sm text-xs text-[#0d253d] mt-1 mb-0.5">Context-Aware Guidance</p>
+              <p className="font-body-md text-[#64748d] text-[11px] leading-relaxed">
+                Hardened with a 5-layer anti-hijacking firewall to provide safe, verified IAQ interventions.
+              </p>
             </div>
-            <div>
-              <span className="font-micro-cap text-[#64748d]">Families & Groups</span>
-              <p className="font-body-md text-[#0d253d] text-xs mt-0.5 font-medium">Multi-Tenant H3 Hex Mesh</p>
+
+            <div className="p-3.5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
+              <span className="font-micro-cap text-[#533afd]">Inversion-Aware Routines</span>
+              <p className="font-heading-sm text-xs text-[#0d253d] mt-1 mb-0.5">Thermal Window Scheduling</p>
+              <p className="font-body-md text-[#64748d] text-[11px] leading-relaxed">
+                Shifts school runs, outdoor exercise, and ventilation into golden midday boundary layer mixing windows.
+              </p>
             </div>
-            <div>
-              <span className="font-micro-cap text-[#64748d]">Severe Winter Smog</span>
-              <p className="font-body-md text-[#0d253d] text-xs mt-0.5 font-medium">Thermal Inversion Window Radar</p>
+
+            <div className="p-3.5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
+              <span className="font-micro-cap text-[#533afd]">Indoor Air Quality Hacks</span>
+              <p className="font-heading-sm text-xs text-[#0d253d] mt-1 mb-0.5">Physics-Driven Sanctuaries</p>
+              <p className="font-body-md text-[#64748d] text-[11px] leading-relaxed">
+                Test DIY Corsi-Rosenthal boxes, draft sash sealing, and exhaust purges on a living 3D terrarium.
+              </p>
             </div>
-            <div>
-              <span className="font-micro-cap text-[#64748d]">Direct Choice Impact</span>
-              <p className="font-body-md text-[#0d253d] text-xs mt-0.5 font-medium">Deterministic Breath Receipts</p>
+
+            <div className="p-3.5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
+              <span className="font-micro-cap text-[#533afd]">Deterministic Impact</span>
+              <p className="font-heading-sm text-xs text-[#0d253d] mt-1 mb-0.5">Breath-Cost Accounting</p>
+              <p className="font-body-md text-[#64748d] text-[11px] leading-relaxed">
+                Prints verifiable receipts for avoided PM₂.₅ lung doses, cigarette equivalents, and carbon reductions.
+              </p>
             </div>
           </div>
         </section>
