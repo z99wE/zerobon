@@ -1,0 +1,27 @@
+name = "zerobon-edge-api"
+main = "apps/edge-api/index.ts"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ENVIRONMENT = "production"
+
+# Cloudflare D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "zerobon-d1-prod"
+database_id = "00000000-0000-0000-0000-000000000000"
+
+# Cloudflare KV Namespaces
+[[kv_namespaces]]
+binding = "KV"
+id = "00000000000000000000000000000000"
+
+# Cloudflare R2 Storage
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "zerobon-assets-prod"
+
+# Hourly Cron Trigger for atmospheric ingestion
+[triggers]
+crons = ["0 * * * *"]

@@ -1,0 +1,23 @@
+[package]
+name = "zerobon-physics-wasm"
+version = "4.0.0"
+edition = "2021"
+authors = ["Zerobon Deep-Tech Team"]
+description = "Physics-Informed Indoor Mass-Balance & Breath-Cost Engine in WebAssembly"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+
+[dev-dependencies]
+proptest = "1.4"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

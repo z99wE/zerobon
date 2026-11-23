@@ -1,0 +1,9 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+packages/physics-wasm/target
+Cargo.lock
+.DS_Store
+*.log
