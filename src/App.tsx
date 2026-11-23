@@ -8,6 +8,7 @@ import { HardenedCopilot } from './components/HardenedCopilot';
 import { OpticalHazeEstimator } from './components/OpticalHazeEstimator';
 import { MultiTenantAdmin } from './components/MultiTenantAdmin';
 import { BreathReceiptModal } from './components/BreathReceiptModal';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { DEMO_TENANTS } from './engine/tenancy';
 import { DEFAULT_PHYSICS_PARAMS, stepAnalytical, computeBreathReceipt } from './engine/physics';
 import { TenantConfig, BreathReceipt, MassBalanceParams } from './types';
@@ -229,13 +230,15 @@ export const App: React.FC = () => {
         {activeTab === 'terrarium' && (
           <div className="space-y-8 animate-fadeIn">
             {/* Dark-App Dashboard Track Composited Above Canvas */}
-            <AtmosphericTerrarium
-              indoorPm25={indoorPm25}
-              outdoorPm25={outdoorPm25}
-              activeHacks={activeHacks}
-              onTriggerHackToggle={handleToggleHack}
-              onOpenReceipt={handleManualReceipt}
-            />
+            <ErrorBoundary>
+              <AtmosphericTerrarium
+                indoorPm25={indoorPm25}
+                outdoorPm25={outdoorPm25}
+                activeHacks={activeHacks}
+                onTriggerHackToggle={handleToggleHack}
+                onOpenReceipt={handleManualReceipt}
+              />
+            </ErrorBoundary>
 
             {/* 3 Stripe Feature Cards (White + Cream Band + Light) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
