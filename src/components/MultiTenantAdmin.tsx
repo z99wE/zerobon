@@ -3,7 +3,6 @@ import { TenantConfig } from '../types';
 
 interface MultiTenantAdminProps {
   tenant: TenantConfig;
-  onUpdateThreshold?: (threshold: number) => void;
 }
 
 export const MultiTenantAdmin: React.FC<MultiTenantAdminProps> = ({ tenant }) => {
@@ -17,58 +16,79 @@ export const MultiTenantAdmin: React.FC<MultiTenantAdminProps> = ({ tenant }) =>
   };
 
   return (
-    <div className="w-full apple-glass-card rounded-3xl p-6 md:p-8">
+    <div className="w-full card-feature-light p-6 sm:p-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <p className="apple-tag mb-1">Multi-Tenant Administrative Governance</p>
-          <h3 className="text-xl md:text-2xl font-semibold text-white tracking-tight">
+          <span className="pill-tag-soft">Multi-Tenant Governance</span>
+          <h3 className="font-heading-lg text-[#0d253d] mt-1">
             {tenant.name}
           </h3>
-          <p className="text-xs text-neutral-400 mt-1">
-            Subdomain: <code className="text-sky-300 font-mono">{tenant.subdomain}</code> • Isolation: <span className="text-emerald-400">TenantScopedDB (D1 SQLite)</span>
+          <p className="font-body-md text-xs text-[#64748d] mt-0.5">
+            Subdomain: <code className="text-[#533afd] font-mono">{tenant.subdomain}</code> • Isolation: <span className="text-[#34d399] font-medium">TenantScopedDB (D1 SQLite)</span>
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="apple-glass px-3 py-1.5 rounded-full text-xs text-neutral-300 font-medium">
-            Role: <strong className="text-white">tenant_admin</strong>
+          <span className="px-3 py-1 rounded-full bg-[#f6f9fc] border border-[#e3e8ee] font-tabular text-xs text-[#273951]">
+            Role: <strong className="text-[#0d253d]">tenant_admin</strong>
           </span>
         </div>
       </div>
 
-      {/* Aggregate Collective Impact Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div className="apple-glass p-4 rounded-2xl">
-          <p className="text-[10px] uppercase tracking-wider text-neutral-400">Total Enrolled Members</p>
-          <p className="text-2xl font-semibold text-white mt-1">{tenant.totalMembers.toLocaleString()}</p>
-          <p className="text-[11px] text-neutral-400 mt-0.5">Active atmospheric twins</p>
+      {/* Stripe-style 3-Tier Cards: White + Featured Dark-Navy + Warm Cream */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Tier 1: Standard White Card */}
+        <div className="p-6 rounded-xl bg-white border border-[#e3e8ee] shadow-sm">
+          <span className="font-micro-cap text-[#64748d]">Enrolled Members</span>
+          <p className="font-tabular text-3xl font-normal text-[#0d253d] mt-2">
+            {tenant.totalMembers.toLocaleString()}
+          </p>
+          <span className="font-caption text-[#64748d] mt-1 block">Active atmospheric twins</span>
+          <div className="mt-4 pt-3 border-t border-[#e3e8ee] font-tabular text-xs text-[#533afd]">
+            100% tenant-scoped privacy
+          </div>
         </div>
 
-        <div className="apple-glass p-4 rounded-2xl">
-          <p className="text-[10px] uppercase tracking-wider text-neutral-400">Active Daily Pledges</p>
-          <p className="text-2xl font-semibold text-sky-400 mt-1">{tenant.activePledgesCount}</p>
-          <p className="text-[11px] text-neutral-400 mt-0.5">Carpool, metro, induction</p>
+        {/* Tier 2: Featured Dark-Navy Card (Stripe brand-dark-900 #1c1e54 polarity inversion) */}
+        <div className="card-pricing-featured p-6">
+          <div className="flex items-center justify-between">
+            <span className="font-micro-cap text-[#b9b9f9]">Collective Pledges</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white font-mono">Active Tier</span>
+          </div>
+          <p className="font-tabular text-3xl font-normal text-white mt-2">
+            {tenant.activePledgesCount}
+          </p>
+          <span className="font-caption text-white/70 mt-1 block">Carpool, metro, induction swaps</span>
+          <div className="mt-4 pt-3 border-t border-white/10 font-tabular text-xs text-[#b9b9f9]">
+            +42 new pledges this winter
+          </div>
         </div>
 
-        <div className="apple-glass p-4 rounded-2xl">
-          <p className="text-[10px] uppercase tracking-wider text-neutral-400">Collective CO₂e Avoided</p>
-          <p className="text-2xl font-semibold text-emerald-400 mt-1">{tenant.collectiveEmissionsSavedKg.toFixed(1)} kg</p>
-          <p className="text-[11px] text-neutral-400 mt-0.5">Deterministic ledger audit</p>
+        {/* Tier 3: Warm Cream Band Card (Stripe Chromatic Interlude #f5e9d4) */}
+        <div className="card-cream-band p-6">
+          <span className="font-micro-cap text-[#9b6829]">Emissions Prevented</span>
+          <p className="font-tabular text-3xl font-normal text-[#0d253d] mt-2">
+            {tenant.collectiveEmissionsSavedKg.toFixed(1)} <span className="text-base font-normal">kg CO₂e</span>
+          </p>
+          <span className="font-caption text-[#0d253d]/70 mt-1 block">Deterministic ledger audit</span>
+          <div className="mt-4 pt-3 border-t border-[#9b6829]/20 font-tabular text-xs text-[#9b6829]">
+            Verified IPCC factor calculations
+          </div>
         </div>
       </div>
 
       {/* Tenant Automated Smog Triggers */}
-      <div className="border-t border-white/[0.08] pt-6 mb-8">
-        <p className="apple-tag mb-4">Atmospheric Inversion Safety Automation</p>
+      <div className="pt-6 border-t border-[#e3e8ee] mb-8">
+        <span className="font-micro-cap text-[#64748d] mb-4 block">Automated Smog Safety Triggers</span>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="apple-glass p-5 rounded-2xl space-y-3">
+          <div className="p-5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee] space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-white">Auto-Cancel Outdoor Recess / Sports</span>
-              <span className="text-xs font-mono text-rose-400">{recessThreshold} µg/m³</span>
+              <span className="font-heading-sm text-xs text-[#0d253d]">Outdoor Recess / Play Relocation</span>
+              <span className="font-tabular text-xs text-[#ea2261] font-medium">{recessThreshold} µg/m³</span>
             </div>
-            <p className="text-xs text-neutral-400 leading-relaxed">
-              When ground sensor PM2.5 crosses this threshold during school hours, the tenant edge worker automatically notifies all staff and relocates activities to indoor HEPA zones.
+            <p className="font-body-md text-xs text-[#64748d] leading-relaxed">
+              When ground sensor PM2.5 crosses this threshold during school hours, the tenant edge worker dispatches automated alerts to relocate activities to indoor HEPA zones.
             </p>
             <input
               type="range"
@@ -80,13 +100,13 @@ export const MultiTenantAdmin: React.FC<MultiTenantAdminProps> = ({ tenant }) =>
             />
           </div>
 
-          <div className="apple-glass p-5 rounded-2xl space-y-3">
+          <div className="p-5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee] space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-white">WFH & Staggered Commute Trigger</span>
-              <span className="text-xs font-mono text-amber-400">{wfhThreshold} µg/m³</span>
+              <span className="font-heading-sm text-xs text-[#0d253d]">WFH & Staggered Commute Trigger</span>
+              <span className="font-tabular text-xs text-[#9b6829] font-medium">{wfhThreshold} µg/m³</span>
             </div>
-            <p className="text-xs text-neutral-400 leading-relaxed">
-              Dispatches morning advisory to campus employees or RWA residents to stagger commutes away from the 7:00 – 9:00 AM winter inversion trap.
+            <p className="font-body-md text-xs text-[#64748d] leading-relaxed">
+              Notifies campus employees or RWA residents to shift morning commutes away from the 7:00 – 9:00 AM winter inversion boundary trap.
             </p>
             <input
               type="range"
@@ -102,23 +122,23 @@ export const MultiTenantAdmin: React.FC<MultiTenantAdminProps> = ({ tenant }) =>
         <div className="mt-4 flex items-center justify-end">
           <button
             onClick={handleSave}
-            className="px-5 py-2.5 rounded-xl bg-white text-black font-semibold text-xs hover:bg-neutral-200 transition-all active:scale-95 shadow-md"
+            className="button-primary-pill"
           >
             {savedSuccess ? 'Thresholds Updated ✓' : 'Save Safety Rules'}
           </button>
         </div>
       </div>
 
-      {/* Cloudflare Edge D1 Isolation Architecture Details */}
-      <div className="border-t border-white/[0.08] pt-6">
-        <p className="apple-tag mb-3">Logical Edge Data Isolation Architecture</p>
-        <div className="apple-glass-subtle p-4 rounded-2xl font-mono text-xs text-neutral-300 space-y-2 border border-white/[0.04]">
-          <p className="text-sky-300">// Cloudflare D1 Composite Index Isolation Constraint</p>
-          <p className="text-neutral-400">
+      {/* Cloudflare D1 Logical Isolation Blueprint */}
+      <div className="pt-6 border-t border-[#e3e8ee]">
+        <span className="font-micro-cap text-[#64748d] mb-2 block">D1 SQLite Isolation Contract</span>
+        <div className="p-4 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee] font-mono text-xs text-[#273951] space-y-1">
+          <p className="text-[#533afd]">// Cloudflare D1 Tenant Composite Index</p>
+          <p className="text-[#0d253d]">
             CREATE INDEX idx_ledger_tenant_h3 ON impact_ledger(tenant_id, h3_cell, logged_at);
           </p>
-          <p className="text-neutral-400">
-            All D1 queries wrapped in <span className="text-white">TenantScopedDB(tenant_id)</span>. Cross-tenant leakage impossible by construction.
+          <p className="text-[#64748d] text-[11px]">
+            Scoped Repository Pattern structurally binds WHERE tenant_id = ? on workerd edge.
           </p>
         </div>
       </div>

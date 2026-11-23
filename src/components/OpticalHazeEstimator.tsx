@@ -19,26 +19,24 @@ export const OpticalHazeEstimator: React.FC<OpticalHazeEstimatorProps> = ({ onAp
     const width = canvas.width;
     const height = canvas.height;
 
-    // Create realistic sky gradient
     const grad = ctx.createLinearGradient(0, 0, 0, height);
     if (mode === 'clean') {
-      grad.addColorStop(0, '#1e40af'); // Deep Rayleigh blue
-      grad.addColorStop(0.5, '#38bdf8'); // Sky cyan
-      grad.addColorStop(1, '#bae6fd');
+      grad.addColorStop(0, '#1e40af');
+      grad.addColorStop(0.5, '#533afd');
+      grad.addColorStop(1, '#b9b9f9');
     } else if (mode === 'moderate') {
-      grad.addColorStop(0, '#64748b'); // Mixed Mie haze
+      grad.addColorStop(0, '#64748d');
       grad.addColorStop(0.5, '#94a3b8');
       grad.addColorStop(1, '#cbd5e1');
     } else {
-      grad.addColorStop(0, '#78716c'); // Winter smog yellowish-grey
+      grad.addColorStop(0, '#9b6829');
       grad.addColorStop(0.5, '#a8a29e');
-      grad.addColorStop(1, '#d6d3d1');
+      grad.addColorStop(1, '#f5e9d4');
     }
 
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, width, height);
 
-    // Analyze pixels
     const imgData = ctx.getImageData(0, 0, width, height);
     const analysis = analyzeSkyLuminanceData(imgData);
     setResult(analysis);
@@ -49,56 +47,59 @@ export const OpticalHazeEstimator: React.FC<OpticalHazeEstimatorProps> = ({ onAp
   }, [skySample]);
 
   return (
-    <div className="w-full apple-glass-card rounded-3xl p-6 md:p-8">
+    <div className="w-full card-feature-light p-6 sm:p-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <p className="apple-tag mb-1">Zero-Hardware Optical Estimator</p>
-          <h3 className="text-xl md:text-2xl font-semibold text-white tracking-tight">
-            Sky Turbidity & Rayleigh Scattering Analyzer
+          <span className="pill-tag-soft">Zero-Hardware Optical Estimator</span>
+          <h3 className="font-heading-lg text-[#0d253d] mt-1">
+            Sky Turbidity & Rayleigh Scattering Pipeline
           </h3>
+          <p className="font-body-md text-[#64748d] mt-0.5">
+            Client-side blue-to-red luminance scattering ratio estimating local Aerosol Optical Depth (AOD).
+          </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-400" />
-          <span className="text-xs text-neutral-300 font-medium">Luminance Edge Pipeline Ready</span>
+          <span className="w-2 h-2 rounded-full bg-[#34d399]" />
+          <span className="font-tabular text-xs text-[#273951]">Optical Engine Ready</span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
         {/* Sky Viewfinder Canvas */}
-        <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-black/40">
+        <div className="relative rounded-xl overflow-hidden border border-[#e3e8ee] bg-[#f6f9fc]">
           <canvas ref={canvasRef} width={400} height={240} className="w-full h-56 object-cover" />
 
-          {/* Crosshair & Zenith Sampling Box */}
+          {/* Crosshair & Sampling Box */}
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-            <div className="w-32 h-20 border border-white/40 rounded-lg flex flex-col items-center justify-center bg-black/20 backdrop-blur-[2px]">
-              <span className="text-[10px] text-white/90 uppercase tracking-wider font-mono">Zenith Sample</span>
+            <div className="w-32 h-20 border border-white/60 rounded flex flex-col items-center justify-center bg-black/15 backdrop-blur-[1px]">
+              <span className="text-[10px] text-white uppercase tracking-wider font-mono">Zenith Band</span>
             </div>
           </div>
 
-          {/* Sample Preset Switcher */}
+          {/* Sample Switcher Pills */}
           <div className="absolute bottom-3 left-3 right-3 flex items-center justify-center gap-2">
             <button
               onClick={() => setSkySample('clean')}
-              className={`px-3 py-1 rounded-xl text-xs font-medium transition-all ${
-                skySample === 'clean' ? 'bg-white text-black' : 'bg-black/60 text-white hover:bg-black/80'
+              className={`px-3 py-1 rounded-full text-xs font-light transition-all ${
+                skySample === 'clean' ? 'bg-[#533afd] text-white' : 'bg-white/80 text-[#0d253d] hover:bg-white'
               }`}
             >
-              Clean Sky
+              Rayleigh Sky
             </button>
             <button
               onClick={() => setSkySample('moderate')}
-              className={`px-3 py-1 rounded-xl text-xs font-medium transition-all ${
-                skySample === 'moderate' ? 'bg-white text-black' : 'bg-black/60 text-white hover:bg-black/80'
+              className={`px-3 py-1 rounded-full text-xs font-light transition-all ${
+                skySample === 'moderate' ? 'bg-[#533afd] text-white' : 'bg-white/80 text-[#0d253d] hover:bg-white'
               }`}
             >
               Noon Haze
             </button>
             <button
               onClick={() => setSkySample('severe')}
-              className={`px-3 py-1 rounded-xl text-xs font-medium transition-all ${
-                skySample === 'severe' ? 'bg-white text-black' : 'bg-black/60 text-white hover:bg-black/80'
+              className={`px-3 py-1 rounded-full text-xs font-light transition-all ${
+                skySample === 'severe' ? 'bg-[#533afd] text-white' : 'bg-white/80 text-[#0d253d] hover:bg-white'
               }`}
             >
               Winter Smog
@@ -107,11 +108,11 @@ export const OpticalHazeEstimator: React.FC<OpticalHazeEstimatorProps> = ({ onAp
         </div>
 
         {/* Optical Diagnostics & Calculation Card */}
-        <div className="apple-glass p-5 rounded-2xl space-y-4">
-          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
-            <span className="text-xs font-semibold text-white">Scattering Ratio & Inferred PM₂.₅</span>
+        <div className="p-5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee] space-y-4">
+          <div className="flex items-center justify-between border-b border-[#e3e8ee] pb-3">
+            <span className="font-heading-sm text-xs text-[#0d253d]">Rayleigh Ratio & Ambient Inference</span>
             {result && (
-              <span className="text-xs font-medium text-emerald-400">
+              <span className="font-tabular text-xs text-[#34d399] font-medium">
                 {result.confidencePercent}% Confidence
               </span>
             )}
@@ -120,30 +121,30 @@ export const OpticalHazeEstimator: React.FC<OpticalHazeEstimatorProps> = ({ onAp
           {result && (
             <div className="space-y-3">
               <div className="flex items-baseline justify-between">
-                <span className="text-neutral-400 text-xs">Estimated Ambient PM₂.₅:</span>
-                <span className="text-2xl font-bold text-white tracking-tight">
-                  {result.inferredPm25} <span className="text-xs text-neutral-400 font-normal">µg/m³</span>
+                <span className="font-body-md text-xs text-[#64748d]">Estimated Ambient PM₂.₅:</span>
+                <span className="font-tabular text-3xl font-normal text-[#0d253d]">
+                  {result.inferredPm25} <span className="text-xs text-[#64748d] font-normal">µg/m³</span>
                 </span>
               </div>
 
-              <div className="flex items-center justify-between text-xs py-1 border-b border-white/[0.04]">
-                <span className="text-neutral-400">Rayleigh B/R Ratio:</span>
-                <span className="text-white font-mono">{result.blueToRedRatio}</span>
+              <div className="flex items-center justify-between text-xs py-1 border-b border-[#e3e8ee]">
+                <span className="text-[#64748d]">Rayleigh B/R Ratio:</span>
+                <span className="font-tabular text-[#0d253d] font-medium">{result.blueToRedRatio}</span>
               </div>
 
-              <div className="flex items-center justify-between text-xs py-1 border-b border-white/[0.04]">
-                <span className="text-neutral-400">Aerosol Optical Depth (AOD):</span>
-                <span className="text-white font-mono">{result.estimatedAOD}</span>
+              <div className="flex items-center justify-between text-xs py-1 border-b border-[#e3e8ee]">
+                <span className="text-[#64748d]">Aerosol Optical Depth (AOD):</span>
+                <span className="font-tabular text-[#0d253d] font-medium">{result.estimatedAOD}</span>
               </div>
 
               <div className="flex items-center justify-between text-xs py-1">
-                <span className="text-neutral-400">Atmospheric Scattering Class:</span>
-                <span className="text-sky-300 font-medium">{result.hazeClass}</span>
+                <span className="text-[#64748d]">Aerosol Scattering Class:</span>
+                <span className="font-body-md text-xs text-[#533afd] font-medium">{result.hazeClass}</span>
               </div>
 
               <button
                 onClick={() => onApplyEstimatedOutdoorPm25(result.inferredPm25)}
-                className="w-full mt-2 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold transition-all active:scale-95 shadow-md shadow-sky-500/20"
+                className="w-full mt-2 button-primary-pill"
               >
                 Apply Inferred Ambient to 3D Dome
               </button>

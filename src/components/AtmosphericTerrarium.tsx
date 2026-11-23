@@ -22,10 +22,9 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
   onOpenReceipt,
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
-  const [cameraMode, setCameraMode] = useState<'orbit' | 'front' | 'top'>('orbit');
   const [isScrubbingAirflow, setIsScrubbingAirflow] = useState(false);
 
-  // References to Three.js objects for live updates
+  // References to Three.js objects
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -39,7 +38,6 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
   const n95MaskMeshRef = useRef<THREE.Mesh | null>(null);
   const bloomLightRef = useRef<THREE.PointLight | null>(null);
 
-  // Airflow trigger effect
   useEffect(() => {
     if (activeHacks.corsiRosenthal || activeHacks.kitchenExhaust || activeHacks.windowOpen) {
       setIsScrubbingAirflow(true);
@@ -52,20 +50,18 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
     const container = mountRef.current;
     if (!container) return;
 
-    // Scene
+    // Scene with Stripe deep navy #1c1e54 atmosphere
     const scene = new THREE.Scene();
     sceneRef.current = scene;
-    scene.background = new THREE.Color(0x050507);
-    scene.fog = new THREE.FogExp2(0x050507, 0.035);
+    scene.background = new THREE.Color(0x13153d);
+    scene.fog = new THREE.FogExp2(0x13153d, 0.035);
 
-    // Camera
     const width = container.clientWidth;
     const height = container.clientHeight;
     const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
     camera.position.set(0, 2.2, 5.2);
     cameraRef.current = camera;
 
-    // Renderer with Apple-grade power scaling
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       powerPreference: 'high-performance',
@@ -76,63 +72,64 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
+    renderer.toneMappingExposure = 1.15;
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
     // Studio Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.4);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
     keyLight.position.set(3.5, 6, 4);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.width = 1024;
     keyLight.shadow.mapSize.height = 1024;
-    keyLight.shadow.bias = -0.0001;
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 1.8);
+    // Stripe electric indigo rim light
+    const rimLight = new THREE.DirectionalLight(0x533afd, 2.0);
     rimLight.position.set(-4, 3, -3);
     scene.add(rimLight);
 
-    const warmFillLight = new THREE.DirectionalLight(0xfef08a, 0.6);
+    // Warm fill light
+    const warmFillLight = new THREE.DirectionalLight(0xf5e9d4, 0.6);
     warmFillLight.position.set(0, -2, 3);
     scene.add(warmFillLight);
 
     // Glowing pet heart/bloom light
-    const bloomLight = new THREE.PointLight(0x38bdf8, 2.0, 4);
+    const bloomLight = new THREE.PointLight(0x533afd, 2.2, 4);
     bloomLight.position.set(0, 0.6, 0);
     scene.add(bloomLight);
     bloomLightRef.current = bloomLight;
 
-    // Pedestal Base (Apple-style polished titanium cylinder with etched rings)
+    // Pedestal Base (Stripe deep navy cylinder with precision etched ring)
     const baseGroup = new THREE.Group();
     scene.add(baseGroup);
 
     const baseGeo = new THREE.CylinderGeometry(1.65, 1.75, 0.14, 64);
     const baseMat = new THREE.MeshStandardMaterial({
-      color: 0x16161c,
-      roughness: 0.25,
-      metalness: 0.85,
+      color: 0x1c1e54,
+      roughness: 0.3,
+      metalness: 0.8,
     });
     const baseMesh = new THREE.Mesh(baseGeo, baseMat);
     baseMesh.position.y = -0.07;
     baseMesh.receiveShadow = true;
     baseGroup.add(baseMesh);
 
-    // Precision etched ring on base
+    // Precision etched ring on base in electric indigo
     const ringGeo = new THREE.TorusGeometry(1.58, 0.008, 16, 100);
-    const ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.45 });
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0x533afd, transparent: true, opacity: 0.5 });
     const ringMesh = new THREE.Mesh(ringGeo, ringMat);
     ringMesh.rotation.x = Math.PI / 2;
     ringMesh.position.y = 0.005;
     baseGroup.add(ringMesh);
 
-    // Inner Terrarium Soil/Moss disc
+    // Inner Terrarium Soil disc
     const soilGeo = new THREE.CylinderGeometry(1.52, 1.52, 0.04, 48);
     const soilMat = new THREE.MeshStandardMaterial({
-      color: 0x111612,
+      color: 0x0f112e,
       roughness: 0.9,
       metalness: 0.1,
     });
@@ -141,7 +138,7 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
     soilMesh.receiveShadow = true;
     baseGroup.add(soilMesh);
 
-    // Glass Dome (Physics-inspired dome with physical refraction, Fresnel and transparency)
+    // Glass Dome (Physics-inspired dome)
     const domeGeo = new THREE.SphereGeometry(1.5, 48, 36, 0, Math.PI * 2, 0, Math.PI * 0.5);
     const domeMat = new THREE.MeshPhysicalMaterial({
       color: 0xffffff,
@@ -150,9 +147,8 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
       transparent: true,
       roughness: 0.08,
       metalness: 0.1,
-      ior: 1.48, // crown glass
+      ior: 1.48,
       specularIntensity: 1.0,
-      specularColor: new THREE.Color(0xffffff),
       side: THREE.DoubleSide,
       depthWrite: false,
     });
@@ -167,10 +163,10 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
     scene.add(petGroup);
     petGroupRef.current = petGroup;
 
-    // Pet Body (Floating soft pearl/cloud ellipsoid)
+    // Fox Body (Pearl/Cloud ellipsoid)
     const bodyGeo = new THREE.SphereGeometry(0.38, 32, 24);
     const bodyMat = new THREE.MeshStandardMaterial({
-      color: 0xf3f4f6,
+      color: 0xf8fafc,
       roughness: 0.45,
       metalness: 0.15,
     });
@@ -181,7 +177,7 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
     // Fox Ears
     const earGeo = new THREE.ConeGeometry(0.11, 0.24, 16);
     const earMat = new THREE.MeshStandardMaterial({
-      color: 0xe5e7eb,
+      color: 0xe2e8f0,
       roughness: 0.5,
     });
 
@@ -201,10 +197,10 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
     petGroup.add(earR);
     earRRef.current = earR;
 
-    // Eyes (Two dark obsidian reflective spheres)
+    // Eyes (Deep navy ink spheres)
     const eyeGeo = new THREE.SphereGeometry(0.045, 16, 16);
     const eyeMat = new THREE.MeshStandardMaterial({
-      color: 0x050507,
+      color: 0x0d253d,
       roughness: 0.1,
       metalness: 0.9,
     });
@@ -218,7 +214,7 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
 
     // Glowing pupil glints
     const glintGeo = new THREE.SphereGeometry(0.015, 8, 8);
-    const glintMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+    const glintMat = new THREE.MeshBasicMaterial({ color: 0x533afd });
     const glintL = new THREE.Mesh(glintGeo, glintMat);
     glintL.position.set(-0.10, 0.09, 0.375);
     petGroup.add(glintL);
@@ -227,7 +223,7 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
     glintR.position.set(0.12, 0.09, 0.375);
     petGroup.add(glintR);
 
-    // Fox Snout
+    // Snout & Nose
     const snoutGeo = new THREE.ConeGeometry(0.07, 0.14, 16);
     const snoutMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 });
     const snout = new THREE.Mesh(snoutGeo, snoutMat);
@@ -235,14 +231,13 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
     snout.position.set(0, 0.02, 0.4);
     petGroup.add(snout);
 
-    // Little Nose
     const noseGeo = new THREE.SphereGeometry(0.022, 12, 12);
-    const noseMat = new THREE.MeshBasicMaterial({ color: 0x0f172a });
+    const noseMat = new THREE.MeshBasicMaterial({ color: 0x0d253d });
     const nose = new THREE.Mesh(noseGeo, noseMat);
     nose.position.set(0, 0.02, 0.47);
     petGroup.add(nose);
 
-    // Crystalline C-Curved Tail
+    // Crystalline Tail
     const tailGroup = new THREE.Group();
     tailGroup.position.set(0, -0.05, -0.32);
     petGroup.add(tailGroup);
@@ -251,7 +246,7 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
     for (let i = 0; i < 5; i++) {
       const segGeo = new THREE.SphereGeometry(0.16 - i * 0.022, 16, 16);
       const segMat = new THREE.MeshPhysicalMaterial({
-        color: 0x38bdf8,
+        color: 0x533afd,
         transmission: 0.7,
         roughness: 0.15,
         opacity: 0.85,
@@ -262,7 +257,7 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
       tailGroup.add(seg);
     }
 
-    // N95 Miniature Shield (Holographic mask visible when indoor PM2.5 > 100)
+    // N95 Miniature Shield
     const n95Geo = new THREE.CylinderGeometry(0.15, 0.11, 0.12, 24, 1, true, 0, Math.PI);
     const n95Mat = new THREE.MeshPhysicalMaterial({
       color: 0xf8fafc,
@@ -278,7 +273,7 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
     petGroup.add(n95Mask);
     n95MaskMeshRef.current = n95Mask;
 
-    // Volumetric Smog Particles inside dome
+    // Volumetric Smog Particles
     const particleCount = 220;
     const particleGeo = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
@@ -303,13 +298,12 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
       size: 0.045,
       transparent: true,
       opacity: 0.25,
-      blending: THREE.NormalBlending,
     });
     const particles = new THREE.Points(particleGeo, particleMat);
     scene.add(particles);
     particlesRef.current = particles;
 
-    // Airflow Streamlines (Scrubbing Vortex)
+    // Airflow Streamlines
     const streamGroup = new THREE.Group();
     scene.add(streamGroup);
     streamLinesRef.current = streamGroup;
@@ -323,7 +317,7 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
       ]);
       const lineGeo = new THREE.TubeGeometry(curve, 32, 0.012, 8, false);
       const lineMat = new THREE.MeshBasicMaterial({
-        color: 0x38bdf8,
+        color: 0x533afd,
         transparent: true,
         opacity: 0.0,
       });
@@ -331,7 +325,7 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
       streamGroup.add(tube);
     }
 
-    // Interaction Drag Controls (Smooth Apple-style orbital inertia)
+    // Interaction Drag Controls
     let isDragging = false;
     let prevMouseX = 0;
     let prevMouseY = 0;
@@ -345,50 +339,21 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
       prevMouseX = e.clientX;
       prevMouseY = e.clientY;
     };
-
     const onMouseMove = (e: MouseEvent) => {
       if (!isDragging) return;
       const deltaX = e.clientX - prevMouseX;
       const deltaY = e.clientY - prevMouseY;
       prevMouseX = e.clientX;
       prevMouseY = e.clientY;
-
       targetRotationY += deltaX * 0.006;
       targetRotationX = Math.max(-0.2, Math.min(0.6, targetRotationX + deltaY * 0.005));
     };
-
-    const onMouseUp = () => {
-      isDragging = false;
-    };
+    const onMouseUp = () => (isDragging = false);
 
     const domElement = renderer.domElement;
     domElement.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
-
-    // Touch support
-    const onTouchStart = (e: TouchEvent) => {
-      if (e.touches.length === 1) {
-        isDragging = true;
-        prevMouseX = e.touches[0]!.clientX;
-        prevMouseY = e.touches[0]!.clientY;
-      }
-    };
-    const onTouchMove = (e: TouchEvent) => {
-      if (!isDragging || e.touches.length !== 1) return;
-      const deltaX = e.touches[0]!.clientX - prevMouseX;
-      const deltaY = e.touches[0]!.clientY - prevMouseY;
-      prevMouseX = e.touches[0]!.clientX;
-      prevMouseY = e.touches[0]!.clientY;
-      targetRotationY += deltaX * 0.006;
-      targetRotationX = Math.max(-0.2, Math.min(0.6, targetRotationX + deltaY * 0.005));
-    };
-    const onTouchEnd = () => {
-      isDragging = false;
-    };
-    domElement.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('touchend', onTouchEnd);
 
     // Animation Loop
     let animationFrameId: number;
@@ -398,7 +363,6 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
       animationFrameId = requestAnimationFrame(animate);
       const elapsed = clock.getElapsedTime();
 
-      // Smooth camera interpolation
       currentRotationY += (targetRotationY - currentRotationY) * 0.08;
       currentRotationX += (targetRotationX - currentRotationX) * 0.08;
 
@@ -408,26 +372,19 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
       camera.position.y = 2.2 + Math.sin(currentRotationX) * 2.0;
       camera.lookAt(0, 0.65, 0);
 
-      // Pet breathing & floating physics
       if (petGroupRef.current) {
-        // Floating sinusoidal levitation
         petGroupRef.current.position.y = 0.52 + Math.sin(elapsed * 1.8) * 0.04;
         petGroupRef.current.rotation.y = Math.sin(elapsed * 0.6) * 0.15;
       }
-
-      // Tail swish
       if (tailRef.current) {
         tailRef.current.rotation.y = Math.sin(elapsed * 2.4) * 0.28;
         tailRef.current.rotation.z = Math.cos(elapsed * 1.6) * 0.14;
       }
-
-      // Ear twitch
       if (earLRef.current && earRRef.current) {
         earLRef.current.rotation.z = 0.25 + Math.sin(elapsed * 3.5) * 0.05;
         earRRef.current.rotation.z = -0.25 - Math.sin(elapsed * 3.5) * 0.05;
       }
 
-      // Particle circulation inside dome
       if (particlesRef.current) {
         const posAttr = particlesRef.current.geometry.attributes.position;
         if (posAttr) {
@@ -436,8 +393,6 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
             arr[i * 3] += velocities[i * 3]!;
             arr[i * 3 + 1] += velocities[i * 3 + 1]!;
             arr[i * 3 + 2] += velocities[i * 3 + 2]!;
-
-            // Clamp inside dome radius
             const dist = Math.sqrt(arr[i * 3]! ** 2 + arr[i * 3 + 2]! ** 2);
             if (dist > 1.35 || arr[i * 3 + 1]! > 1.38 || arr[i * 3 + 1]! < 0.08) {
               arr[i * 3] = (Math.random() - 0.5) * 1.2;
@@ -449,17 +404,14 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
         }
       }
 
-      // Streamline rotation
       if (streamLinesRef.current) {
         streamLinesRef.current.rotation.y = elapsed * 0.7;
       }
 
       renderer.render(scene, camera);
     };
-
     animate();
 
-    // Resize handler
     const handleResize = () => {
       if (!container || !renderer || !camera) return;
       const w = container.clientWidth;
@@ -476,9 +428,6 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
       domElement.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
-      domElement.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('touchend', onTouchEnd);
       if (renderer.domElement.parentNode) {
         renderer.domElement.parentNode.removeChild(renderer.domElement);
       }
@@ -486,45 +435,36 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
     };
   }, []);
 
-  // Update dynamic atmospheric shaders and pet visual state based on indoor PM2.5 & airflow
+  // Update dynamic atmospheric shaders based on indoor PM2.5
   useEffect(() => {
-    // 1. Particle density and color
     if (particlesRef.current) {
       const mat = particlesRef.current.material as THREE.PointsMaterial;
       if (indoorPm25 < 15) {
-        // Clean air
         mat.opacity = 0.06;
-        mat.color.setHex(0x38bdf8);
+        mat.color.setHex(0x533afd); // Electric Indigo
       } else if (indoorPm25 < 60) {
-        // Moderate
         mat.opacity = 0.28;
-        mat.color.setHex(0xfbbf24);
+        mat.color.setHex(0x9b6829); // Sherbet Lemon/Amber
       } else {
-        // Severe smog
         mat.opacity = Math.min(0.85, 0.35 + (indoorPm25 / 300) * 0.5);
-        mat.color.setHex(0x94a3b8);
+        mat.color.setHex(0x64748d); // Ink Mute
       }
     }
 
-    // 2. Dome glass haze tint
     if (domeMeshRef.current) {
       const domeMat = domeMeshRef.current.material as THREE.MeshPhysicalMaterial;
       if (indoorPm25 < 15) {
         domeMat.color.setHex(0xffffff);
         domeMat.transmission = 0.92;
-        domeMat.roughness = 0.05;
       } else if (indoorPm25 < 60) {
-        domeMat.color.setHex(0xfef3c7);
+        domeMat.color.setHex(0xf5e9d4); // Canvas Cream
         domeMat.transmission = 0.85;
-        domeMat.roughness = 0.12;
       } else {
         domeMat.color.setHex(0xd1d5db);
         domeMat.transmission = 0.65;
-        domeMat.roughness = 0.28;
       }
     }
 
-    // 3. Pet N95 mask state
     if (n95MaskMeshRef.current) {
       const maskMat = n95MaskMeshRef.current.material as THREE.MeshPhysicalMaterial;
       if (indoorPm25 > 90) {
@@ -534,140 +474,142 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
       }
     }
 
-    // 4. Pet heart bloom light
     if (bloomLightRef.current) {
       if (indoorPm25 < 15) {
-        bloomLightRef.current.color.setHex(0x38bdf8); // Cyan pure
+        bloomLightRef.current.color.setHex(0x533afd); // Electric Indigo
         bloomLightRef.current.intensity = 2.4;
       } else if (indoorPm25 < 60) {
-        bloomLightRef.current.color.setHex(0xfbbf24); // Warm amber
+        bloomLightRef.current.color.setHex(0x9b6829); // Lemon
         bloomLightRef.current.intensity = 1.8;
       } else {
-        bloomLightRef.current.color.setHex(0xf87171); // Alert rose
-        bloomLightRef.current.intensity = 1.2;
+        bloomLightRef.current.color.setHex(0xea2261); // Ruby
+        bloomLightRef.current.intensity = 1.4;
       }
     }
 
-    // 5. Airflow scrubbing streamline visibility
     if (streamLinesRef.current) {
       streamLinesRef.current.children.forEach((child) => {
         const mesh = child as THREE.Mesh;
         const lineMat = mesh.material as THREE.MeshBasicMaterial;
-        lineMat.opacity = isScrubbingAirflow ? 0.65 : 0.0;
+        lineMat.opacity = isScrubbingAirflow ? 0.75 : 0.0;
       });
     }
   }, [indoorPm25, isScrubbingAirflow]);
 
-  // Status metrics
-  const getAirQualityLabel = (pm: number) => {
-    if (pm < 15) return { label: 'Pristine Air', color: 'text-emerald-400' };
-    if (pm < 35) return { label: 'Good', color: 'text-emerald-300' };
-    if (pm < 75) return { label: 'Moderate Haze', color: 'text-amber-300' };
-    if (pm < 150) return { label: 'Unhealthy Smog', color: 'text-orange-400' };
-    return { label: 'Hazardous Inversion', color: 'text-rose-400' };
-  };
-
-  const indoorStatus = getAirQualityLabel(indoorPm25);
-
   return (
-    <div className="relative w-full h-[620px] rounded-3xl overflow-hidden apple-glass-card">
-      {/* 3D WebGL Canvas Mount */}
-      <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
-
-      {/* Top Floating Telemetry Bar (Minimalist Apple precision style) */}
-      <div className="absolute top-6 left-6 right-6 flex items-center justify-between pointer-events-none">
-        <div className="pointer-events-auto flex items-center gap-4">
-          <div className="apple-glass px-4 py-2.5 rounded-2xl flex items-center gap-3 shadow-lg">
-            <div className={`w-2 h-2 rounded-full ${indoorPm25 < 25 ? 'bg-emerald-400 animate-pulse' : indoorPm25 < 100 ? 'bg-amber-400' : 'bg-rose-500 animate-ping'}`} />
-            <div>
-              <p className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Indoor Atmospheric Twin</p>
-              <div className="flex items-baseline gap-2">
-                <span className="text-xl font-semibold tracking-tight text-white">{Math.round(indoorPm25)}</span>
-                <span className="text-xs text-neutral-400">µg/m³ PM₂.₅</span>
-                <span className={`text-xs font-medium ml-1 ${indoorStatus.color}`}>{indoorStatus.label}</span>
-              </div>
-            </div>
+    <div className="w-full card-dashboard-chrome overflow-hidden">
+      {/* Stripe Dark-App Faux IDE / Window Header Bar */}
+      <div className="h-11 px-4 border-b border-white/10 flex items-center justify-between bg-[#141642]">
+        <div className="flex items-center gap-3">
+          {/* Faux Window Controls: Ruby, Lemon, Emerald */}
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-[#ea2261]" />
+            <div className="w-3 h-3 rounded-full bg-[#9b6829]" />
+            <div className="w-3 h-3 rounded-full bg-[#34d399]" />
           </div>
-
-          <div className="apple-glass px-3.5 py-2.5 rounded-2xl hidden md:flex flex-col justify-center">
-            <p className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Outdoor Dispersion</p>
-            <p className="text-sm font-medium text-neutral-300">{Math.round(outdoorPm25)} µg/m³ Ambient</p>
-          </div>
+          <span className="text-white/40 text-xs font-mono">|</span>
+          <span className="text-white/80 font-tabular text-xs font-normal">
+            zerobon-core://terrarium.wasm.rs
+          </span>
         </div>
 
-        {/* View Mode Controls */}
-        <div className="pointer-events-auto flex items-center gap-2">
+        {/* Tabular Telemetry Header Pills */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10">
+            <span className={`w-1.5 h-1.5 rounded-full ${indoorPm25 < 25 ? 'bg-[#34d399]' : indoorPm25 < 100 ? 'bg-[#9b6829]' : 'bg-[#ea2261] animate-ping'}`} />
+            <span className="font-tabular text-xs text-white/90">
+              Indoor: <strong className="text-white font-medium">{Math.round(indoorPm25)} µg/m³</strong>
+            </span>
+          </div>
+
           <button
             onClick={onOpenReceipt}
-            className="apple-glass px-4 py-2 rounded-2xl text-xs font-medium text-white hover:bg-white/10 transition-all active:scale-95 shadow-md flex items-center gap-2"
+            className="text-xs font-light text-[#b9b9f9] hover:text-white transition-colors"
           >
-            <span>Breath Receipt</span>
+            Deterministic Receipt →
           </button>
         </div>
       </div>
 
-      {/* Live Bio-Indicator Habit Loops & Sandbox Controls (Apple-style frosted dock) */}
-      <div className="absolute bottom-6 left-6 right-6 pointer-events-none flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Bio-Indicator Status Banner */}
-        <div className="pointer-events-auto apple-glass px-4 py-3 rounded-2xl max-w-sm">
-          <p className="text-[11px] font-semibold text-white flex items-center gap-2">
-            <span>Atmospheric Familiar: Lumi</span>
-            {indoorPm25 > 90 && <span className="text-[10px] text-rose-300 px-1.5 py-0.5 rounded bg-rose-500/20">N95 Shield Deployed</span>}
-          </p>
-          <p className="text-xs text-neutral-400 mt-0.5 leading-relaxed">
+      {/* 3D Viewport with Overlay Controls */}
+      <div className="relative w-full h-[520px]">
+        <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+
+        {/* Floating Bio-Indicator Telemetry Card (Deep navy composite) */}
+        <div className="absolute top-4 left-4 p-4 rounded-xl bg-[#1c1e54]/90 backdrop-blur-md border border-white/10 max-w-xs pointer-events-auto shadow-xl">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs text-white font-normal">Atmospheric Familiar: Lumi</span>
+            {indoorPm25 > 90 && (
+              <span className="text-[10px] text-[#ea2261] px-1.5 py-0.5 rounded bg-[#ea2261]/20 font-mono">
+                N95 Deployed
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-white/70 font-light leading-relaxed">
             {indoorPm25 < 15
-              ? 'Lumi is relaxed and breathing pure air. Habit streak: 6 Clean Air Dewdrops.'
+              ? 'Pristine indoor boundary layer. Tail crystal humming at 1.8 Hz.'
               : indoorPm25 < 60
-              ? 'Moderate particulate detected. Lumi nudges window indicator for scheduled clean air airing.'
-              : 'Dense winter smog penetrated the envelope. Lumi has donned an N95 shield. Activate IAQ hacks to scrub.'}
+              ? 'Moderate penetration. Habit loop prompt: schedule midday airing.'
+              : 'Severe winter smog infiltration. N95 shield active; engage Corsi-Rosenthal unit.'}
           </p>
         </div>
 
-        {/* Interactive 3D IAQ Hack Switchboard */}
-        <div className="pointer-events-auto apple-glass px-3 py-2 rounded-2xl flex flex-wrap items-center gap-2">
-          <button
-            onClick={() => onTriggerHackToggle('corsiRosenthal')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-              activeHacks.corsiRosenthal
-                ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30'
-                : 'text-neutral-300 hover:bg-white/10'
-            }`}
-          >
-            DIY Corsi-Rosenthal (+350 CADR)
-          </button>
+        {/* Interactive IAQ Switchboard (Pill-shaped buttons inside dark shell) */}
+        <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
+          <div className="pointer-events-auto flex flex-wrap gap-2">
+            <button
+              onClick={() => onTriggerHackToggle('corsiRosenthal')}
+              className={`text-xs px-3.5 py-1.5 rounded-full transition-all ${
+                activeHacks.corsiRosenthal
+                  ? 'bg-[#533afd] text-white shadow-md shadow-[#533afd]/40'
+                  : 'bg-white/10 text-white/80 hover:bg-white/20'
+              }`}
+            >
+              Corsi-Rosenthal Box (+350 CADR)
+            </button>
 
-          <button
-            onClick={() => onTriggerHackToggle('kitchenExhaust')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-              activeHacks.kitchenExhaust
-                ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30'
-                : 'text-neutral-300 hover:bg-white/10'
-            }`}
-          >
-            Kitchen Exhaust Purge
-          </button>
+            <button
+              onClick={() => onTriggerHackToggle('kitchenExhaust')}
+              className={`text-xs px-3.5 py-1.5 rounded-full transition-all ${
+                activeHacks.kitchenExhaust
+                  ? 'bg-[#533afd] text-white shadow-md shadow-[#533afd]/40'
+                  : 'bg-white/10 text-white/80 hover:bg-white/20'
+              }`}
+            >
+              Kitchen Exhaust Purge
+            </button>
 
-          <button
-            onClick={() => onTriggerHackToggle('draftSealing')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-              activeHacks.draftSealing
-                ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30'
-                : 'text-neutral-300 hover:bg-white/10'
-            }`}
-          >
-            Draft Sash Seal (P: 0.40)
-          </button>
+            <button
+              onClick={() => onTriggerHackToggle('draftSealing')}
+              className={`text-xs px-3.5 py-1.5 rounded-full transition-all ${
+                activeHacks.draftSealing
+                  ? 'bg-[#533afd] text-white shadow-md shadow-[#533afd]/40'
+                  : 'bg-white/10 text-white/80 hover:bg-white/20'
+              }`}
+            >
+              Draft Sash Seal (P: 0.38)
+            </button>
 
-          <button
-            onClick={() => onTriggerHackToggle('windowOpen')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-              activeHacks.windowOpen
-                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
-                : 'text-neutral-300 hover:bg-white/10'
-            }`}
-          >
-            {activeHacks.windowOpen ? 'Window Airing (Open)' : 'Window (Closed)'}
-          </button>
+            <button
+              onClick={() => onTriggerHackToggle('windowOpen')}
+              className={`text-xs px-3.5 py-1.5 rounded-full transition-all ${
+                activeHacks.windowOpen
+                  ? 'bg-[#34d399] text-[#0d253d] font-medium shadow-md shadow-[#34d399]/40'
+                  : 'bg-white/10 text-white/80 hover:bg-white/20'
+              }`}
+            >
+              {activeHacks.windowOpen ? 'Window Airing Active' : 'Window Closed'}
+            </button>
+          </div>
+
+          <div className="pointer-events-auto">
+            <button
+              onClick={onOpenReceipt}
+              className="button-primary-pill"
+            >
+              Generate Breath Receipt
+            </button>
+          </div>
         </div>
       </div>
     </div>

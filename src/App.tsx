@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
+import { GradientMesh } from './components/GradientMesh';
 import { AtmosphericTerrarium } from './components/AtmosphericTerrarium';
 import { H3CommunityBiome } from './components/H3CommunityBiome';
 import { InversionRadar } from './components/InversionRadar';
@@ -16,7 +17,7 @@ export const App: React.FC = () => {
   const [selectedTenant, setSelectedTenant] = useState<TenantConfig>(DEMO_TENANTS[0]!);
 
   // Ambient & Indoor Physics State
-  const [outdoorPm25, setOutdoorPm25] = useState(245); // High winter smog
+  const [outdoorPm25, setOutdoorPm25] = useState(245);
   const [indoorPm25, setIndoorPm25] = useState(135);
 
   // Active IAQ Hacks
@@ -30,11 +31,10 @@ export const App: React.FC = () => {
   // Breath receipt modal state
   const [activeReceipt, setActiveReceipt] = useState<BreathReceipt | null>(null);
 
-  // Real-time Physics Differential Loop (Continuous analytical step forward)
+  // Real-time Physics Differential Loop
   useEffect(() => {
     const interval = setInterval(() => {
       setIndoorPm25((prevCin) => {
-        // Adjust physics parameters according to active user hacks
         const currentParams: MassBalanceParams = {
           ...DEFAULT_PHYSICS_PARAMS,
           p_penetration: activeHacks.draftSealing ? 0.38 : 0.82,
@@ -42,8 +42,6 @@ export const App: React.FC = () => {
           q_cadr: activeHacks.corsiRosenthal ? 360.0 : 0.0,
         };
 
-        // If window is open during severe smog, high outdoor infiltration enters.
-        // If window is open during midday clean air window (outdoorPm25 < 75), it purges!
         const step = stepAnalytical(prevCin, outdoorPm25, 0.04, currentParams);
         return Math.round(step.cin * 10) / 10;
       });
@@ -52,14 +50,12 @@ export const App: React.FC = () => {
     return () => clearInterval(interval);
   }, [outdoorPm25, activeHacks]);
 
-  // Handle toggling hacks & generating deterministic receipt
   const handleToggleHack = (key: 'corsiRosenthal' | 'kitchenExhaust' | 'draftSealing' | 'windowOpen') => {
     setActiveHacks((prev) => {
       const nextVal = !prev[key];
       const nextHacks = { ...prev, [key]: nextVal };
 
       if (nextVal) {
-        // Generate counterfactual receipt
         const titleMap = {
           corsiRosenthal: 'Corsi-Rosenthal Box Air Cleanser (+350 CADR)',
           kitchenExhaust: 'Kitchen Range Hood High Exhaust Purge',
@@ -114,8 +110,11 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050507] text-[#f5f5f7] flex flex-col font-sans selection:bg-sky-500/20">
-      {/* Precision Apple-Style Top Navigation */}
+    <div className="relative min-h-screen bg-white text-[#0d253d] flex flex-col font-sans selection:bg-[#533afd]/20 selection:text-[#533afd]">
+      {/* Stripe Signature Atmospheric Gradient Mesh Upper Third */}
+      <GradientMesh />
+
+      {/* Floating Top Navigation */}
       <Navbar
         activeTab={activeTab}
         onSelectTab={setActiveTab}
@@ -124,30 +123,52 @@ export const App: React.FC = () => {
         outdoorPm25={outdoorPm25}
       />
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex flex-col gap-10">
-        {/* Apple Product Showcase Header (Bold Typography, No eyebrow tags, No cluttered icons) */}
-        <div className="text-center max-w-3xl mx-auto space-y-4 pt-2">
-          <p className="apple-tag">Zerobon 4.0 • Atmospheric Physics & Digital Pet</p>
-          <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-white font-sans">
-            Clean air, made tangible.
+      {/* Hero Section floating above the Gradient Mesh */}
+      <section className="relative z-10 max-w-[1200px] w-full mx-auto px-4 sm:px-6 pt-12 pb-14 text-left">
+        <div className="max-w-3xl">
+          {/* Subdued Tag Pill */}
+          <span className="pill-tag-soft mb-4 inline-block">
+            Atmospheric Infrastructure for Clean Air
+          </span>
+
+          {/* Söhne Thin Display Headline (-1.4px letter-spacing at 56px, weight 300) */}
+          <h1 className="font-display-xxl text-[#0d253d] mb-4">
+            Financial-grade precision for the air you breathe.
           </h1>
-          <p className="text-base sm:text-lg text-neutral-400 font-normal leading-relaxed max-w-2xl mx-auto">
-            A physics-informed indoor mass-balance engine bound to an atmospheric familiar that breathes with your home. 100% full-stack on Cloudflare edge.
+
+          <p className="font-body-lg text-[#273951] max-w-2xl leading-relaxed mb-6">
+            A physics-informed indoor mass-balance engine bound to a living 3D atmospheric familiar. Deterministic breath-cost receipts, multi-tenant isolation, and zero-trust LLM security on Cloudflare edge.
           </p>
+
+          {/* Single-Voltage CTA: Electric Indigo Pill + Secondary Pill */}
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={() => setActiveTab('terrarium')}
+              className="button-primary-pill"
+            >
+              <span>Explore 3D Terrarium</span>
+              <span>→</span>
+            </button>
+
+            <button
+              onClick={handleManualReceipt}
+              className="button-secondary-pill"
+            >
+              <span>View Deterministic Receipt</span>
+            </button>
+          </div>
         </div>
 
-        {/* Ambient Simulation Scrubber (Precision Apple slider) */}
-        <div className="max-w-xl w-full mx-auto apple-glass px-6 py-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-left w-full sm:w-auto">
-            <p className="text-[10px] uppercase tracking-wider text-neutral-400 font-medium">Ambient Winter Smog Control</p>
-            <p className="text-xs text-neutral-300 font-medium mt-0.5">
-              Outdoor PM₂.₅: <strong className="text-white">{outdoorPm25} µg/m³</strong>
-            </p>
+        {/* Ambient Winter Smog Scrubber Control (Card Feature Light) */}
+        <div className="mt-10 max-w-md card-feature-light p-4 bg-white/90 backdrop-blur-md">
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-micro-cap text-[#64748d]">Simulate Ambient Smog Event</span>
+            <span className="font-tabular text-xs text-[#0d253d] font-medium">
+              {outdoorPm25} µg/m³ PM₂.₅
+            </span>
           </div>
-
-          <div className="w-full sm:w-56 flex items-center gap-3">
-            <span className="text-[10px] text-neutral-500">15</span>
+          <div className="flex items-center gap-3">
+            <span className="font-tabular text-xs text-[#64748d]">15</span>
             <input
               type="range"
               min={15}
@@ -156,13 +177,17 @@ export const App: React.FC = () => {
               onChange={(e) => setOutdoorPm25(Number(e.target.value))}
               className="w-full"
             />
-            <span className="text-[10px] text-neutral-500">380</span>
+            <span className="font-tabular text-xs text-[#64748d]">380</span>
           </div>
         </div>
+      </section>
 
-        {/* Tab Content Display */}
+      {/* Main Content Surface */}
+      <main className="relative z-10 flex-1 max-w-[1200px] w-full mx-auto px-4 sm:px-6 pb-20 flex flex-col gap-12">
+        {/* Active Tab Subsystem */}
         {activeTab === 'terrarium' && (
           <div className="space-y-8 animate-fadeIn">
+            {/* Dark-App Dashboard Track Composited Above Canvas */}
             <AtmosphericTerrarium
               indoorPm25={indoorPm25}
               outdoorPm25={outdoorPm25}
@@ -171,31 +196,32 @@ export const App: React.FC = () => {
               onOpenReceipt={handleManualReceipt}
             />
 
-            {/* Differential Equation Explainer Card (Apple Precision Design) */}
+            {/* 3 Stripe Feature Cards (White + Cream Band + Light) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="apple-glass p-6 rounded-3xl space-y-2">
-                <p className="apple-tag">Mass-Balance Solver</p>
-                <h4 className="text-base font-semibold text-white">Client-Side WASM Engine</h4>
-                <p className="text-xs text-neutral-400 leading-relaxed font-mono text-[11px]">
+              <div className="card-feature-light p-6">
+                <span className="font-micro-cap text-[#533afd]">Rust / WASM Engine</span>
+                <h4 className="font-heading-md text-[#0d253d] mt-1 mb-2">Mass-Balance Solver</h4>
+                <p className="font-tabular text-xs text-[#533afd] font-mono mb-2">
                   dCin/dt = P·λ·Cout − (λ + kd + CADR/V)·Cin + Eindoor/V
                 </p>
-                <p className="text-xs text-neutral-400 leading-relaxed">
-                  Calculates real-time particle infiltration without requiring proprietary indoor hardware sensors.
+                <p className="font-body-md text-xs text-[#64748d] leading-relaxed">
+                  Computes real-time indoor fine particulate infiltration analytically without requiring proprietary hardware sensors.
                 </p>
               </div>
 
-              <div className="apple-glass p-6 rounded-3xl space-y-2">
-                <p className="apple-tag">Bio-Indicator State</p>
-                <h4 className="text-base font-semibold text-white">Lumi the Cloud Fox</h4>
-                <p className="text-xs text-neutral-400 leading-relaxed">
-                  Dynamically shifts from playful blooming idle (Cin &lt; 15), to amber scarf alertness (35–100), to deploying an N95 protective shield (&gt; 150 µg/m³).
+              {/* Warm Cream Band Card (Stripe Chromatic Interlude #f5e9d4) */}
+              <div className="card-cream-band p-6">
+                <span className="font-micro-cap text-[#9b6829]">Living Bio-Indicator</span>
+                <h4 className="font-heading-md text-[#0d253d] mt-1 mb-2">Lumi the Cloud Fox</h4>
+                <p className="font-body-md text-xs text-[#0d253d]/80 leading-relaxed">
+                  Transforms particulate physics into emotional habit loops. Shifts from relaxed blooming idle (Cin &lt; 15) to deploying an N95 respirator mask (&gt; 150 µg/m³).
                 </p>
               </div>
 
-              <div className="apple-glass p-6 rounded-3xl space-y-2">
-                <p className="apple-tag">Deterministic Receipts</p>
-                <h4 className="text-base font-semibold text-white">Breath-Cost Accounting</h4>
-                <p className="text-xs text-neutral-400 leading-relaxed">
+              <div className="card-feature-light p-6">
+                <span className="font-micro-cap text-[#533afd]">Deterministic Impact</span>
+                <h4 className="font-heading-md text-[#0d253d] mt-1 mb-2">Breath-Cost Accounting</h4>
+                <p className="font-body-md text-xs text-[#64748d] leading-relaxed">
                   Converts avoided microgram PM2.5 lung doses directly into cigarette equivalents saved and verified IPCC CO2e emission reductions.
                 </p>
               </div>
@@ -234,11 +260,17 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* Apple-grade Minimalist Footer */}
-      <footer className="w-full border-t border-white/[0.06] py-8 text-center text-xs text-neutral-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>Zerobon Version 4.0 — 100% Cloudflare Free Tier + Rust/WASM + Three.js</p>
-          <p className="font-mono text-[11px] text-neutral-400">Zero-Trust LLM Pipeline • Sub-5ms Edge CPU • H3 Resolution-7 Mesh</p>
+      {/* Stripe Site-Wide Footer (footer-light) */}
+      <footer className="w-full bg-[#f6f9fc] border-t border-[#e3e8ee] py-12 text-[#64748d] text-xs font-light">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-4 h-4 rounded-full bg-[#533afd]" />
+            <span className="text-[#0d253d] font-normal font-sans">Zerobon 4.0</span>
+            <span>• Stripe Inspired Atmospheric Architecture</span>
+          </div>
+          <div className="font-tabular text-[12px] text-[#64748d]">
+            100% Cloudflare Free Tier • Rust/WASM Mass-Balance • Sub-5ms Edge CPU
+          </div>
         </div>
       </footer>
 

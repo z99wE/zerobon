@@ -2,77 +2,282 @@
 
 @layer base {
   :root {
-    --bg-deep: #050507;
-    --bg-card: rgba(18, 18, 24, 0.72);
-    --border-hairline: rgba(255, 255, 255, 0.08);
-    --border-hover: rgba(255, 255, 255, 0.16);
-    --text-primary: #f5f5f7;
-    --text-secondary: #86868b;
-    --accent-sky: #38bdf8;
-    --accent-emerald: #34d399;
-    --accent-amber: #fbbf24;
-    --accent-rose: #f87171;
+    --color-primary: #533afd;
+    --color-primary-deep: #4434d4;
+    --color-primary-press: #2e2b8c;
+    --color-primary-soft: #665efd;
+    --color-primary-bg-subdued-hover: #b9b9f9;
+    --color-brand-dark-900: #1c1e54;
+    --color-ink: #0d253d;
+    --color-ink-secondary: #273951;
+    --color-ink-mute: #64748d;
+    --color-ink-mute-2: #61718a;
+    --color-on-primary: #ffffff;
+    --color-canvas: #ffffff;
+    --color-canvas-soft: #f6f9fc;
+    --color-canvas-cream: #f5e9d4;
+    --color-hairline: #e3e8ee;
+    --color-hairline-input: #a8c3de;
+    --color-ruby: #ea2261;
+    --color-magenta: #f96bee;
+    --color-lemon: #9b6829;
+    --color-shadow-blue: #003770;
   }
 
   body {
-    background-color: var(--bg-deep);
-    color: var(--text-primary);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", sans-serif;
-    letter-spacing: -0.012em;
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: -apple-system, BlinkMacSystemFont, "sohne-var", "SF Pro Display", "Inter", system-ui, sans-serif;
+    font-feature-settings: "ss01";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* Apple-style frosted glass panel */
-.apple-glass {
-  background: rgba(16, 16, 22, 0.72);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* Stripe Söhne / Inter Thin Display Tier */
+.font-display-xxl {
+  font-size: 56px;
+  font-weight: 300;
+  line-height: 1.03;
+  letter-spacing: -1.4px;
+  font-feature-settings: "ss01";
 }
 
-.apple-glass-subtle {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+.font-display-xl {
+  font-size: 48px;
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.96px;
+  font-feature-settings: "ss01";
 }
 
-.apple-glass-card {
-  background: linear-gradient(145deg, rgba(24, 24, 32, 0.75) 0%, rgba(12, 12, 16, 0.85) 100%);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+.font-display-lg {
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.64px;
+  font-feature-settings: "ss01";
 }
 
-/* Precision Apple typography styling */
-.text-apple-title {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
-  letter-spacing: -0.035em;
-  font-weight: 600;
+.font-display-md {
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1.12;
+  letter-spacing: -0.26px;
+  font-feature-settings: "ss01";
 }
 
-.text-apple-sub {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
-  letter-spacing: -0.01em;
-  color: #86868b;
+.font-heading-lg {
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.22px;
+  font-feature-settings: "ss01";
 }
 
-.apple-tag {
-  letter-spacing: 0.14em;
+.font-heading-md {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.4;
+  letter-spacing: -0.2px;
+  font-feature-settings: "ss01";
+}
+
+.font-heading-sm {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.4;
+  letter-spacing: 0;
+  font-feature-settings: "ss01";
+}
+
+.font-body-lg {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.4;
+  letter-spacing: 0;
+  font-feature-settings: "ss01";
+}
+
+.font-body-md {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.4;
+  letter-spacing: 0;
+  font-feature-settings: "ss01";
+}
+
+/* Tabular figures for money, metrics, and data */
+.font-tabular {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.4;
+  letter-spacing: -0.42px;
+  font-feature-settings: "tnum", "ss01";
+}
+
+.font-caption {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.39px;
+  font-feature-settings: "tnum", "ss01";
+}
+
+.font-micro-cap {
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.1px;
   text-transform: uppercase;
-  font-size: 11px;
-  font-weight: 500;
-  color: #86868b;
+  font-feature-settings: "ss01";
 }
 
-/* Minimalist precision sliders */
+/* Single-voltage CTA: Electric Indigo Pill */
+.button-primary-pill {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: 0;
+  border-radius: 9999px;
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0, 55, 112, 0.12);
+}
+
+.button-primary-pill:hover {
+  background-color: var(--color-primary-soft);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(83, 58, 253, 0.25);
+}
+
+.button-primary-pill:active {
+  background-color: var(--color-primary-press);
+  transform: translateY(0);
+}
+
+/* Secondary Button Pill */
+.button-secondary-pill {
+  background-color: var(--color-canvas);
+  color: var(--color-primary);
+  border: 1px solid var(--color-hairline);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: 0;
+  border-radius: 9999px;
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 55, 112, 0.05);
+}
+
+.button-secondary-pill:hover {
+  border-color: var(--color-primary-bg-subdued-hover);
+  color: var(--color-primary-deep);
+  background-color: var(--color-canvas-soft);
+}
+
+/* Dark Button Pill */
+.button-on-dark-pill {
+  background-color: var(--color-brand-dark-900);
+  color: var(--color-on-primary);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: 0;
+  border-radius: 9999px;
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.button-on-dark-pill:hover {
+  background-color: #272a6b;
+}
+
+/* Cards & Surfaces */
+.card-feature-light {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  border-radius: 12px;
+  border: 1px solid var(--color-hairline);
+  box-shadow: 0 1px 3px rgba(0, 55, 112, 0.08);
+}
+
+.card-pricing-featured {
+  background-color: var(--color-brand-dark-900);
+  color: var(--color-on-primary);
+  border-radius: 12px;
+  box-shadow: 0 16px 36px rgba(0, 55, 112, 0.16);
+}
+
+.card-cream-band {
+  background-color: var(--color-canvas-cream);
+  color: var(--color-ink);
+  border-radius: 12px;
+  border: 1px solid rgba(155, 104, 41, 0.15);
+}
+
+/* Dark-App Dashboard Mockup Shell */
+.card-dashboard-chrome {
+  background-color: var(--color-brand-dark-900);
+  color: var(--color-on-primary);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 48px -12px rgba(0, 55, 112, 0.35), 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Subdued tag pill */
+.pill-tag-soft {
+  background-color: var(--color-primary-bg-subdued-hover);
+  color: var(--color-primary-deep);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  padding: 4px 8px;
+}
+
+/* Atmospheric Gradient Mesh Backdrop */
+.stripe-mesh-gradient {
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140vw;
+  max-width: 1600px;
+  height: 620px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.95;
+  background:
+    radial-gradient(circle at 18% 28%, #f5e9d4 0%, rgba(245, 233, 212, 0) 45%),
+    radial-gradient(circle at 75% 20%, #f96bee 0%, rgba(249, 107, 238, 0) 50%),
+    radial-gradient(circle at 50% 32%, #533afd 0%, rgba(83, 58, 253, 0) 55%),
+    radial-gradient(circle at 85% 42%, #ea2261 0%, rgba(234, 34, 97, 0) 45%),
+    radial-gradient(circle at 35% 45%, #b9b9f9 0%, rgba(185, 185, 249, 0) 50%),
+    radial-gradient(circle at 60% 12%, #9b6829 0%, rgba(155, 104, 41, 0) 38%);
+  filter: blur(55px);
+}
+
+/* Range input styled with Stripe precision */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
-  background: rgba(255, 255, 255, 0.1);
+  background: #e3e8ee;
   height: 4px;
   border-radius: 9999px;
   outline: none;
@@ -85,31 +290,13 @@ input[type="range"]::-webkit-slider-thumb {
   height: 16px;
   border-radius: 50%;
   background: #ffffff;
+  border: 1px solid #533afd;
   cursor: pointer;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 3px rgba(0, 55, 112, 0.2);
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
   transform: scale(1.15);
-  background: #38bdf8;
-}
-
-/* Clean scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #533afd;
 }
