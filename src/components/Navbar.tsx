@@ -56,7 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Center Primary Nav (Thin Söhne / Inter 300) */}
-        <nav className="hidden lg:flex items-center gap-5">
+        <nav className="hidden lg:flex items-center gap-5" aria-label="Main Navigation">
           {(
             [
               { id: 'terrarium', label: '3D Terrarium' },
@@ -71,9 +71,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               key={item.id}
               onClick={() => onSelectTab(item.id)}
-              className={`text-sm transition-colors ${
+              aria-current={activeTab === item.id ? 'page' : undefined}
+              className={`text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-[#533afd] rounded-md px-1.5 py-0.5 ${
                 activeTab === item.id
-                  ? 'text-[#533afd] font-normal border-b-2 border-[#533afd] pb-1'
+                  ? 'text-[#533afd] font-medium border-b-2 border-[#533afd] pb-1'
                   : 'text-[#273951] hover:text-[#0d253d] font-light'
               }`}
             >

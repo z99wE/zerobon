@@ -51,7 +51,6 @@ export const OpticalHazeEstimator: React.FC<OpticalHazeEstimatorProps> = ({ onAp
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <span className="pill-tag-soft">Zero-Hardware Optical Estimator</span>
           <h3 className="font-heading-lg text-[#0d253d] mt-1">
             Sky Turbidity & Rayleigh Scattering Pipeline
           </h3>
@@ -79,27 +78,33 @@ export const OpticalHazeEstimator: React.FC<OpticalHazeEstimatorProps> = ({ onAp
           </div>
 
           {/* Sample Switcher Pills */}
-          <div className="absolute bottom-3 left-3 right-3 flex items-center justify-center gap-2">
+          <div className="absolute bottom-3 left-3 right-3 flex items-center justify-center gap-2" role="group" aria-label="Sky sample modes">
             <button
               onClick={() => setSkySample('clean')}
-              className={`px-3 py-1 rounded-full text-xs font-light transition-all ${
-                skySample === 'clean' ? 'bg-[#533afd] text-white' : 'bg-white/80 text-[#0d253d] hover:bg-white'
+              aria-pressed={skySample === 'clean'}
+              aria-label="Select Clean Rayleigh Sky Sample"
+              className={`px-3 py-1 rounded-full text-xs font-light transition-all focus:outline-none focus:ring-2 focus:ring-white ${
+                skySample === 'clean' ? 'bg-[#533afd] text-white shadow-sm' : 'bg-white/80 text-[#0d253d] hover:bg-white'
               }`}
             >
               Rayleigh Sky
             </button>
             <button
               onClick={() => setSkySample('moderate')}
-              className={`px-3 py-1 rounded-full text-xs font-light transition-all ${
-                skySample === 'moderate' ? 'bg-[#533afd] text-white' : 'bg-white/80 text-[#0d253d] hover:bg-white'
+              aria-pressed={skySample === 'moderate'}
+              aria-label="Select Noon Haze Sky Sample"
+              className={`px-3 py-1 rounded-full text-xs font-light transition-all focus:outline-none focus:ring-2 focus:ring-white ${
+                skySample === 'moderate' ? 'bg-[#533afd] text-white shadow-sm' : 'bg-white/80 text-[#0d253d] hover:bg-white'
               }`}
             >
               Noon Haze
             </button>
             <button
               onClick={() => setSkySample('severe')}
-              className={`px-3 py-1 rounded-full text-xs font-light transition-all ${
-                skySample === 'severe' ? 'bg-[#533afd] text-white' : 'bg-white/80 text-[#0d253d] hover:bg-white'
+              aria-pressed={skySample === 'severe'}
+              aria-label="Select Winter Smog Sky Sample"
+              className={`px-3 py-1 rounded-full text-xs font-light transition-all focus:outline-none focus:ring-2 focus:ring-white ${
+                skySample === 'severe' ? 'bg-[#533afd] text-white shadow-sm' : 'bg-white/80 text-[#0d253d] hover:bg-white'
               }`}
             >
               Winter Smog

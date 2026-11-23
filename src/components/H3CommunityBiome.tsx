@@ -213,7 +213,6 @@ export const H3CommunityBiome: React.FC<H3CommunityBiomeProps> = ({ tenantId: _t
             mesh://h3-grid.cell#87283082bffffff
           </span>
         </div>
-        <span className="pill-tag-soft">Uber H3 Res-7 Mesh</span>
       </div>
 
       <div className="relative w-full h-[500px]">

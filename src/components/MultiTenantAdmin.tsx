@@ -20,7 +20,6 @@ export const MultiTenantAdmin: React.FC<MultiTenantAdminProps> = ({ tenant }) =>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <span className="pill-tag-soft">Multi-Tenant Governance</span>
           <h3 className="font-heading-lg text-[#0d253d] mt-1">
             {tenant.name}
           </h3>
@@ -84,37 +83,57 @@ export const MultiTenantAdmin: React.FC<MultiTenantAdminProps> = ({ tenant }) =>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="p-5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee] space-y-3">
             <div className="flex items-center justify-between">
-              <span className="font-heading-sm text-xs text-[#0d253d]">Outdoor Recess / Play Relocation</span>
-              <span className="font-tabular text-xs text-[#ea2261] font-medium">{recessThreshold} µg/m³</span>
+              <label htmlFor="recess-threshold-slider" className="font-heading-sm text-xs text-[#0d253d] cursor-pointer">
+                Outdoor Recess / Play Relocation
+              </label>
+              <span className="font-tabular text-xs text-[#ea2261] font-medium" aria-live="polite">
+                {recessThreshold} µg/m³
+              </span>
             </div>
-            <p className="font-body-md text-xs text-[#64748d] leading-relaxed">
+            <p className="font-body-md text-xs text-[#475569] leading-relaxed">
               When ground sensor PM2.5 crosses this threshold during school hours, the tenant edge worker dispatches automated alerts to relocate activities to indoor HEPA zones.
             </p>
             <input
+              id="recess-threshold-slider"
               type="range"
               min={60}
               max={300}
+              aria-label="Outdoor Recess PM2.5 Threshold"
+              aria-valuemin={60}
+              aria-valuemax={300}
+              aria-valuenow={recessThreshold}
+              aria-valuetext={`${recessThreshold} micrograms per cubic meter`}
               value={recessThreshold}
               onChange={(e) => setRecessThreshold(Number(e.target.value))}
-              className="w-full"
+              className="w-full focus:ring-2 focus:ring-[#533afd] focus:outline-none"
             />
           </div>
 
           <div className="p-5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee] space-y-3">
             <div className="flex items-center justify-between">
-              <span className="font-heading-sm text-xs text-[#0d253d]">WFH & Staggered Commute Trigger</span>
-              <span className="font-tabular text-xs text-[#9b6829] font-medium">{wfhThreshold} µg/m³</span>
+              <label htmlFor="wfh-threshold-slider" className="font-heading-sm text-xs text-[#0d253d] cursor-pointer">
+                WFH & Staggered Commute Trigger
+              </label>
+              <span className="font-tabular text-xs text-[#854d0e] font-medium" aria-live="polite">
+                {wfhThreshold} µg/m³
+              </span>
             </div>
-            <p className="font-body-md text-xs text-[#64748d] leading-relaxed">
+            <p className="font-body-md text-xs text-[#475569] leading-relaxed">
               Notifies campus employees or RWA residents to shift morning commutes away from the 7:00 – 9:00 AM winter inversion boundary trap.
             </p>
             <input
+              id="wfh-threshold-slider"
               type="range"
               min={80}
               max={350}
+              aria-label="WFH and Staggered Commute PM2.5 Alert Threshold"
+              aria-valuemin={80}
+              aria-valuemax={350}
+              aria-valuenow={wfhThreshold}
+              aria-valuetext={`${wfhThreshold} micrograms per cubic meter`}
               value={wfhThreshold}
               onChange={(e) => setWfhThreshold(Number(e.target.value))}
-              className="w-full"
+              className="w-full focus:ring-2 focus:ring-[#533afd] focus:outline-none"
             />
           </div>
         </div>

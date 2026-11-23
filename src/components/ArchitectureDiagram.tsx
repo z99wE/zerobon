@@ -7,7 +7,6 @@ export const ArchitectureDiagram: React.FC = () => {
       <div className="card-dashboard-chrome p-6 sm:p-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5 mb-8">
           <div>
-            <span className="pill-tag-soft">End-to-End System Architecture</span>
             <h3 className="font-heading-lg text-white mt-1">
               High-Contrast Zerobon 4.0 Infrastructure Blueprint
             </h3>

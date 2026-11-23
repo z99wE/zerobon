@@ -21,7 +21,6 @@ export const InversionRadar: React.FC = () => {
       {/* Title & Atmospheric Description */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <span className="pill-tag-soft">Atmospheric Physics Radar</span>
           <h3 className="font-heading-lg text-[#0d253d] mt-1">
             Thermal Inversion & Boundary Layer Dispersion
           </h3>
@@ -61,7 +60,9 @@ export const InversionRadar: React.FC = () => {
               <button
                 key={item.hour}
                 onClick={() => setSelectedHour(item)}
-                className="group relative flex flex-col items-center flex-1 h-full justify-end cursor-pointer focus:outline-none"
+                aria-label={`Select forecast for hour ${item.hour}, PBL ${item.pblHeightMeters} meters, PM2.5 ${item.outdoorPm25} micrograms per cubic meter`}
+                aria-pressed={isSelected}
+                className="group relative flex flex-col items-center flex-1 h-full justify-end cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#533afd] rounded-t"
               >
                 <div
                   style={{ height: `${pblBarHeight}%` }}

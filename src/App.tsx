@@ -121,6 +121,14 @@ export const App: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-white text-[#0d253d] flex flex-col font-sans selection:bg-[#533afd]/20 selection:text-[#533afd]">
+      {/* Skip to Content for Keyboard and Screen Reader Accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[100] px-4 py-2 bg-[#533afd] text-white rounded-full text-xs font-medium shadow-lg outline-none ring-2 ring-white"
+      >
+        Skip to main content
+      </a>
+
       {/* Stripe Signature Atmospheric Gradient Mesh Upper Third */}
       <GradientMesh />
 
@@ -136,11 +144,6 @@ export const App: React.FC = () => {
       {/* Hero Section floating above the Gradient Mesh */}
       <section className="relative z-10 max-w-[1200px] w-full mx-auto px-4 sm:px-6 pt-12 pb-14 text-left">
         <div className="max-w-3xl">
-          {/* Subdued Tag Pill */}
-          <span className="pill-tag-soft mb-4 inline-block">
-            Atmospheric Infrastructure for Clean Air
-          </span>
-
           {/* Söhne Thin Display Headline (-1.4px letter-spacing at 56px, weight 300) */}
           <h1 className="font-display-xxl text-[#0d253d] mb-4">
             Financial-grade precision for the air you breathe.
@@ -172,28 +175,36 @@ export const App: React.FC = () => {
         {/* Ambient Winter Smog Scrubber Control (Card Feature Light) */}
         <div className="mt-10 max-w-md card-feature-light p-4 bg-white/90 backdrop-blur-md">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-micro-cap text-[#64748d]">Simulate Ambient Smog Event</span>
-            <span className="font-tabular text-xs text-[#0d253d] font-medium">
+            <label htmlFor="smog-simulator-slider" className="font-micro-cap text-[#475569] cursor-pointer">
+              Simulate Ambient Smog Event
+            </label>
+            <span className="font-tabular text-xs text-[#0d253d] font-medium" aria-live="polite">
               {outdoorPm25} µg/m³ PM₂.₅
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="font-tabular text-xs text-[#64748d]">15</span>
+            <span className="font-tabular text-xs text-[#475569]">15</span>
             <input
+              id="smog-simulator-slider"
               type="range"
               min={15}
               max={380}
+              aria-label="Simulate Ambient Smog PM2.5 Level"
+              aria-valuemin={15}
+              aria-valuemax={380}
+              aria-valuenow={outdoorPm25}
+              aria-valuetext={`${outdoorPm25} micrograms per cubic meter`}
               value={outdoorPm25}
               onChange={(e) => setOutdoorPm25(Number(e.target.value))}
-              className="w-full"
+              className="w-full focus:ring-2 focus:ring-[#533afd] focus:outline-none"
             />
-            <span className="font-tabular text-xs text-[#64748d]">380</span>
+            <span className="font-tabular text-xs text-[#475569]">380</span>
           </div>
         </div>
       </section>
 
       {/* Main Content Surface */}
-      <main className="relative z-10 flex-1 max-w-[1200px] w-full mx-auto px-4 sm:px-6 pb-20 flex flex-col gap-10">
+      <main id="main-content" tabIndex={-1} className="relative z-10 flex-1 max-w-[1200px] w-full mx-auto px-4 sm:px-6 pb-20 flex flex-col gap-10 outline-none">
         {/* Problem Statement Reimagined as High-Impact Stripe-Style Marketing Copy */}
         <section
           id="problem-statement"
@@ -204,7 +215,6 @@ export const App: React.FC = () => {
               <span className="w-2 h-2 rounded-full bg-[#533afd]" />
               <span className="font-micro-cap text-[#533afd]">The Zerobon Mandate</span>
             </div>
-            <span className="pill-tag-soft">AI-Powered Atmospheric Intelligence</span>
           </div>
 
           <div className="max-w-3xl mb-6">

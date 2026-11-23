@@ -51,7 +51,6 @@ export const HardenedCopilot: React.FC<HardenedCopilotProps> = ({ indoorPm25, ou
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <span className="pill-tag-soft">Zero-Trust LLM Architecture</span>
           <h3 className="font-heading-lg text-[#0d253d] mt-1">
             Hardened Hybrid Edge + Local Copilot
           </h3>
@@ -112,18 +111,24 @@ export const HardenedCopilot: React.FC<HardenedCopilotProps> = ({ indoorPm25, ou
         }}
         className="flex gap-2 mb-6"
       >
+        <label htmlFor="copilot-input-query" className="sr-only">
+          Ask Copilot an indoor air quality or routine query
+        </label>
         <input
+          id="copilot-input-query"
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Ask for an IAQ hack, winter smog commute swap, or DIY purifier blueprint..."
           maxLength={400}
-          className="flex-1 bg-white text-[#0d253d] font-body-md px-4 py-2.5 rounded-lg border border-[#a8c3de] focus:border-[#533afd] outline-none transition-all text-sm"
+          aria-label="Ask for an IAQ hack, winter smog commute swap, or DIY purifier blueprint"
+          className="flex-1 bg-white text-[#0d253d] font-body-md px-4 py-2.5 rounded-lg border border-[#94a3b8] focus:border-[#533afd] focus:ring-2 focus:ring-[#533afd]/20 outline-none transition-all text-sm"
         />
         <button
           type="submit"
           disabled={isLoading || !query.trim()}
           className="button-primary-pill"
+          aria-label="Query Hardened Copilot"
         >
           {isLoading ? 'Verifying...' : 'Query Copilot'}
         </button>
