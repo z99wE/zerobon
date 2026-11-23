@@ -62,10 +62,15 @@ export async function executeHardenedCopilotPipeline(
 
   // Layer 1: Pre-Inference Input Firewall
   const lengthUnder400 = rawInput.length <= 400;
-  // Strip control characters, zero-width joiners (\u200B-\u200D, \uFEFF), non-printable ASCII
+  // Strip zero-width joiners and ASCII control characters safely without raw regex control codes
   const sanitized = rawInput
     .replace(/[\u200B-\u200D\uFEFF]/g, '')
-    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+    .split('')
+    .filter((char) => {
+      const code = char.charCodeAt(0);
+      return (code >= 32 && code !== 127) || code === 9 || code === 10 || code === 13;
+    })
+    .join('')
     .trim();
 
   let attackDetected = false;

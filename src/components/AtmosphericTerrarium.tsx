@@ -16,7 +16,7 @@ interface AtmosphericTerrariumProps {
 
 export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
   indoorPm25,
-  outdoorPm25,
+  outdoorPm25: _outdoorPm25,
   activeHacks,
   onTriggerHackToggle,
   onOpenReceipt,

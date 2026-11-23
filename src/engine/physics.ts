@@ -1,4 +1,4 @@
-import { MassBalanceParams, SimulationState, InhaledDoseParams, BreathReceipt } from '../types';
+import { MassBalanceParams, InhaledDoseParams, BreathReceipt, HourlyAtmosphericForecast } from '../types';
 
 export const CIGARETTE_EQUIVALENT_PM25_UG = 22.0;
 
@@ -116,7 +116,7 @@ export function generate24HourAtmosphericForecast() {
     outdoorPm25: h.cout,
     pblHeightMeters: h.pbl,
     groundTempC: h.temp,
-    inversionStrength: h.inv as any,
+    inversionStrength: h.inv as HourlyAtmosphericForecast['inversionStrength'],
     isMiddayCleanWindow: h.inv === 'Clean Air Window',
     windSpeedKmh: h.inv === 'Clean Air Window' ? 14 : 3,
   }));

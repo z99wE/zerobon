@@ -4,7 +4,17 @@ import { HourlyAtmosphericForecast } from '../types';
 
 export const InversionRadar: React.FC = () => {
   const forecast = generate24HourAtmosphericForecast();
-  const [selectedHour, setSelectedHour] = useState<HourlyAtmosphericForecast>(forecast[4]!); // 11:30 AM window
+  const defaultHour = forecast[4] ?? forecast[0] ?? {
+    hour: '11:30',
+    time24: 11.5,
+    outdoorPm25: 85,
+    pblHeightMeters: 950,
+    groundTempC: 22,
+    inversionStrength: 'Clean Air Window' as const,
+    isMiddayCleanWindow: true,
+    windSpeedKmh: 14,
+  };
+  const [selectedHour, setSelectedHour] = useState<HourlyAtmosphericForecast>(defaultHour);
 
   return (
     <div className="w-full card-feature-light p-6 sm:p-8">

@@ -15,7 +15,16 @@ import { TenantConfig, BreathReceipt, MassBalanceParams } from './types';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin' | 'architecture'>('terrarium');
-  const [selectedTenant, setSelectedTenant] = useState<TenantConfig>(DEMO_TENANTS[0]!);
+  const [selectedTenant, setSelectedTenant] = useState<TenantConfig>(DEMO_TENANTS[0] ?? {
+    id: 'tenant-family-chen',
+    name: 'The Chen Household',
+    type: 'family',
+    h3Index: '87283082bffffff',
+    subdomain: 'chen.zerobon.io',
+    totalMembers: 4,
+    activePledgesCount: 3,
+    collectiveEmissionsSavedKg: 14.8,
+  });
 
   // Ambient & Indoor Physics State
   const [outdoorPm25, setOutdoorPm25] = useState(245);

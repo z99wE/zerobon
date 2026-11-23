@@ -3,35 +3,78 @@
  * Runs on Cloudflare Free Tier (Sub-5ms Edge CPU target)
  */
 
+export interface D1DatabaseBinding {
+  prepare: (query: string) => {
+    bind: (...params: unknown[]) => {
+      all: <T = unknown>() => Promise<{ results: T[] }>;
+      run: () => Promise<{ success: boolean }>;
+    };
+  };
+}
+
+export interface KVNamespaceBinding {
+  get: (key: string) => Promise<string | null>;
+  put: (key: string, value: string, options?: { expirationTtl?: number }) => Promise<void>;
+}
+
+export interface WorkersAIBinding {
+  run: (model: string, inputs: Record<string, unknown>) => Promise<unknown>;
+}
+
+export interface R2BucketBinding {
+  get: (key: string) => Promise<unknown>;
+  put: (key: string, value: unknown) => Promise<unknown>;
+}
+
+export interface ExecutionContextBinding {
+  waitUntil: (promise: Promise<unknown>) => void;
+  passThroughOnException: () => void;
+}
+
+export interface ScheduledEventBinding {
+  cron: string;
+  type: string;
+  scheduledTime: number;
+}
+
 export interface Env {
-  DB: any; // Cloudflare D1 Database binding
-  KV: any; // Cloudflare KV Namespace binding
-  AI: any; // Cloudflare Workers AI binding
-  R2: any; // Cloudflare R2 Bucket
-  GEMINI_API_KEY?: string; // Google Gemini API Key (Gemini 2.5 Flash / Gemini 1.5 Pro)
-  CANARY_SECRET: string;
+  DB?: D1DatabaseBinding;
+  KV?: KVNamespaceBinding;
+  AI?: WorkersAIBinding;
+  R2?: R2BucketBinding;
+  GEMINI_API_KEY?: string;
+  CANARY_SECRET?: string;
 }
 
 const CANARY_SECRET = 'CANARY_ZEROBON_SEC_99F3B';
 
-// Strict Allowed IAQ Hack Enums
-const VERIFIED_HACK_IDS = [
+export const VERIFIED_HACK_IDS = [
   'corsi_rosenthal_box',
   'kitchen_exhaust_purge',
   'magnetic_draft_stopper',
   'midday_window_airing',
   'n95_active_commute',
   'induction_cook_swap',
-];
+] as const;
+
+interface GeminiResponseCandidate {
+  content?: {
+    parts?: Array<{ text?: string }>;
+  };
+}
+
+interface GeminiApiResponse {
+  candidates?: GeminiResponseCandidate[];
+}
 
 /**
  * Dispatches to Google Gemini API (gemini-2.5-flash) in Structured JSON mode
  */
-async function callGoogleGeminiAssistant(
+export async function callGoogleGeminiAssistant(
   sanitizedDelimitedQuery: string,
-  contextData: any,
+  contextData: Record<string, unknown>,
   apiKey?: string
-) {
+): Promise<Record<string, unknown> | null> {
   if (!apiKey) return null;
 
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
@@ -57,17 +100,17 @@ async function callGoogleGeminiAssistant(
   });
 
   if (!response.ok) return null;
-  const result: any = await response.json();
+  const result = (await response.json()) as GeminiApiResponse;
   const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-  return text ? JSON.parse(text) : null;
+  return text ? (JSON.parse(text) as Record<string, unknown>) : null;
 }
 
 export default {
-  async fetch(request: Request, env: Env, ctx: any): Promise<Response> {
+  async fetch(request: Request, env: Env, _ctx: ExecutionContextBinding): Promise<Response> {
     const url = new URL(request.url);
 
     // Enhanced Security and CORS Headers
-    const secureHeaders = {
+    const secureHeaders: Record<string, string> = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Tenant-ID',
@@ -83,7 +126,6 @@ export default {
     }
 
     // 1. Tenant Resolution Middleware
-    // Resolves tenant_id from hostname (e.g. greenwood.zerobon.io) or X-Tenant-ID header
     const host = url.hostname;
     const headerTenant = request.headers.get('X-Tenant-ID');
     let tenantId = 'tenant-family-chen';
@@ -107,27 +149,32 @@ export default {
           isolation_mode: 'TenantScopedDB',
           edge_latency_ms: 1.8,
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { headers: secureHeaders }
       );
     }
 
     // Route: POST /api/v4/copilot/query (5-Layer Anti-Hijacking Pipeline)
     if (url.pathname === '/api/v4/copilot/query' && request.method === 'POST') {
       try {
-        const body: any = await request.json();
-        const rawQuery: string = body?.query || '';
+        const body = (await request.json()) as { query?: string } | null;
+        const rawQuery = body?.query || '';
 
         // LAYER 1: Pre-Inference Input Firewall
         if (rawQuery.length > 400) {
           return new Response(
             JSON.stringify({ error: 'Payload exceeds 400 character security cap', code: 'OVERSIZE' }),
-            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            { status: 400, headers: secureHeaders }
           );
         }
 
         const sanitized = rawQuery
           .replace(/[\u200B-\u200D\uFEFF]/g, '')
-          .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+          .split('')
+          .filter((char) => {
+            const code = char.charCodeAt(0);
+            return (code >= 32 && code !== 127) || code === 9 || code === 10 || code === 13;
+          })
+          .join('')
           .trim();
 
         // Check for instruction override signatures
@@ -140,7 +187,7 @@ export default {
               iaq_hack_ids: ['corsi_rosenthal_box'],
               pet_animation_state: 'alert_mask',
             }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            { headers: secureHeaders }
           );
         }
 
@@ -149,7 +196,7 @@ export default {
         const delimited = `<untrusted_query_${randId}>${sanitized}</untrusted_query_${randId}>`;
 
         // LAYER 3 & 4: Model Execution in Strict JSON Mode
-        const structuredResult = {
+        let structuredResult: Record<string, unknown> = {
           intent_valid: true,
           routine_advice: [
             'Seal drafty window gaps with magnetic weatherstripping.',
@@ -160,35 +207,44 @@ export default {
           safety_note: 'Validated against static D1 FTS5 IAQ playbook repository.',
         };
 
+        if (env.GEMINI_API_KEY) {
+          const geminiOutput = await callGoogleGeminiAssistant(
+            delimited,
+            { tenant_id: tenantId, query: sanitized },
+            env.GEMINI_API_KEY
+          );
+          if (geminiOutput) {
+            structuredResult = geminiOutput;
+          }
+        }
+
         // LAYER 5: Egress Canary Scan
         const outputString = JSON.stringify(structuredResult);
-        if (outputString.includes(CANARY_SECRET)) {
+        const canaryToCheck = env.CANARY_SECRET || CANARY_SECRET;
+        if (outputString.includes(canaryToCheck)) {
           return new Response(
             JSON.stringify({ error: 'Egress security violation blocked', code: 'CANARY_LEAK_PREVENTED' }),
-            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            { status: 500, headers: secureHeaders }
           );
         }
 
-        return new Response(outputString, {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      } catch (err: any) {
-        return new Response(JSON.stringify({ error: err.message }), {
+        return new Response(outputString, { headers: secureHeaders });
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Unknown server error';
+        return new Response(JSON.stringify({ error: message }), {
           status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: secureHeaders,
         });
       }
     }
 
     return new Response(JSON.stringify({ status: 'Zerobon Edge API v4.0 Active', tenant: tenantId }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: secureHeaders,
     });
   },
 
   // Hourly Scheduled Cron Trigger for Open-Meteo, OpenAQ v3, and NASA FIRMS
-  async scheduled(event: any, env: Env, ctx: any) {
-    // 1. Batch fetch Open-Meteo (PBL height + surface temperature + PM2.5)
-    // 2. Fetch ground station truth from OpenAQ v3
-    // 3. Store aggregated telemetry into KV cache (global:aq:hex:*)
+  async scheduled(_event: ScheduledEventBinding, _env: Env, _ctx: ExecutionContextBinding) {
+    // Ingestion scheduled worker pipeline
   },
 };

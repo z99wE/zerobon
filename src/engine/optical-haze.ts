@@ -29,9 +29,9 @@ export function analyzeSkyLuminanceData(
   const step = 4 * 4; // Sample every 4th pixel for edge sub-5ms performance
 
   for (let i = 0; i < sampleLimit; i += step) {
-    const r = data[i]!;
-    const g = data[i + 1]!;
-    const b = data[i + 2]!;
+    const r = data[i] ?? 0;
+    const g = data[i + 1] ?? 0;
+    const b = data[i + 2] ?? 0;
     
     // Ignore near-black or blown-out white pixels (clouds/sun disc)
     const brightness = (r + g + b) / 3;
@@ -66,8 +66,8 @@ export function analyzeSkyLuminanceData(
   // Pristine sky: brRatio >= 1.5 -> PM2.5 < 25 ug/m3
   // Moderate haze: 1.15 <= brRatio < 1.5 -> PM2.5 ~ 40 - 100 ug/m3
   // Heavy winter smog: brRatio < 1.15 -> PM2.5 > 150 ug/m3
-  let inferredPm25 = 0;
-  let aod = 0;
+  let inferredPm25: number;
+  let aod: number;
   let hazeClass: TurbidityResult['hazeClass'];
 
   if (brRatio >= 1.45) {

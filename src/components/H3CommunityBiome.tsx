@@ -7,9 +7,17 @@ interface H3CommunityBiomeProps {
   tenantId: string;
 }
 
-export const H3CommunityBiome: React.FC<H3CommunityBiomeProps> = ({ tenantId }) => {
+export const H3CommunityBiome: React.FC<H3CommunityBiomeProps> = ({ tenantId: _tenantId }) => {
   const mountRef = useRef<HTMLDivElement>(null);
-  const [selectedDome, setSelectedDome] = useState<H3NeighborDome>(INITIAL_NEIGHBOR_DOMES[0]!);
+  const defaultDome = INITIAL_NEIGHBOR_DOMES[0] ?? {
+    id: 'dome-chen',
+    tenantName: 'Chen Family (You)',
+    hexOffset: [0, 0] as [number, number],
+    indoorPm25: 18,
+    petStatus: 'calm' as const,
+    activeHack: 'Corsi-Rosenthal Box active',
+  };
+  const [selectedDome, setSelectedDome] = useState<H3NeighborDome>(defaultDome);
 
   useEffect(() => {
     const container = mountRef.current;

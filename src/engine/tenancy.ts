@@ -133,7 +133,16 @@ export class TenantScopedDB {
 
   getTenantConfig(): TenantConfig {
     const tenant = DEMO_TENANTS.find((t) => t.id === this.tenantId);
-    return tenant || DEMO_TENANTS[0]!;
+    return tenant ?? DEMO_TENANTS[0] ?? {
+      id: 'tenant-family-chen',
+      name: 'The Chen Household',
+      type: 'family',
+      h3Index: '87283082bffffff',
+      subdomain: 'chen.zerobon.io',
+      totalMembers: 4,
+      activePledgesCount: 3,
+      collectiveEmissionsSavedKg: 14.8,
+    };
   }
 
   getTenantPledges() {
