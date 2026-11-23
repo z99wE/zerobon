@@ -35,13 +35,16 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Tenant Selector Dropdown (Hairline Input Style) */}
           <div className="relative">
+            <label htmlFor="tenant-switcher" className="sr-only">Select Household or Institutional Tenant</label>
             <select
+              id="tenant-switcher"
+              aria-label="Select Household or Institutional Tenant"
               value={selectedTenant.id}
               onChange={(e) => {
                 const found = DEMO_TENANTS.find((t) => t.id === e.target.value);
                 if (found) onSelectTenant(found);
               }}
-              className="bg-transparent text-xs font-normal text-[#273951] hover:text-[#0d253d] cursor-pointer outline-none border border-[#e3e8ee] hover:border-[#a8c3de] rounded-md px-2.5 py-1 transition-all"
+              className="bg-transparent text-xs font-normal text-[#273951] hover:text-[#0d253d] cursor-pointer outline-none border border-[#e3e8ee] hover:border-[#a8c3de] focus:ring-2 focus:ring-[#533afd]/20 rounded-md px-2.5 py-1 transition-all"
             >
               {DEMO_TENANTS.map((t) => (
                 <option key={t.id} value={t.id} className="bg-white text-[#0d253d] text-xs">

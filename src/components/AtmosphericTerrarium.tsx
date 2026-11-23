@@ -556,10 +556,11 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
 
         {/* Interactive IAQ Switchboard (Pill-shaped buttons inside dark shell) */}
         <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
-          <div className="pointer-events-auto flex flex-wrap gap-2">
+          <div className="pointer-events-auto flex flex-wrap gap-2" role="group" aria-label="Indoor air quality interventions">
             <button
               onClick={() => onTriggerHackToggle('corsiRosenthal')}
-              className={`text-xs px-3.5 py-1.5 rounded-full transition-all ${
+              aria-pressed={activeHacks.corsiRosenthal}
+              className={`text-xs px-3.5 py-1.5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-[#533afd] ${
                 activeHacks.corsiRosenthal
                   ? 'bg-[#533afd] text-white shadow-md shadow-[#533afd]/40'
                   : 'bg-white/10 text-white/80 hover:bg-white/20'
@@ -570,7 +571,8 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
 
             <button
               onClick={() => onTriggerHackToggle('kitchenExhaust')}
-              className={`text-xs px-3.5 py-1.5 rounded-full transition-all ${
+              aria-pressed={activeHacks.kitchenExhaust}
+              className={`text-xs px-3.5 py-1.5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-[#533afd] ${
                 activeHacks.kitchenExhaust
                   ? 'bg-[#533afd] text-white shadow-md shadow-[#533afd]/40'
                   : 'bg-white/10 text-white/80 hover:bg-white/20'
@@ -581,7 +583,8 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
 
             <button
               onClick={() => onTriggerHackToggle('draftSealing')}
-              className={`text-xs px-3.5 py-1.5 rounded-full transition-all ${
+              aria-pressed={activeHacks.draftSealing}
+              className={`text-xs px-3.5 py-1.5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-[#533afd] ${
                 activeHacks.draftSealing
                   ? 'bg-[#533afd] text-white shadow-md shadow-[#533afd]/40'
                   : 'bg-white/10 text-white/80 hover:bg-white/20'
@@ -592,7 +595,8 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
 
             <button
               onClick={() => onTriggerHackToggle('windowOpen')}
-              className={`text-xs px-3.5 py-1.5 rounded-full transition-all ${
+              aria-pressed={activeHacks.windowOpen}
+              className={`text-xs px-3.5 py-1.5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-[#34d399] ${
                 activeHacks.windowOpen
                   ? 'bg-[#34d399] text-[#0d253d] font-medium shadow-md shadow-[#34d399]/40'
                   : 'bg-white/10 text-white/80 hover:bg-white/20'
@@ -606,6 +610,7 @@ export const AtmosphericTerrarium: React.FC<AtmosphericTerrariumProps> = ({
             <button
               onClick={onOpenReceipt}
               className="button-primary-pill"
+              aria-label="Generate Deterministic Breath Receipt"
             >
               Generate Breath Receipt
             </button>

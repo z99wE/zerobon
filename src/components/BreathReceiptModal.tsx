@@ -19,13 +19,19 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d253d]/50 backdrop-blur-sm animate-fadeIn">
+    <div 
+      role="dialog" 
+      aria-modal="true" 
+      aria-labelledby="receipt-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d253d]/50 backdrop-blur-sm animate-fadeIn"
+    >
       {/* Stripe Financial Confirmation Card */}
       <div className="relative w-full max-w-md bg-white rounded-2xl p-6 sm:p-8 border border-[#e3e8ee] shadow-2xl">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#64748d] hover:text-[#0d253d] flex items-center justify-center transition-all text-xs"
+          aria-label="Close Breath Receipt Modal"
+          className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#64748d] hover:text-[#0d253d] flex items-center justify-center transition-all text-xs focus:ring-2 focus:ring-[#533afd]"
         >
           ✕
         </button>
@@ -36,7 +42,7 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
             <span className="w-2 h-2 rounded-full bg-[#34d399]" />
             <span className="font-micro-cap text-[#64748d]">Verified Environmental Transaction</span>
           </div>
-          <h2 className="font-heading-lg text-[#0d253d]">Deterministic Breath Receipt</h2>
+          <h2 id="receipt-title" className="font-heading-lg text-[#0d253d]">Deterministic Breath Receipt</h2>
           <div className="flex items-center justify-between text-xs text-[#64748d] mt-1 font-tabular">
             <span>Reference: {receipt.receiptId}</span>
             <span>{receipt.timestamp}</span>
