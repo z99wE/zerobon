@@ -103,9 +103,37 @@ The Zerobon architecture was engineered to maximize every dimension of the **Sol
 
 ---
 
-## 3. Deep-Tech Core Engines
+## 3. GenAI Services Utilized & Google Technology Stack
 
-### 3.1. Physics-Informed Mass-Balance Engine (Rust → WASM)
+Zerobon integrates Google's AI and cloud developer platform across multiple tiers of the application architecture:
+
+### 3.1. Google Gemini API (`gemini-2.5-flash` / `gemini-1.5-pro` via Google AI Studio & Vertex AI)
+- **Where Utilized**: Powers the **Hardened Hybrid Edge + Local Copilot** ([`src/engine/copilot-firewall.ts`](src/engine/copilot-firewall.ts) and [`apps/edge-api/index.ts`](apps/edge-api/index.ts)).
+- **Core Functionality**:
+  - Translates complex micro-atmospheric dynamics (Planetary Boundary Layer height, ground radiation cooling, PM2.5 infiltration) into personalized, family-safe daily routine swaps and indoor air quality hacks.
+  - Dynamically customizes guidance to household parameters: dwelling floor elevation, window sash draftiness, cooking style (gas vs. induction), commute modes (underground metro vs. open-air transit), and vulnerable health flags (asthma, children, elderly).
+- **Hardened Execution & Security**:
+  - **Structured JSON Mode (`responseMimeType: "application/json"`)**: Enforces outputs strictly locked to the Zod schema (`CopilotResponseSchema`). The model cannot output arbitrary HTML, script tags, or unverified free-text recommendations.
+  - **System Instructions**: Implements strict air-quality domain adherence and treats inputs wrapped in `<untrusted_query_*>` delimiters as untrusted data, neutralizing prompt-injection overrides.
+  - **Zero-Hallucination Math Separation**: Gemini explains habits and verified indoor interventions, while all numerical calculations (inhaled lung dose, cigarette equivalents, and carbon deltas) are computed deterministically in Rust/WASM.
+
+### 3.2. Google Cloud Run (Serverless Microservices & Edge Compute)
+- **Where Utilized**: Containerized edge services running the Rust/WASM atmospheric mass-balance physics solver and batch telemetry ETL pipeline.
+- **Benefits**: Autoscales from 0 to peak smog spikes with low latency, providing high-throughput calculation of differential equations across millions of household twins.
+
+### 3.3. Google Earth Engine (GEE) & Google Air Quality API
+- **Where Utilized**: Atmospheric telemetry calibration pipeline.
+- **Functionality**: Integrates planetary-scale satellite remote sensing data (Aerosol Optical Depth from MODIS/VIIRS) with fused ground air quality station feeds to calibrate the Planetary Boundary Layer (PBL) thermal inversion curve across Uber H3 Resolution-7 hexagonal grids.
+
+### 3.4. Google Chrome WebGPU & WebAssembly (V8 Engine)
+- **Where Utilized**: In-browser client-side execution of the **Zero-Hardware Optical Sky-Turbidity Estimator** ([`src/engine/optical-haze.ts`](src/engine/optical-haze.ts)) and Three.js 3D rendering.
+- **Functionality**: Analyzes live camera canvas pixels to evaluate Rayleigh vs. Mie blue-to-red luminance scattering directly on device with zero server latency and total user privacy.
+
+---
+
+## 4. Deep-Tech Core Engines
+
+### 4.1. Physics-Informed Mass-Balance Engine (Rust → WASM)
 Located in [`packages/physics-wasm/src/lib.rs`](packages/physics-wasm/src/lib.rs):
 
 ```rust
@@ -133,7 +161,7 @@ pub fn step_analytical(c_in_0: f64, c_out: f64, dt_hours: f64, p: &MassBalancePa
 }
 ```
 
-### 3.2. Counterfactual "Breath-Cost & Emission Receipt"
+### 4.2. Counterfactual "Breath-Cost & Emission Receipt"
 Computes deterministic personal savings and avoids LLM math errors:
 - **Inhaled Dose Avoided**: Calculated from minute ventilation ($\dot{V}_E = 0.012\text{ m}^3/\text{min}$), duration, and indoor vs. outdoor concentrations.
 - **Cigarette Equivalents**: $1\text{ cigarette} \approx 22\,\mu g\text{ PM}_{2.5}$ inhaled dose.
@@ -142,7 +170,7 @@ Computes deterministic personal savings and avoids LLM math errors:
   - *EV Carpool*: $980\text{ g } CO_2e$, $2.1\text{ g } NO_x$, $0.22\text{ g } PM_{2.5}$
   - *WFH Smog Day*: $2,850\text{ g } CO_2e$, $7.2\text{ g } NO_x$, $0.95\text{ g } PM_{2.5}$
 
-### 3.3. Zero-Hardware Optical Sky-Turbidity Estimator
+### 4.3. Zero-Hardware Optical Sky-Turbidity Estimator
 Runs client-side luminance sampling on sky zenith frames:
 - **Rayleigh Scattering ($B/R > 1.45$)**: Clean air with high blue-to-red ratio ($PM_{2.5} < 25\ \mu g/m^3$).
 - **Mie Scattering ($B/R < 1.15$)**: Particulate-dominated wavelength-independent haze ($PM_{2.5} > 150\ \mu g/m^3$).
