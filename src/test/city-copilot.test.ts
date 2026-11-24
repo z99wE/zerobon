@@ -92,18 +92,17 @@ describe('Global City Data Engine & Multi-City Copilot Reasoning', () => {
     expect(attack.report.attackDetected).toBe(true);
     expect(attack.report.status).toBe('blocked_fallback');
 
-    // Legit multi-word queries with long words (e.g. "Neighborhood waste burning deterrence policy") must NEVER be false-positived as base64
+    // Legit multi-word queries with long words (e.g. "Neighborhood waste burning deterrence policy") must NEVER be false-positived as base64, even under default family tenant
     const legitQuery = 'Neighborhood waste burning deterrence policy';
     const legitRes = await executeHardenedCopilotPipeline(legitQuery, {
       city: 'Delhi NCR',
       indoorPm25: 45,
       outdoorPm25: 180,
       isMiddayWindow: false,
-      tenantProfile: 'community',
     });
     expect(legitRes.report.attackDetected).toBe(false);
     expect(legitRes.report.status).toBe('allowed');
     expect(legitRes.response.intent_valid).toBe(true);
-    expect(legitRes.response.routine_advice[0]).toContain('burning');
+    expect(legitRes.response.routine_advice[0]).toContain('Waste Deterrence');
   });
 });

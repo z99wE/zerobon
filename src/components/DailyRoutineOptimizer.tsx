@@ -70,7 +70,7 @@ const ROUTINE_SWAPS: RoutineSwapItem[] = [
     lifestyleMatch: ['Fitness Enthusiasts', 'All Families'],
     d2cTips: {
       quickAction: 'Schedule your runs or brisk walks between 12:00 PM and 3:00 PM when solar warming dilutes smog.',
-      familyBenefit: 'Spares deep lung alveoli from heavy morning diesel soot deposits while maintaining cardiovascular health.',
+      familyBenefit: 'Spares your lungs from heavy morning diesel soot deposits while maintaining cardiovascular health.',
       proTip: 'Do morning mobility or yoga indoors, then take your cardio outside during lunchtime sunshine.',
     },
   },

@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<D2CTab>('routines');
+  const [activeTab, setActiveTab] = useState<D2CTab>('overview');
   const [selectedCity, setSelectedCity] = useState<string>('Delhi NCR');
 
   // Dynamic City Weather & Air Profile
@@ -119,6 +119,11 @@ export const App: React.FC = () => {
     neighborhoodMultiplier: 3.2,
   };
 
+  const handleNavigateTab = (tab: D2CTab) => {
+    setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
   return (
     <div className="relative min-h-screen bg-white text-[#0d253d] flex flex-col font-sans selection:bg-[#533afd]/20 selection:text-[#533afd]">
       {/* Skip to Content for Accessibility */}
@@ -135,7 +140,7 @@ export const App: React.FC = () => {
       {/* D2C Top Navigation */}
       <Navbar
         activeTab={activeTab}
-        onSelectTab={setActiveTab}
+        onSelectTab={handleNavigateTab}
         outdoorPm25={outdoorPm25}
         temperatureC={cityProfile.temperatureC}
         onOpenShare={() => setShowShareModal(true)}
@@ -143,38 +148,28 @@ export const App: React.FC = () => {
         onSelectCity={setSelectedCity}
       />
 
-      {/* World-Class D2C Landing Page Hero with Noisy Gradient Background & High Problem-Statement Alignment */}
-      <div className="relative z-10 max-w-[1240px] w-full mx-auto px-4 sm:px-6 pt-6 pb-6">
-        <LandingHero
-          selectedCity={selectedCity}
-          cityProfile={cityProfile}
-          outdoorPm25={outdoorPm25}
-          onSetOutdoorPm25={setOutdoorPm25}
-          onExploreRoutines={() => {
-            setActiveTab('routines');
-            const el = document.getElementById('main-content');
-            el?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          onExploreHacks={() => {
-            setActiveTab('hacks');
-            const el = document.getElementById('main-content');
-            el?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          onOpenAssistant={() => {
-            setActiveTab('copilot');
-            const el = document.getElementById('main-content');
-            el?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          onOpenShare={() => setShowShareModal(true)}
-        />
-      </div>
-
-      {/* Main Content Surface */}
+      {/* Main Content Surface - Displays Tab Directly Without Scrolling Friction */}
       <main 
         id="main-content" 
         tabIndex={-1} 
-        className="relative z-10 flex-1 max-w-[1240px] w-full mx-auto px-4 sm:px-6 pb-20 outline-none space-y-10"
+        className="relative z-10 flex-1 max-w-[1240px] w-full mx-auto px-4 sm:px-6 pt-6 pb-20 outline-none space-y-10"
       >
+        {/* Tab 0: World-Class D2C Overview Landing Page */}
+        {activeTab === 'overview' && (
+          <ErrorBoundary>
+            <LandingHero
+              selectedCity={selectedCity}
+              cityProfile={cityProfile}
+              outdoorPm25={outdoorPm25}
+              onSetOutdoorPm25={setOutdoorPm25}
+              onExploreRoutines={() => handleNavigateTab('routines')}
+              onExploreHacks={() => handleNavigateTab('hacks')}
+              onOpenAssistant={() => handleNavigateTab('copilot')}
+              onOpenShare={() => setShowShareModal(true)}
+            />
+          </ErrorBoundary>
+        )}
+
         {/* Tab 1: Daily Routine Optimizer */}
         {activeTab === 'routines' && (
           <ErrorBoundary>
@@ -222,9 +217,9 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* High-End Branded Versioned Footer with Prominent Community CTA Banner */}
-      <footer className="w-full bg-[#f6f9fc] border-t-2 border-[#533afd]/20 pt-16 pb-14 text-[#64748d] text-xs">
-        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 space-y-12">
+      {/* High-End Branded Versioned Footer with Prominent Community CTA Banner & Top Gradient Ribbon Match */}
+      <footer className="w-full bg-[#f6f9fc] border-t-2 border-[#533afd]/20 pt-16 text-[#64748d] text-xs">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 space-y-12 pb-14">
           {/* Prominent Footer Hero Call-to-Action (CTA) Entity */}
           <div className="w-full rounded-3xl p-8 sm:p-10 bg-gradient-to-br from-[#0d253d] via-[#1a123f] to-[#533afd] text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
             <div className="relative z-10 max-w-xl space-y-2">
@@ -236,16 +231,13 @@ export const App: React.FC = () => {
                 Ready to protect your home and neighborhood?
               </h3>
               <p className="font-body-md text-sm text-white/80 leading-relaxed">
-                Join thousands of families shifting routines, building $35 DIY cleansers, and sharing verifiable breath receipts. Make clean air accessible to all.
+                Join thousands of families shifting routines into clean air windows, building $35 DIY cleansers, and sharing verifiable breath receipts. Make clean air accessible to all.
               </p>
             </div>
 
             <div className="relative z-10 flex flex-wrap items-center gap-3 w-full md:w-auto">
               <button
-                onClick={() => {
-                  setActiveTab('routines');
-                  window.scrollTo({ top: 400, behavior: 'smooth' });
-                }}
+                onClick={() => handleNavigateTab('routines')}
                 className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white text-[#0d253d] text-xs font-bold hover:bg-white/90 transition-all shadow-md focus:ring-2 focus:ring-white"
               >
                 <span>Adopt First Routine</span>
@@ -278,7 +270,7 @@ export const App: React.FC = () => {
                 <div className="flex items-center gap-2.5">
                   <span className="text-[#0d253d] font-bold text-lg tracking-tight">ZeroBon</span>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#533afd]/10 text-[#533afd] border border-[#533afd]/20">
-                    v4.2 D2C Edition
+                    v4.3 D2C Edition
                   </span>
                 </div>
               </div>
@@ -290,37 +282,31 @@ export const App: React.FC = () => {
             {/* Quick Actions & Navigation */}
             <div className="flex flex-wrap items-center gap-6">
               <button
-                onClick={() => {
-                  setActiveTab('routines');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onClick={() => handleNavigateTab('overview')}
+                className="text-[#0d253d] hover:text-[#533afd] font-semibold transition-colors"
+              >
+                Overview
+              </button>
+              <button
+                onClick={() => handleNavigateTab('routines')}
                 className="text-[#0d253d] hover:text-[#533afd] font-semibold transition-colors"
               >
                 Routines
               </button>
               <button
-                onClick={() => {
-                  setActiveTab('hacks');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onClick={() => handleNavigateTab('hacks')}
                 className="text-[#0d253d] hover:text-[#533afd] font-semibold transition-colors"
               >
                 Indoor Hacks
               </button>
               <button
-                onClick={() => {
-                  setActiveTab('radar');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onClick={() => handleNavigateTab('radar')}
                 className="text-[#0d253d] hover:text-[#533afd] font-semibold transition-colors"
               >
                 Air Forecast
               </button>
               <button
-                onClick={() => {
-                  setActiveTab('copilot');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onClick={() => handleNavigateTab('copilot')}
                 className="text-[#0d253d] hover:text-[#533afd] font-semibold transition-colors"
               >
                 AI Assistant
@@ -352,6 +338,12 @@ export const App: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Matching Top Gradient Brand Ribbon at Very Bottom */}
+        <div 
+          aria-hidden="true" 
+          className="w-full h-2 bg-gradient-to-r from-[#533afd] via-[#b9b9f9] via-[#f5e9d4] to-[#ea2261]" 
+        />
       </footer>
 
       {/* Breath Receipt Modal */}

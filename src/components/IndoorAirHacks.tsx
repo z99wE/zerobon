@@ -70,7 +70,7 @@ const HACK_DETAILS: DIYHackDetail[] = [
     description: 'Self-adhesive foam weatherstripping and silicone draft seals along sliding window sashes and door bottoms.',
     humanExplanation: 'Most smog enters through tiny cracks around windows and doors. Sealing these gaps blocks outdoor haze from leaking into living areas.',
     materials: [
-      'High-density EPDM foam rubber weatherstrip tape',
+      'Durable high-density foam rubber weatherstrip tape',
       'Silicone door-bottom draft stopper',
       'Rubbing alcohol for cleaning surfaces before application',
     ],

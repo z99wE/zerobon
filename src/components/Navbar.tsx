@@ -3,7 +3,7 @@ import { Share2, MapPin, Search } from 'lucide-react';
 import { ArchitectureBulb } from './ArchitectureDiagram';
 import { TOP_CITIES } from '../engine/city-data';
 
-export type D2CTab = 'routines' | 'hacks' | 'radar' | 'copilot';
+export type D2CTab = 'overview' | 'routines' | 'hacks' | 'radar' | 'copilot';
 
 interface NavbarProps {
   activeTab: D2CTab;
@@ -35,13 +35,26 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
+  const navItems = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'routines', label: 'Daily Routines' },
+    { id: 'hacks', label: 'Indoor Hacks' },
+    { id: 'radar', label: 'Air Forecast' },
+    { id: 'copilot', label: 'AI Assistant' },
+  ] as const;
+
+  const handleNavClick = (tabId: D2CTab) => {
+    onSelectTab(tabId);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-[#e3e8ee] transition-all">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
         {/* Brand Name & City Picker */}
         <div className="flex items-center gap-3">
           <button
-            onClick={() => onSelectTab('routines')}
+            onClick={() => handleNavClick('overview')}
             className="flex items-center gap-2 text-left focus:outline-none focus:ring-2 focus:ring-[#533afd] rounded-lg p-1"
             aria-label="ZeroBon Home"
           >
@@ -122,17 +135,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Center Primary D2C Navigation */}
         <nav className="hidden lg:flex items-center gap-6" aria-label="Main Navigation">
-          {(
-            [
-              { id: 'routines', label: 'Daily Routines' },
-              { id: 'hacks', label: 'Indoor Hacks' },
-              { id: 'radar', label: 'Air Forecast' },
-              { id: 'copilot', label: 'AI Assistant' },
-            ] as const
-          ).map((item) => (
+          {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => onSelectTab(item.id)}
+              onClick={() => handleNavClick(item.id)}
               aria-current={activeTab === item.id ? 'page' : undefined}
               className={`text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#533afd] rounded-md px-2 py-1 ${
                 activeTab === item.id
@@ -171,17 +177,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Horizontal Subnav */}
       <div className="lg:hidden flex items-center overflow-x-auto px-4 py-2 border-t border-[#e3e8ee] bg-[#f6f9fc] gap-2">
-        {(
-          [
-            { id: 'routines', label: 'Daily Routines' },
-            { id: 'hacks', label: 'Indoor Hacks' },
-            { id: 'radar', label: 'Air Forecast' },
-            { id: 'copilot', label: 'AI Assistant' },
-          ] as const
-        ).map((item) => (
+        {navItems.map((item) => (
           <button
             key={item.id}
-            onClick={() => onSelectTab(item.id)}
+            onClick={() => handleNavClick(item.id)}
             className={`whitespace-nowrap px-3 py-1 rounded-full text-xs transition-all ${
               activeTab === item.id
                 ? 'bg-[#533afd] text-white font-medium shadow-sm'

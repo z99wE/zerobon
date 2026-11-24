@@ -248,6 +248,23 @@ function generateDynamicAirAdvice(
     }
   }
 
+  const isWasteBurning =
+    q.includes('waste') ||
+    q.includes('burn') ||
+    q.includes('fire') ||
+    q.includes('leaf') ||
+    q.includes('leaves') ||
+    q.includes('stubble') ||
+    q.includes('bonfire') ||
+    q.includes('policy') ||
+    q.includes('deterren') ||
+    q.includes('rwa') ||
+    q.includes('society') ||
+    q.includes('neighborhood') ||
+    q.includes('community') ||
+    q.includes('generator') ||
+    q.includes('dg');
+
   const isDiyPurifier = q.includes('purifier') || q.includes('diy') || q.includes('box') || q.includes('corsi') || q.includes('filter');
   const isCommute = q.includes('commute') || q.includes('travel') || q.includes('drive') || q.includes('metro') || q.includes('traffic') || q.includes('bus') || q.includes('cycle') || q.includes('bike');
   const isExercise = q.includes('jog') || q.includes('run') || q.includes('walk') || q.includes('gym') || q.includes('exercise') || q.includes('outside');
@@ -255,8 +272,21 @@ function generateDynamicAirAdvice(
   const isFamily = q.includes('kid') || q.includes('child') || q.includes('baby') || q.includes('infant') || q.includes('elderly') || q.includes('asthma') || q.includes('pet');
   const isVentilation = q.includes('window') || q.includes('ventilate') || q.includes('airing') || q.includes('fresh air') || q.includes('co2');
 
+  // Topic 0: Neighborhood & Community Waste Burning Deterrence
+  if (isWasteBurning) {
+    hackIds.push('magnetic_draft_stopper', 'corsi_rosenthal_box');
+    advice.push(
+      `Community & Neighborhood Waste Deterrence for ${city.name}: Open waste and horticulture leaf burning produces intense plumes of black carbon and volatile organic compounds trapped close to ground level by winter thermal inversions.`
+    );
+    advice.push(
+      `Establish a community leaf-composting pit and coordinate with Resident Welfare Associations (RWAs) or municipal marshals to enforce zero-tolerance open burning deterrence policies.`
+    );
+    advice.push(
+      `To protect your family during nearby burning episodes, seal perimeter window gaps with silicone draft tape and run a Corsi-Rosenthal unit on High to scrub infiltrations before particles settle.`
+    );
+  }
   // Topic 1: DIY Corsi-Rosenthal Purifier & Filters
-  if (isDiyPurifier) {
+  else if (isDiyPurifier) {
     hackIds.push('corsi_rosenthal_box', 'magnetic_draft_stopper');
     advice.push(
       `Build a Corsi-Rosenthal box using four 20x20x2" MERV-13 filters and a standard 20" box fan ($35–$45 total). It achieves ~350 m³/h clean air delivery, matching $400 commercial HEPA units with far lower motor strain.`
