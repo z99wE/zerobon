@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { 
-  Sparkles, 
   Share2, 
   Wrench, 
   Zap, 
-  ArrowDown
+  ArrowDown,
+  ShieldCheck
 } from 'lucide-react';
 import { BreathReceipt } from '../types';
 import { computeBreathReceipt } from '../engine/physics';
@@ -200,7 +200,7 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
         {/* Live Controls Bar */}
         <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
           <div className="flex items-center gap-2 text-xs text-[#475569]">
-            <Sparkles className="w-4 h-4 text-[#533afd]" />
+            <ShieldCheck className="w-4 h-4 text-[#533afd]" />
             <span>
               Real-time room air simulator updating based on active filter and window seals.
             </span>

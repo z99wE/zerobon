@@ -19,6 +19,7 @@ export interface CopilotExecutionContext {
   outdoorPm25: number;
   isMiddayWindow: boolean;
   temperature?: number;
+  tenantProfile?: 'family' | 'commuter' | 'school' | 'community';
 }
 
 /**
@@ -200,11 +201,38 @@ function extractCityFromQuery(query: string): string | null {
 function generateDynamicAirAdvice(
   query: string,
   city: ReturnType<typeof getCityProfile>,
-  _context: CopilotExecutionContext
+  context: CopilotExecutionContext
 ): { advice: string[]; hackIds: (typeof VERIFIED_HACK_IDS)[number][]; microclimateNote: string } {
   const q = query.toLowerCase();
   const advice: string[] = [];
   const hackIds: (typeof VERIFIED_HACK_IDS)[number][] = [];
+
+  const tenant = context.tenantProfile ?? 'family';
+
+  // Specific Tenant Profile Context Injection
+  if (tenant === 'school') {
+    if (q.includes('recess') || q.includes('outside') || q.includes('play') || q.includes('sport')) {
+      hackIds.push('midday_window_airing');
+      advice.push(
+        `For school campuses in ${city.name}: Cancel outdoor sports before 10:30 AM during morning inversion peaks. Reschedule recess to the midday thermal mixing window (${city.cleanWindowHours}) when surface pollutants dilute.`
+      );
+      advice.push(
+        `Enforce classroom door buffers to prevent diesel exhaust from drop-off idling zones from drafting into academic hallways.`
+      );
+      return { advice, hackIds, microclimateNote: `School Campus Protocol: Midday recess window active for ${city.name}.` };
+    }
+  } else if (tenant === 'community') {
+    if (q.includes('dg') || q.includes('generator') || q.includes('society') || q.includes('rwa') || q.includes('waste')) {
+      hackIds.push('magnetic_draft_stopper');
+      advice.push(
+        `Residential Community Protocol for ${city.name}: Coordinate with estate management to enforce zero-tolerance for open leaf/waste burning, which spikes localized PM2.5 by over 300 µg/m³.`
+      );
+      advice.push(
+        `Shift communal diesel generator testing to midday convective mixing hours (12:00 PM – 2:00 PM) rather than morning stillness.`
+      );
+      return { advice, hackIds, microclimateNote: `Community RWA Protocol: Verified boundary mixing hours for ${city.name}.` };
+    }
+  }
 
   const isDiyPurifier = q.includes('purifier') || q.includes('diy') || q.includes('box') || q.includes('corsi') || q.includes('filter');
   const isCommute = q.includes('commute') || q.includes('travel') || q.includes('drive') || q.includes('metro') || q.includes('traffic') || q.includes('bus') || q.includes('cycle') || q.includes('bike');

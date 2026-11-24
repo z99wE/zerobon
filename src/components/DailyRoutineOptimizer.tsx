@@ -6,8 +6,7 @@ import {
   Flame, 
   Home, 
   Check, 
-  Share2, 
-  Sparkles
+  Share2
 } from 'lucide-react';
 import { BreathReceipt } from '../types';
 import { computeBreathReceipt } from '../engine/physics';
@@ -348,7 +347,7 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                       : 'bg-[#533afd] hover:bg-[#432ec9] text-white shadow-sm'
                   }`}
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Check className="w-3.5 h-3.5" />
                   <span>{isDone ? 'Update Receipt' : 'Adopt Routine Swap'}</span>
                 </button>
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Share2, Check, Copy, X, ExternalLink, Sparkles } from 'lucide-react';
+import { Share2, Check, Copy, X } from 'lucide-react';
 import { BreathReceipt } from '../types';
 
 interface SocialShareModalProps {
@@ -13,7 +13,7 @@ export const SocialShareModal: React.FC<SocialShareModalProps> = ({ receipt, onC
 
   // Full rich text message formulated for viral social awareness and D2C impact
   const shareText = `ZeroBon Clean Air Impact Report:
-Protecting our family & neighborhood during this winter smog crisis!
+Protecting our family & community during this winter smog crisis!
 
 Action: ${receipt.actionTitle}
 Lung Dose Prevented: ${receipt.doseSavedUg} µg PM2.5 (${receipt.cigaretteEquivalentsSaved} cigarettes equivalent saved)
@@ -47,23 +47,6 @@ Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
     }
   };
 
-  // Universal Web Share API for mobile and modern desktop OS
-  const handleNativeShare = async () => {
-    await copyToClipboard('Full report copied! Opening share options...');
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'ZeroBon Clean Air Impact Report',
-          text: shareText,
-          url: 'https://zerobon.pages.dev',
-        });
-      } catch (err) {
-        // User cancelled or aborted share, ignore
-        console.debug('Share cancelled or not supported', err);
-      }
-    }
-  };
-
   const handleWhatsApp = async () => {
     await copyToClipboard('Full report copied! Opening WhatsApp...');
     const url = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
@@ -73,18 +56,6 @@ Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
   const handleTwitterX = async () => {
     await copyToClipboard('Full report copied! Opening X...');
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
-  const handleLinkedIn = async () => {
-    await copyToClipboard('Full report copied to clipboard! Paste directly into your LinkedIn post.');
-    const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://zerobon.pages.dev')}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
-  const handleFacebook = async () => {
-    await copyToClipboard('Full report copied to clipboard! Paste directly into your Facebook update.');
-    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://zerobon.pages.dev')}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
@@ -117,7 +88,7 @@ Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
           </div>
         </div>
         <p className="font-body-md text-xs text-[#475569] mb-4">
-          Inspire your family, friends, and community. The full verified report is automatically prepared for your post.
+          Inspire your family, friends, and community. The full verified report is automatically copied and prepared for posting.
         </p>
 
         {/* Live Feedback Banner */}
@@ -127,7 +98,6 @@ Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
               <Check className="w-4 h-4 text-white" />
               <span>{actionFeedback}</span>
             </div>
-            <Sparkles className="w-3.5 h-3.5 opacity-80" />
           </div>
         )}
 
@@ -135,7 +105,7 @@ Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
         <div className="p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] mb-5">
           <div className="flex items-center justify-between mb-2">
             <label htmlFor="share-text-preview" className="text-xs font-semibold text-[#0d253d]">
-              Full Share Content
+              Full Share Content (Ready for Posting)
             </label>
             <button
               onClick={() => copyToClipboard('Full report copied to clipboard!')}
@@ -154,64 +124,36 @@ Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
           />
         </div>
 
-        {/* Social Share Buttons Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-6">
+        {/* Social Share Buttons: Only WhatsApp & X (Twitter) */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
           <button
             onClick={handleWhatsApp}
             aria-label="Share full text on WhatsApp"
-            className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] font-medium text-xs transition-all border border-[#e3e8ee] focus:ring-2 focus:ring-[#533afd]"
+            className="flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] font-medium text-xs transition-all border border-[#e3e8ee] focus:ring-2 focus:ring-[#533afd]"
           >
-            <span className="font-semibold text-[#533afd]">WhatsApp</span>
-            <span className="text-[10px] text-[#64748d]">Direct Text</span>
+            <span className="font-semibold text-[#533afd] text-sm">WhatsApp</span>
+            <span className="text-[11px] text-[#64748d]">• Direct Message</span>
           </button>
 
           <button
             onClick={handleTwitterX}
             aria-label="Share full text on X"
-            className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] font-medium text-xs transition-all border border-[#e3e8ee] focus:ring-2 focus:ring-[#533afd]"
+            className="flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] font-medium text-xs transition-all border border-[#e3e8ee] focus:ring-2 focus:ring-[#533afd]"
           >
-            <span className="font-semibold text-[#533afd]">X (Twitter)</span>
-            <span className="text-[10px] text-[#64748d]">Full Tweet</span>
-          </button>
-
-          <button
-            onClick={handleLinkedIn}
-            aria-label="Share on LinkedIn"
-            className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] font-medium text-xs transition-all border border-[#e3e8ee] focus:ring-2 focus:ring-[#533afd]"
-          >
-            <span className="font-semibold text-[#533afd]">LinkedIn</span>
-            <span className="text-[10px] text-[#64748d]">Copy & Post</span>
-          </button>
-
-          <button
-            onClick={handleFacebook}
-            aria-label="Share on Facebook"
-            className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] font-medium text-xs transition-all border border-[#e3e8ee] focus:ring-2 focus:ring-[#533afd]"
-          >
-            <span className="font-semibold text-[#533afd]">Facebook</span>
-            <span className="text-[10px] text-[#64748d]">Copy & Post</span>
+            <span className="font-semibold text-[#533afd] text-sm">X (Twitter)</span>
+            <span className="text-[11px] text-[#64748d]">• Full Post</span>
           </button>
         </div>
 
-        {/* Primary Action Button: Native Share / Copy */}
+        {/* Primary Action Button: Copy Full Text */}
         <div className="flex items-center gap-2">
-          {typeof navigator !== 'undefined' && typeof navigator.share === 'function' ? (
-            <button
-              onClick={handleNativeShare}
-              className="flex-1 py-3 px-4 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-sm focus:ring-2 focus:ring-[#533afd]"
-            >
-              <ExternalLink className="w-4 h-4" />
-              <span>Share via Device Sheet (All Apps)</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => copyToClipboard('Full report copied to clipboard!')}
-              className="flex-1 py-3 px-4 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-sm focus:ring-2 focus:ring-[#533afd]"
-            >
-              <Copy className="w-4 h-4" />
-              <span>{copied ? 'Copied to Clipboard!' : 'Copy Full Impact Report'}</span>
-            </button>
-          )}
+          <button
+            onClick={() => copyToClipboard('Full report copied to clipboard!')}
+            className="flex-1 py-3 px-4 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-sm focus:ring-2 focus:ring-[#533afd]"
+          >
+            <Copy className="w-4 h-4" />
+            <span>{copied ? 'Copied to Clipboard!' : 'Copy Full Impact Report'}</span>
+          </button>
 
           <button
             onClick={onClose}

@@ -10,28 +10,27 @@ describe('WCAG 2.1 AA Accessibility Automated axe Audits', () => {
           <a href="#main-content">Skip to content</a>
           <button aria-current="page">Daily Routines</button>
           <button>Indoor Hacks</button>
-          <button>Smog Radar</button>
+          <button>Air Forecast</button>
           <button>AI Assistant</button>
-          <button>Sky Scanner</button>
         </nav>
       </header>
       <main id="main-content" role="main">
         <h1>Navigate severe winter smog with intelligent daily routines</h1>
         <section aria-labelledby="heading-routines">
-          <h2 id="heading-routines">Inversion-Smart Daily Routines</h2>
+          <h2 id="heading-routines">Daily Routine Optimizer</h2>
           <div role="tablist" aria-label="Lifestyle Filters">
             <button role="tab" aria-selected="true">All</button>
             <button role="tab" aria-selected="false">Families with Kids</button>
           </div>
-          <button aria-label="Commit Electric Metro Commute Switch">Commit Routine Swap</button>
+          <button aria-label="Adopt Electric Metro Commute Switch">Adopt Routine Swap</button>
         </section>
         <section aria-labelledby="heading-hacks">
           <h2 id="heading-hacks">Indoor Air Sanctuary Controls</h2>
           <button role="switch" aria-checked="true" aria-label="Toggle DIY Corsi-Rosenthal Box">Toggle</button>
         </section>
-        <section aria-labelledby="heading-radar">
-          <h2 id="heading-radar">Thermal Inversion & Boundary Layer Dispersion</h2>
-          <button aria-label="Select 11:30 clean window" aria-pressed="true">11h</button>
+        <section aria-labelledby="heading-forecast">
+          <h2 id="heading-forecast">Clean Air Window Forecast</h2>
+          <button aria-label="Select 11:30 clean window" aria-pressed="true">11:30</button>
         </section>
       </main>
       <footer role="contentinfo">
@@ -52,8 +51,7 @@ describe('WCAG 2.1 AA Accessibility Automated axe Audits', () => {
         <button aria-label="Close modal">Close</button>
         <p>Details of protected lung dose.</p>
         <button aria-label="Share full text on WhatsApp">WhatsApp</button>
-        <button aria-label="Share full text on LinkedIn">LinkedIn</button>
-        <button aria-label="Share full text on Facebook">Facebook</button>
+        <button aria-label="Share full text on X">X (Twitter)</button>
         <button aria-label="Copy full impact text to clipboard">Copy Text</button>
       </div>
     `;

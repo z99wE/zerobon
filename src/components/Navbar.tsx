@@ -3,7 +3,7 @@ import { Share2, MapPin, Search } from 'lucide-react';
 import { ArchitectureBulb } from './ArchitectureDiagram';
 import { TOP_CITIES } from '../engine/city-data';
 
-export type D2CTab = 'routines' | 'hacks' | 'radar' | 'copilot' | 'scanner';
+export type D2CTab = 'routines' | 'hacks' | 'radar' | 'copilot';
 
 interface NavbarProps {
   activeTab: D2CTab;
@@ -126,9 +126,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             [
               { id: 'routines', label: 'Daily Routines' },
               { id: 'hacks', label: 'Indoor Hacks' },
-              { id: 'radar', label: 'Smog Radar' },
+              { id: 'radar', label: 'Air Forecast' },
               { id: 'copilot', label: 'AI Assistant' },
-              { id: 'scanner', label: 'Sky Scanner' },
             ] as const
           ).map((item) => (
             <button
@@ -176,9 +175,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           [
             { id: 'routines', label: 'Daily Routines' },
             { id: 'hacks', label: 'Indoor Hacks' },
-            { id: 'radar', label: 'Smog Radar' },
+            { id: 'radar', label: 'Air Forecast' },
             { id: 'copilot', label: 'AI Assistant' },
-            { id: 'scanner', label: 'Sky Scanner' },
           ] as const
         ).map((item) => (
           <button

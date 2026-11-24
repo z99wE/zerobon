@@ -5,7 +5,7 @@ import { DailyRoutineOptimizer } from './components/DailyRoutineOptimizer';
 import { IndoorAirHacks } from './components/IndoorAirHacks';
 import { InversionRadar } from './components/InversionRadar';
 import { HardenedCopilot } from './components/HardenedCopilot';
-import { OpticalHazeEstimator } from './components/OpticalHazeEstimator';
+import { GlyphStream } from './components/GlyphStream';
 import { BreathReceiptModal } from './components/BreathReceiptModal';
 import { SocialShareModal } from './components/SocialShareModal';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -132,6 +132,9 @@ export const App: React.FC = () => {
       >
         Skip to main content
       </a>
+
+      {/* Subtle Liquid Branded Glyph Stream Cursor Interaction */}
+      <GlyphStream />
 
       {/* Atmospheric Gradient Mesh Upper Third */}
       <GradientMesh />
@@ -342,13 +345,6 @@ export const App: React.FC = () => {
               outdoorPm25={outdoorPm25} 
               city={selectedCity} 
             />
-          </ErrorBoundary>
-        )}
-
-        {/* Tab 5: Sky Scanner */}
-        {activeTab === 'scanner' && (
-          <ErrorBoundary>
-            <OpticalHazeEstimator onApplyEstimatedOutdoorPm25={(pm) => setOutdoorPm25(pm)} />
           </ErrorBoundary>
         )}
       </main>

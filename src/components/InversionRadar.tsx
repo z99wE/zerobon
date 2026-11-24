@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { generate24HourAtmosphericForecast } from '../engine/physics';
 import { HourlyAtmosphericForecast } from '../types';
+import { Sun, Wind, Clock, ArrowRight } from 'lucide-react';
 
 export const InversionRadar: React.FC = () => {
   const forecast = generate24HourAtmosphericForecast();
@@ -17,68 +18,72 @@ export const InversionRadar: React.FC = () => {
   const [selectedHour, setSelectedHour] = useState<HourlyAtmosphericForecast>(defaultHour);
 
   return (
-    <div className="w-full card-feature-light p-6 sm:p-8">
-      {/* Title & Atmospheric Description */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <div className="w-full bg-white rounded-3xl p-6 sm:p-8 border border-[#e3e8ee] shadow-sm space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#e3e8ee]">
         <div>
-          <h3 className="font-heading-lg text-[#0d253d] mt-1">
-            Thermal Inversion & Boundary Layer Dispersion
-          </h3>
-          <p className="font-body-md text-[#64748d] mt-0.5">
-            Hourly Planetary Boundary Layer (PBL) altitude curve mapping diurnal clean air windows.
+          <h2 className="font-heading-lg text-2xl sm:text-3xl text-[#0d253d]">
+            Clean Air Window Forecast
+          </h2>
+          <p className="font-body-md text-sm text-[#475569] mt-1 max-w-2xl">
+            Diurnal atmospheric mixing timeline. Sunlight warms the ground to naturally lift and disperse surface pollution during midday hours.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#f6f9fc] border border-[#e3e8ee]">
-            <span className="w-2 h-2 rounded-full bg-[#34d399] animate-pulse" />
-            <span className="font-tabular text-xs text-[#273951]">Midday Window: 11:30 – 15:30</span>
-          </div>
+        <div className="flex items-center gap-2 p-3 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
+          <Sun className="w-4 h-4 text-[#533afd]" />
+          <span className="text-xs font-semibold text-[#0d253d]">
+            Best Ventilation: 11:30 AM – 3:30 PM
+          </span>
         </div>
       </div>
 
-      {/* Interactive 24-Hour Inversion Curve Visualization */}
-      <div className="relative w-full h-56 bg-[#f6f9fc] rounded-xl p-4 border border-[#e3e8ee] flex flex-col justify-between">
-        <div className="flex items-center justify-between text-xs text-[#64748d] font-tabular">
-          <span>00:00 (Ground Trap)</span>
-          <span className="text-[#533afd] font-medium">Solar Boundary Layer Expansion</span>
-          <span>23:59 (Radiation Inversion)</span>
+      {/* Hourly Clean Air Forecast Strip (Minimal Horizontal Cards) */}
+      <div>
+        <div className="flex items-center justify-between mb-3 text-xs text-[#64748d]">
+          <span>Select an hour to view atmospheric conditions</span>
+          <span className="hidden sm:inline">24-Hour Cycle</span>
         </div>
 
-        {/* 24-Hour Dispersion Graph */}
-        <div className="relative w-full h-36 flex items-end justify-between px-2">
-          {/* Shaded clean air window column */}
-          <div className="absolute left-[38%] right-[32%] top-0 bottom-0 bg-[#533afd]/5 border-x border-[#533afd]/20 rounded-lg pointer-events-none flex items-center justify-center">
-            <span className="font-micro-cap text-[#533afd]">Clean Air Window</span>
-          </div>
-
+        <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-2 overflow-x-auto pb-1">
           {forecast.map((item) => {
             const isSelected = selectedHour.hour === item.hour;
-            const pblBarHeight = Math.max(16, (item.pblHeightMeters / 1400) * 100);
+            const isClean = item.isMiddayCleanWindow;
 
             return (
               <button
                 key={item.hour}
                 onClick={() => setSelectedHour(item)}
-                aria-label={`Select forecast for hour ${item.hour}, PBL ${item.pblHeightMeters} meters, PM2.5 ${item.outdoorPm25} micrograms per cubic meter`}
                 aria-pressed={isSelected}
-                className="group relative flex flex-col items-center flex-1 h-full justify-end cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#533afd] rounded-t"
+                aria-label={`Forecast for ${item.hour}`}
+                className={`p-3 rounded-2xl text-left transition-all flex flex-col justify-between h-28 border focus:outline-none focus:ring-2 focus:ring-[#533afd] ${
+                  isSelected
+                    ? 'border-[#533afd] bg-[#533afd] text-white shadow-md'
+                    : isClean
+                    ? 'border-[#533afd]/40 bg-[#533afd]/5 text-[#0d253d] hover:bg-[#533afd]/10'
+                    : 'border-[#e3e8ee] bg-[#f6f9fc] text-[#475569] hover:bg-[#e3e8ee]'
+                }`}
               >
-                <div
-                  style={{ height: `${pblBarHeight}%` }}
-                  className={`w-3 sm:w-5 rounded-t transition-all duration-200 ${
-                    item.isMiddayCleanWindow
-                      ? isSelected
-                        ? 'bg-[#533afd] shadow-md shadow-[#533afd]/30'
-                        : 'bg-[#533afd]/60 group-hover:bg-[#533afd]'
-                      : isSelected
-                      ? 'bg-[#ea2261] shadow-md shadow-[#ea2261]/30'
-                      : 'bg-[#a8c3de] group-hover:bg-[#64748d]'
-                  }`}
-                />
+                <div className="flex items-center justify-between">
+                  <span className={`text-xs font-semibold ${isSelected ? 'text-white' : 'text-[#0d253d]'}`}>
+                    {item.hour}
+                  </span>
+                  {isClean && (
+                    <Sun className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-[#533afd]'}`} />
+                  )}
+                </div>
 
-                <span className={`font-tabular text-[11px] mt-2 transition-colors ${isSelected ? 'text-[#0d253d] font-medium' : 'text-[#64748d]'}`}>
-                  {item.hour.split(':')[0]}h
+                <div>
+                  <span className={`font-tabular text-lg font-bold block ${isSelected ? 'text-white' : 'text-[#0d253d]'}`}>
+                    {Math.round(item.outdoorPm25)}
+                  </span>
+                  <span className={`text-[10px] block ${isSelected ? 'text-white/80' : 'text-[#64748d]'}`}>
+                    µg/m³
+                  </span>
+                </div>
+
+                <span className={`text-[10px] font-medium truncate ${isSelected ? 'text-white/90' : isClean ? 'text-[#533afd]' : 'text-[#64748d]'}`}>
+                  {isClean ? 'Clean Window' : 'Inversion'}
                 </span>
               </button>
             );
@@ -86,69 +91,97 @@ export const InversionRadar: React.FC = () => {
         </div>
       </div>
 
-      {/* Selected Hour Telemetry Grid (Tabular Figures) */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-        <div className="p-4 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
-          <span className="font-micro-cap text-[#64748d]">Boundary Layer (PBL)</span>
-          <p className="font-tabular text-2xl font-normal text-[#0d253d] mt-1">{selectedHour.pblHeightMeters} m</p>
-          <span className="font-caption text-[#64748d]">Vertical mixing depth</span>
-        </div>
-
-        <div className="p-4 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
-          <span className="font-micro-cap text-[#64748d]">Ambient PM₂.₅</span>
-          <p className={`font-tabular text-2xl font-normal mt-1 ${selectedHour.outdoorPm25 < 75 ? 'text-[#34d399]' : 'text-[#ea2261]'}`}>
-            {selectedHour.outdoorPm25} µg/m³
+      {/* Selected Hour Telemetry Details */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-[#e3e8ee]">
+        <div className="p-5 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] flex flex-col justify-between">
+          <span className="text-xs font-semibold text-[#64748d]">
+            Vertical Mixing Ceiling
+          </span>
+          <div className="my-2">
+            <span className="font-tabular text-3xl font-bold text-[#0d253d]">
+              {selectedHour.pblHeightMeters}m
+            </span>
+            <span className="text-xs text-[#64748d] block mt-0.5">
+              Planetary Boundary Layer
+            </span>
+          </div>
+          <p className="text-[11px] text-[#475569]">
+            {selectedHour.pblHeightMeters > 700
+              ? 'Deep solar mixing ceiling lets surface pollution escape into higher atmosphere.'
+              : 'Shallow cold layer traps vehicle and heating exhaust close to ground level.'}
           </p>
-          <span className="font-caption text-[#64748d]">Fine particulate</span>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
-          <span className="font-micro-cap text-[#64748d]">Inversion State</span>
-          <p className="font-heading-sm text-[#0d253d] mt-1">{selectedHour.inversionStrength}</p>
-          <span className="font-tabular text-xs text-[#64748d]">{selectedHour.groundTempC}°C surface</span>
+        <div className="p-5 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] flex flex-col justify-between">
+          <span className="text-xs font-semibold text-[#64748d]">
+            Atmospheric Dispersion
+          </span>
+          <div className="my-2">
+            <span className="font-tabular text-3xl font-bold text-[#533afd]">
+              {selectedHour.outdoorPm25} µg/m³
+            </span>
+            <span className="text-xs text-[#64748d] block mt-0.5">
+              Ambient Particulate Load
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-[#0d253d]">
+            <Wind className="w-3.5 h-3.5 text-[#533afd]" />
+            <span>Wind speed: {selectedHour.windSpeedKmh} km/h</span>
+          </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
-          <span className="font-micro-cap text-[#64748d]">Wind Vector</span>
-          <p className="font-tabular text-2xl font-normal text-[#0d253d] mt-1">{selectedHour.windSpeedKmh} km/h</p>
-          <span className="font-caption text-[#64748d]">Advective dispersion</span>
+        <div className="p-5 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] flex flex-col justify-between">
+          <span className="text-xs font-semibold text-[#64748d]">
+            Recommended Action at {selectedHour.hour}
+          </span>
+          <div className="my-2">
+            <span className="text-base font-semibold text-[#0d253d] block">
+              {selectedHour.isMiddayCleanWindow
+                ? 'Open Windows & Ventilate'
+                : 'Seal Windows & Filter Indoor Air'}
+            </span>
+            <span className="text-xs text-[#64748d] block mt-0.5">
+              Ground Temp: {selectedHour.groundTempC}°C
+            </span>
+          </div>
+          <p className="text-[11px] text-[#475569]">
+            {selectedHour.isMiddayCleanWindow
+              ? 'Safest window of the day for cross-ventilation, outdoor recess, and commuting.'
+              : 'Stagnant boundary layer. Keep windows closed and operate indoor filters.'}
+          </p>
         </div>
       </div>
 
-      {/* Inversion-Aware Routine Scheduler Cards */}
-      <div className="mt-8 pt-6 border-t border-[#e3e8ee]">
-        <span className="font-micro-cap text-[#64748d] mb-3 block">Inversion-Aware Routine Swaps</span>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-5 rounded-xl bg-[#ffffff] border border-[#e3e8ee] shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-heading-sm text-[#0d253d]">Morning School Run</span>
-              <span className="text-[10px] text-[#ea2261] px-2 py-0.5 rounded-full bg-[#ea2261]/10 font-mono">Inversion Peak</span>
-            </div>
-            <p className="font-body-md text-xs text-[#64748d] leading-relaxed">
-              Shallow 140m PBL traps diesel exhaust at street grade. Suggest closed-cabin carpool or underground metro transit.
-            </p>
+      {/* 3 Actionable Time Blocks */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+        <div className="p-5 rounded-2xl bg-white border border-[#e3e8ee] shadow-sm">
+          <div className="flex items-center gap-2 mb-1.5">
+            <Clock className="w-4 h-4 text-[#533afd]" />
+            <h4 className="font-heading-sm text-sm text-[#0d253d]">Morning (7:00 – 10:00 AM)</h4>
           </div>
+          <p className="font-body-md text-xs text-[#475569] leading-relaxed">
+            Cold ground radiation traps dense tailpipe exhaust near breathing level. Shift runs indoors and use filtered transit.
+          </p>
+        </div>
 
-          {/* Warm Cream Band Card (Stripe Chromatic Interlude) */}
-          <div className="card-cream-band p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-heading-sm text-[#0d253d]">Midday Airing & Recess</span>
-              <span className="text-[10px] text-[#9b6829] px-2 py-0.5 rounded-full bg-[#9b6829]/15 font-mono">Clean Window</span>
-            </div>
-            <p className="font-body-md text-xs text-[#0d253d]/80 leading-relaxed">
-              Deep 1,350m thermal mixing dilutes ground pollutants. Ideal window for cross-ventilation, outdoor recess, and errands.
-            </p>
+        <div className="p-5 rounded-2xl bg-white border border-[#533afd]/40 shadow-sm">
+          <div className="flex items-center gap-2 mb-1.5">
+            <Sun className="w-4 h-4 text-[#533afd]" />
+            <h4 className="font-heading-sm text-sm text-[#0d253d]">Midday (11:30 AM – 3:30 PM)</h4>
           </div>
+          <p className="font-body-md text-xs text-[#475569] leading-relaxed">
+            Solar thermal convection dilutes ground particulates. Ideal 15–20 minute window to flush indoor CO₂.
+          </p>
+        </div>
 
-          <div className="p-5 rounded-xl bg-[#ffffff] border border-[#e3e8ee] shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-heading-sm text-[#0d253d]">Evening Inversion Return</span>
-              <span className="text-[10px] text-[#273951] px-2 py-0.5 rounded-full bg-[#f6f9fc] border border-[#e3e8ee] font-mono">Surface Capping</span>
-            </div>
-            <p className="font-body-md text-xs text-[#64748d] leading-relaxed">
-              Planetary boundary layer collapses at 16:30. Close window sashes before sunset and engage Corsi-Rosenthal unit.
-            </p>
+        <div className="p-5 rounded-2xl bg-white border border-[#e3e8ee] shadow-sm">
+          <div className="flex items-center gap-2 mb-1.5">
+            <ArrowRight className="w-4 h-4 text-[#533afd]" />
+            <h4 className="font-heading-sm text-sm text-[#0d253d]">Evening (5:00 – 10:00 PM)</h4>
           </div>
+          <p className="font-body-md text-xs text-[#475569] leading-relaxed">
+            Nocturnal cooling rapidly re-establishes the inversion lid. Latch all window sashes before sunset and run DIY purifiers.
+          </p>
         </div>
       </div>
     </div>
