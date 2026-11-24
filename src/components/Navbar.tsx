@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Share2, MapPin, Search } from 'lucide-react';
-import { ArchitectureBulb } from './ArchitectureDiagram';
 import { TOP_CITIES } from '../engine/city-data';
 
 export type D2CTab = 'overview' | 'routines' | 'hacks' | 'radar' | 'copilot';
@@ -164,9 +163,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Share2 className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Share Impact</span>
           </button>
-
-          {/* Small Architecture Bulb Modal Trigger */}
-          <ArchitectureBulb />
         </div>
       </div>
 

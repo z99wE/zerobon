@@ -440,10 +440,11 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                 >
                   <GradientBackground
                     className="w-full h-full p-5 sm:p-6 text-white flex flex-col justify-between"
-                    gradientOrigin="bottom-middle"
-                    noiseIntensity={0.6}
-                    noisePatternAlpha={30}
-                    noisePatternSize={90}
+                    gradientType="linear-gradient"
+                    gradientOrigin="top-left"
+                    noiseIntensity={0.5}
+                    noisePatternAlpha={25}
+                    noisePatternSize={80}
                     noisePatternRefreshInterval={2}
                   >
                     <div>

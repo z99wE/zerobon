@@ -27,6 +27,26 @@ describe('Global City Data Engine & Multi-City Copilot Reasoning', () => {
 
     const saoPaulo = getCityProfile('São Paulo');
     expect(saoPaulo.country).toBe('Brazil');
+
+    // High Inversion & Severe Smog Basin Additions
+    const patna = getCityProfile('Patna');
+    expect(patna.country).toBe('India');
+    expect(patna.baselinePm25).toBeGreaterThan(250);
+
+    const ulaanbaatar = getCityProfile('Ulaanbaatar');
+    expect(ulaanbaatar.country).toBe('Mongolia');
+    expect(ulaanbaatar.terrainType).toBe('Valley / Mountain');
+
+    const sarajevo = getCityProfile('Sarajevo');
+    expect(sarajevo.country).toBe('Bosnia and Herzegovina');
+
+    const bakersfield = getCityProfile('Bakersfield');
+    expect(bakersfield.country).toBe('United States');
+    expect(bakersfield.smogSeasonContext).toContain('valley');
+
+    const chengdu = getCityProfile('Chengdu');
+    expect(chengdu.country).toBe('China');
+    expect(chengdu.humidityPct).toBeGreaterThan(80);
   });
 
   it('generates consistent synthetic atmospheric profiles for ANY custom city', () => {

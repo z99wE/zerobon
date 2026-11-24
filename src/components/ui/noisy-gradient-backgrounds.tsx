@@ -173,18 +173,16 @@ export interface GradientBackgroundProps {
 
 // Main gradient background component
 function GradientBackground({
-  // Gradient customization
-  gradientType = 'radial-gradient',
+  // Gradient customization - default to seamless, classy brand linear gradient (no egg yolk radial circles)
+  gradientType = 'linear-gradient',
   gradientSize = '125% 125%',
-  gradientOrigin = 'bottom-middle',
+  gradientOrigin = 'top-left',
   colors = [
-    { color: 'rgba(245,87,2,1)', stop: '10.5%' },
-    { color: 'rgba(245,120,2,1)', stop: '16%' },
-    { color: 'rgba(245,140,2,1)', stop: '17.5%' },
-    { color: 'rgba(245,170,100,1)', stop: '25%' },
-    { color: 'rgba(238,174,202,1)', stop: '40%' },
-    { color: 'rgba(202,179,214,1)', stop: '65%' },
-    { color: 'rgba(148,201,233,1)', stop: '100%' }
+    { color: '#1e1b4b', stop: '0%' },
+    { color: '#2e1065', stop: '25%' },
+    { color: '#3b1c85', stop: '50%' },
+    { color: '#533afd', stop: '80%' },
+    { color: '#6366f1', stop: '100%' }
   ],
   
   // Noise customization

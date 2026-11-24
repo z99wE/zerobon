@@ -5,17 +5,14 @@ import { Sun, Wind, ShieldCheck, Thermometer } from 'lucide-react';
 
 export const InversionRadar: React.FC = () => {
   const forecast = generate24HourAtmosphericForecast();
-  const defaultHour = forecast[4] ?? forecast[0] ?? {
-    hour: '11:30',
-    time24: 11.5,
-    outdoorPm25: 85,
-    pblHeightMeters: 950,
-    groundTempC: 22,
-    inversionStrength: 'Clean Air Window' as const,
-    isMiddayCleanWindow: true,
-    windSpeedKmh: 14,
-  };
-  const [selectedHour, setSelectedHour] = useState<HourlyAtmosphericForecast>(defaultHour);
+  
+  // Real-time atmospheric selection: syncs to current local hour (no stale data)
+  const currentHourDecimal = new Date().getHours() + new Date().getMinutes() / 60;
+  const initialCurrentHour = forecast.reduce((prev, curr) => {
+    return Math.abs(curr.time24 - currentHourDecimal) < Math.abs(prev.time24 - currentHourDecimal) ? curr : prev;
+  }, forecast[0]) || forecast[0];
+
+  const [selectedHour, setSelectedHour] = useState<HourlyAtmosphericForecast>(initialCurrentHour);
 
   // SVG dimensions for the 24-hour Planetary Boundary Layer (PBL) altitude curve
   const svgWidth = 800;
@@ -274,10 +271,13 @@ export const InversionRadar: React.FC = () => {
           </div>
         </div>
 
-        {/* 4. Telemetry Command Card for Selected Hour */}
-        <div className="p-6 rounded-3xl bg-gradient-to-br from-[#0d253d] via-[#151c36] to-[#1e1b4b] text-white shadow-xl space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/15">
+        {/* 4. Telemetry Command Card for Selected Hour (Enhanced Brand Purple Gradient) */}
+        <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#533afd] via-[#3c25b8] to-[#1e1b4b] text-white shadow-xl space-y-5 border border-white/20">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/20">
             <div>
+              <span className="text-[11px] font-semibold tracking-wider uppercase text-white/80 block mb-0.5">
+                Atmospheric State at {selectedHour.hour}
+              </span>
               <h3 className="font-heading-md text-xl sm:text-2xl font-bold text-white">
                 {selectedHour.isMiddayCleanWindow
                   ? 'Active Clean Air Window (Solar Convection)'

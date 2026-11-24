@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
 import { GradientBackground } from './ui/noisy-gradient-backgrounds';
 import { CityAirProfile } from '../engine/city-data';
 
@@ -24,158 +23,128 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
   onOpenAssistant,
   onOpenShare,
 }) => {
-  // Cursor tracking for gentle dynamic angle shift (no circular blot or hotspot)
-  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 50, y: 50 });
+  // Flip states for the 3 Solution Architecture Cards
+  const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({
+    routines: false,
+    hacks: false,
+    receipts: false,
+  });
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    if (rect.width > 0 && rect.height > 0) {
-      const x = Math.min(100, Math.max(0, ((e.clientX - rect.left) / rect.width) * 100));
-      const y = Math.min(100, Math.max(0, ((e.clientY - rect.top) / rect.height) * 100));
-      setMousePos({ x, y });
-    }
+  const toggleCardFlip = (key: string) => {
+    setFlippedCards((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // Seamless, classy linear gradient across deep midnight & indigo tones (zero circular blots or hotspots)
-  const angle = 135 + (mousePos.x - 50) * 0.15;
-  const dynamicGradient = `linear-gradient(${angle.toFixed(1)}deg, #0d253d 0%, #151d3b 35%, #241b52 65%, #0f182c 100%)`;
-
   return (
-    <section aria-label="ZeroBon Clean Air Landing" className="w-full space-y-12">
-      {/* 1. Flagship Hero Element with Seamless Classy Gradient & Feathered Background Bleed */}
-      <div className="relative w-full">
-        {/* Soft Ambient Underglow Layer Bleeding Seamlessly Into Page */}
-        <div 
-          aria-hidden="true" 
-          className="absolute -inset-4 sm:-inset-6 rounded-[52px] bg-gradient-to-b from-[#533afd]/15 via-[#533afd]/5 to-transparent blur-3xl pointer-events-none -z-10"
-        />
+    <section aria-label="ZeroBon Clean Air Landing" className="w-full space-y-16">
+      {/* 1. Flagship Hero Section: Seamlessly Integrated on Page (No Hard Box Cutoffs) */}
+      <div className="w-full space-y-8 pt-2">
+        {/* Top Microclimate Status (Clean Text Only • No Icons • No Pill Tags) */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#e3e8ee] text-xs text-[#475569]">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-sm text-[#0d253d]">{selectedCity}</span>
+            <span className="text-[#94a3b8]">•</span>
+            <span className="text-[#64748d]">Urban Microclimate Intelligence</span>
+          </div>
+          <div className="flex items-center gap-3 text-xs text-[#64748d]">
+            <span>Clean Air Window: <strong className="text-[#0d253d] font-semibold">{cityProfile.cleanWindowHours}</strong></span>
+            <span className="text-[#94a3b8]">•</span>
+            <span>Mixing Ceiling: <strong className="text-[#0d253d] font-semibold">{cityProfile.pblHeightMeters}m</strong></span>
+          </div>
+        </div>
 
-        {/* Hero Card Container - Seamless Linear Bleed (No Hard Box Cutoff) */}
-        <div
-          onMouseMove={handleMouseMove}
-          className="relative w-full rounded-3xl sm:rounded-[42px] overflow-hidden transition-all duration-300"
-          style={{
-            maskImage: 'linear-gradient(to bottom, black 82%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, black 82%, transparent 100%)',
-          }}
-        >
-          <GradientBackground
-            customGradient={dynamicGradient}
-            noiseIntensity={0.9}
-            noisePatternAlpha={42}
-            noisePatternSize={75}
-            noisePatternRefreshInterval={1}
-            className="w-full min-h-[560px] sm:min-h-[600px] p-6 sm:p-12 lg:p-16 flex flex-col justify-between text-white relative z-10"
-          >
-            {/* Top Microclimate Status (Clean Text Only • No Icons • No Pill Tags) */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-white/15 text-xs text-white/90">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-sm text-white">{selectedCity}</span>
-                <span className="text-white/40">•</span>
-                <span className="text-white/80">Urban Microclimate</span>
-              </div>
-              <div className="flex items-center gap-3 text-xs text-white/80 font-normal">
-                <span>Clean Air Window: <strong className="text-white font-semibold">{cityProfile.cleanWindowHours}</strong></span>
-                <span className="text-white/40">•</span>
-                <span>Boundary Layer: <strong className="text-white font-semibold">{cityProfile.pblHeightMeters}m</strong></span>
-              </div>
+        {/* Central Hero Headline & Value Proposition */}
+        <div className="max-w-4xl space-y-6 text-left">
+          <h1 className="font-display-xxl text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight text-[#0d253d] leading-[1.12]">
+            Navigate severe winter smog with{' '}
+            <span className="font-semibold text-[#533afd] underline decoration-[#533afd]/30 decoration-4 underline-offset-8">
+              physics-verified
+            </span>{' '}
+            routines & hacks.
+          </h1>
+
+          <p className="font-body-lg text-base sm:text-xl text-[#475569] leading-relaxed max-w-3xl font-normal">
+            A GenAI-powered assistant designed for households and communities. Shift high-emission routines into solar mixing windows, deploy $35 DIY clean sanctuaries, and calculate the exact breath-dose you protect for your loved ones.
+          </p>
+
+          {/* Big Action CTA Buttons */}
+          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+            <button
+              onClick={onExploreRoutines}
+              className="px-8 py-4 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-base font-semibold transition-all shadow-md hover:shadow-lg focus:ring-4 focus:ring-[#533afd]/30 focus:outline-none"
+            >
+              Adopt Low-Emission Routines
+            </button>
+
+            <button
+              onClick={onExploreHacks}
+              className="px-7 py-4 rounded-full bg-white hover:bg-[#f6f9fc] text-[#0d253d] text-base font-semibold border border-[#e3e8ee] shadow-sm transition-all focus:ring-4 focus:ring-[#533afd]/20 focus:outline-none"
+            >
+              Explore $35 Indoor Hacks
+            </button>
+
+            <button
+              onClick={onOpenAssistant}
+              className="px-6 py-4 rounded-full bg-[#533afd]/10 hover:bg-[#533afd]/15 text-[#533afd] text-sm font-semibold transition-all focus:ring-4 focus:ring-[#533afd]/20 focus:outline-none"
+            >
+              Ask AI Assistant
+            </button>
+          </div>
+        </div>
+
+        {/* Live Microclimate Telemetry Row (Seamless Flowing Divs) */}
+        <div className="pt-6 border-t border-[#e3e8ee] grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
+          <div className="p-4 rounded-2xl bg-white border border-[#e3e8ee] shadow-sm">
+            <span className="text-[11px] text-[#64748d] block font-semibold uppercase tracking-wider">
+              Ambient Air Quality
+            </span>
+            <div className="flex items-baseline gap-1 mt-1">
+              <span className="font-tabular text-2xl font-bold text-[#0d253d]">
+                {Math.round(outdoorPm25)}
+              </span>
+              <span className="text-xs text-[#64748d]">µg/m³ PM₂.₅</span>
             </div>
+          </div>
 
-            {/* Central Hero Headline & Value Proposition */}
-            <div className="max-w-3xl my-6 sm:my-8 space-y-5 text-left">
-              <h1 className="font-display-xxl text-3xl sm:text-5xl lg:text-6xl font-light tracking-tight text-white leading-[1.12]">
-                Navigate severe winter smog with <span className="font-semibold text-white underline decoration-[#533afd] decoration-4 underline-offset-8">physics-verified</span> routines & hacks.
-              </h1>
-
-              <p className="font-body-lg text-sm sm:text-lg text-white/85 leading-relaxed max-w-2xl font-normal">
-                A GenAI-powered assistant designed for households and communities. Shift high-emission routines into solar mixing windows, deploy $35 DIY clean sanctuaries, and calculate the exact breath-dose you protect for your loved ones.
-              </p>
-
-              {/* BIG CALL TO ACTION (CTA) BUTTONS */}
-              <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
-                <button
-                  onClick={onExploreRoutines}
-                  className="group flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-white text-[#0d253d] text-base font-bold hover:bg-[#f6f9fc] hover:shadow-xl transition-all shadow-lg focus:ring-4 focus:ring-white/40 focus:outline-none"
-                >
-                  <span>Adopt Low-Emission Routines</span>
-                  <ArrowRight className="w-5 h-5 text-[#533afd] group-hover:translate-x-1 transition-transform" />
-                </button>
-
-                <button
-                  onClick={onExploreHacks}
-                  className="flex items-center justify-center gap-2.5 px-7 py-4 rounded-full bg-white/15 hover:bg-white/25 text-white text-base font-semibold border border-white/25 backdrop-blur-md transition-all focus:ring-4 focus:ring-white/30 focus:outline-none"
-                >
-                  <span>Explore $35 Indoor Hacks</span>
-                </button>
-
-                <button
-                  onClick={onOpenAssistant}
-                  className="flex items-center justify-center gap-2 px-5 py-4 rounded-full bg-black/20 hover:bg-black/35 text-white/90 text-sm font-medium border border-white/15 backdrop-blur-md transition-all"
-                >
-                  <span>Ask AI Assistant</span>
-                </button>
-              </div>
+          <div className="p-4 rounded-2xl bg-white border border-[#e3e8ee] shadow-sm">
+            <span className="text-[11px] text-[#64748d] block font-semibold uppercase tracking-wider">
+              Surface Temp & Humidity
+            </span>
+            <div className="flex items-baseline gap-1 mt-1">
+              <span className="font-tabular text-2xl font-bold text-[#0d253d]">
+                {cityProfile.temperatureC}°C
+              </span>
+              <span className="text-xs text-[#64748d]">· {cityProfile.humidityPct}% RH</span>
             </div>
+          </div>
 
-            {/* Bottom Live Microclimate Stats Bar inside Hero */}
-            <div className="pt-6 border-t border-white/15 grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
-              <div>
-                <span className="text-[11px] text-white/70 block uppercase tracking-wider font-semibold">
-                  Ambient Air Quality
-                </span>
-                <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="font-tabular text-2xl font-bold text-white">
-                    {Math.round(outdoorPm25)}
-                  </span>
-                  <span className="text-xs text-white/70">µg/m³ PM₂.₅</span>
-                </div>
-              </div>
-
-              <div>
-                <span className="text-[11px] text-white/70 block uppercase tracking-wider font-semibold">
-                  Surface Temp & Humidity
-                </span>
-                <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="font-tabular text-2xl font-bold text-white">
-                    {cityProfile.temperatureC}°C
-                  </span>
-                  <span className="text-xs text-white/70">· {cityProfile.humidityPct}% RH</span>
-                </div>
-              </div>
-
-              <div>
-                <span className="text-[11px] text-white/70 block uppercase tracking-wider font-semibold">
-                  Wind Dispersion
-                </span>
-                <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="font-tabular text-2xl font-bold text-white">
-                    {cityProfile.windSpeedKmh}
-                  </span>
-                  <span className="text-xs text-white/70">km/h {cityProfile.windDirection}</span>
-                </div>
-              </div>
-
-              <div>
-                <span className="text-[11px] text-white/70 block uppercase tracking-wider font-semibold">
-                  Atmospheric State
-                </span>
-                <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="font-tabular text-base font-semibold text-white truncate">
-                    {outdoorPm25 > 160 ? 'Thermal Inversion Cap' : 'Active Boundary Layer'}
-                  </span>
-                </div>
-              </div>
+          <div className="p-4 rounded-2xl bg-white border border-[#e3e8ee] shadow-sm">
+            <span className="text-[11px] text-[#64748d] block font-semibold uppercase tracking-wider">
+              Wind Dispersion
+            </span>
+            <div className="flex items-baseline gap-1 mt-1">
+              <span className="font-tabular text-2xl font-bold text-[#0d253d]">
+                {cityProfile.windSpeedKmh}
+              </span>
+              <span className="text-xs text-[#64748d]">km/h {cityProfile.windDirection}</span>
             </div>
-          </GradientBackground>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-white border border-[#e3e8ee] shadow-sm">
+            <span className="text-[11px] text-[#64748d] block font-semibold uppercase tracking-wider">
+              Atmospheric State
+            </span>
+            <div className="flex items-baseline gap-1 mt-1">
+              <span className="font-tabular text-base font-semibold text-[#533afd] truncate">
+                {outdoorPm25 > 160 ? 'Thermal Inversion Cap' : 'Active Boundary Layer'}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* 2. Problem Statement Alignment Pillars (Styled in Warm Flip-Card Orange • No Icons) */}
+      {/* 2. Problem Statement Alignment: 3D Flip Card Architecture (Zero Pill Tags • Zero Icons • Brand Aligned) */}
       <div className="space-y-6">
         <div className="text-center max-w-2xl mx-auto space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#f55702]/10 text-[#f55702] text-xs font-semibold">
-            <span>Tailored Solution Architecture</span>
-          </div>
           <h2 className="font-heading-lg text-2xl sm:text-3xl text-[#0d253d] font-bold">
             How ZeroBon Solves Urban Winter Smog
           </h2>
@@ -185,72 +154,237 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Pillar 1: Low-Emission Daily Routines */}
-          <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-[#f55702]/[0.03] to-white border border-[#f55702]/30 hover:border-[#f55702] shadow-sm transition-all space-y-4 flex flex-col justify-between">
-            <div className="space-y-3">
-              <span className="text-sm font-bold font-tabular text-[#f55702] tracking-wider block">
-                01
-              </span>
-              <h3 className="font-heading-md text-xl font-bold text-[#0d253d]">
-                1. Low-Emission Routines
-              </h3>
-              <p className="font-body-md text-xs sm:text-sm text-[#475569] leading-relaxed">
-                Cold night air traps vehicle exhaust within 150m of ground level. ZeroBon shifts school drop-offs, commutes, and workouts into golden solar convective mixing windows.
-              </p>
-            </div>
-            <div className="pt-4 border-t border-[#f55702]/20">
-              <button
-                onClick={onExploreRoutines}
-                className="text-xs font-bold text-[#f55702] hover:underline"
-              >
-                View Routine Swaps
-              </button>
+          {/* Pillar 1: Low-Emission Routines Flip Card */}
+          <div className="relative perspective-[1000px] w-full min-h-[380px]">
+            <div
+              className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
+                flippedCards.routines ? 'rotate-y-180' : ''
+              }`}
+            >
+              {/* FRONT FACE */}
+              <div className="absolute inset-0 w-full h-full rounded-3xl p-6 sm:p-8 bg-white border border-[#e3e8ee] hover:border-[#533afd] shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between backface-hidden">
+                <div className="space-y-3">
+                  <span className="text-sm font-extrabold font-tabular text-[#533afd] tracking-wider block">
+                    01
+                  </span>
+                  <h3 className="font-heading-md text-xl font-bold text-[#0d253d]">
+                    1. Low-Emission Routines
+                  </h3>
+                  <p className="font-body-md text-xs sm:text-sm text-[#475569] leading-relaxed">
+                    Cold night air traps vehicle exhaust within 150m of ground level. ZeroBon shifts school drop-offs, commutes, and workouts into golden solar convective mixing windows.
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-[#e3e8ee] flex items-center justify-between">
+                  <button
+                    onClick={() => toggleCardFlip('routines')}
+                    className="text-xs font-semibold text-[#533afd] hover:underline"
+                  >
+                    Action Blueprint & Flip
+                  </button>
+                  <button
+                    onClick={onExploreRoutines}
+                    className="text-xs font-medium text-[#64748d] hover:text-[#0d253d]"
+                  >
+                    View Swaps
+                  </button>
+                </div>
+              </div>
+
+              {/* BACK FACE (Styled with Seamless Brand Linear Gradient) */}
+              <div className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-[#533afd]/40 shadow-xl backface-hidden rotate-y-180">
+                <GradientBackground
+                  className="w-full h-full p-6 text-white flex flex-col justify-between"
+                  gradientType="linear-gradient"
+                  gradientOrigin="top-left"
+                  noiseIntensity={0.5}
+                  noisePatternAlpha={25}
+                  noisePatternSize={80}
+                  noisePatternRefreshInterval={2}
+                >
+                  <div className="space-y-3">
+                    <span className="text-xs font-bold font-tabular text-white/80 uppercase tracking-wider block">
+                      Routine Impact Blueprint
+                    </span>
+                    <h4 className="text-lg font-bold text-white">
+                      Solar Dilution Synchronization
+                    </h4>
+                    <p className="text-xs text-white/90 leading-relaxed">
+                      Rescheduling high-aerobic activities between 11:30 AM and 3:30 PM avoids the 70% particle accumulation trapped beneath the nocturnal inversion lid.
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t border-white/20 flex items-center justify-between gap-2">
+                    <button
+                      onClick={() => toggleCardFlip('routines')}
+                      className="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs font-medium transition-all"
+                    >
+                      Flip Back
+                    </button>
+                    <button
+                      onClick={onExploreRoutines}
+                      className="px-4 py-1.5 rounded-full bg-white text-[#0d253d] text-xs font-bold hover:bg-white/90 transition-all shadow-sm"
+                    >
+                      Explore Routine Swaps
+                    </button>
+                  </div>
+                </GradientBackground>
+              </div>
             </div>
           </div>
 
-          {/* Pillar 2: DIY Indoor Air Sanctuaries */}
-          <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-[#f55702]/[0.03] to-white border border-[#f55702]/30 hover:border-[#f55702] shadow-sm transition-all space-y-4 flex flex-col justify-between">
-            <div className="space-y-3">
-              <span className="text-sm font-bold font-tabular text-[#f55702] tracking-wider block">
-                02
-              </span>
-              <h3 className="font-heading-md text-xl font-bold text-[#0d253d]">
-                2. $35 DIY Indoor Sanctuaries
-              </h3>
-              <p className="font-body-md text-xs sm:text-sm text-[#475569] leading-relaxed">
-                Commercial purifiers cost upwards of $400. Build high-performing Corsi-Rosenthal boxes for $35, seal drafty window sashes, and purge kitchen frying soot in minutes.
-              </p>
-            </div>
-            <div className="pt-4 border-t border-[#f55702]/20">
-              <button
-                onClick={onExploreHacks}
-                className="text-xs font-bold text-[#f55702] hover:underline"
-              >
-                Explore Indoor Hacks
-              </button>
+          {/* Pillar 2: $35 DIY Indoor Sanctuaries Flip Card */}
+          <div className="relative perspective-[1000px] w-full min-h-[380px]">
+            <div
+              className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
+                flippedCards.hacks ? 'rotate-y-180' : ''
+              }`}
+            >
+              {/* FRONT FACE */}
+              <div className="absolute inset-0 w-full h-full rounded-3xl p-6 sm:p-8 bg-white border border-[#e3e8ee] hover:border-[#533afd] shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between backface-hidden">
+                <div className="space-y-3">
+                  <span className="text-sm font-extrabold font-tabular text-[#533afd] tracking-wider block">
+                    02
+                  </span>
+                  <h3 className="font-heading-md text-xl font-bold text-[#0d253d]">
+                    2. $35 DIY Indoor Sanctuaries
+                  </h3>
+                  <p className="font-body-md text-xs sm:text-sm text-[#475569] leading-relaxed">
+                    Commercial purifiers cost upwards of $400. Build high-performing Corsi-Rosenthal boxes for $35, seal drafty window sashes, and purge kitchen frying soot in minutes.
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-[#e3e8ee] flex items-center justify-between">
+                  <button
+                    onClick={() => toggleCardFlip('hacks')}
+                    className="text-xs font-semibold text-[#533afd] hover:underline"
+                  >
+                    Action Blueprint & Flip
+                  </button>
+                  <button
+                    onClick={onExploreHacks}
+                    className="text-xs font-medium text-[#64748d] hover:text-[#0d253d]"
+                  >
+                    View Hacks
+                  </button>
+                </div>
+              </div>
+
+              {/* BACK FACE (Styled with Seamless Brand Linear Gradient) */}
+              <div className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-[#533afd]/40 shadow-xl backface-hidden rotate-y-180">
+                <GradientBackground
+                  className="w-full h-full p-6 text-white flex flex-col justify-between"
+                  gradientType="linear-gradient"
+                  gradientOrigin="top-left"
+                  noiseIntensity={0.5}
+                  noisePatternAlpha={25}
+                  noisePatternSize={80}
+                  noisePatternRefreshInterval={2}
+                >
+                  <div className="space-y-3">
+                    <span className="text-xs font-bold font-tabular text-white/80 uppercase tracking-wider block">
+                      Sanctuary Physics
+                    </span>
+                    <h4 className="text-lg font-bold text-white">
+                      Corsi-Rosenthal Box Filtration
+                    </h4>
+                    <p className="text-xs text-white/90 leading-relaxed">
+                      Delivers over 350 m³/h Clean Air Delivery Rate (CADR). Four MERV-13 filters and a box fan achieve 85% indoor particulate reduction at 10% commercial cost.
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t border-white/20 flex items-center justify-between gap-2">
+                    <button
+                      onClick={() => toggleCardFlip('hacks')}
+                      className="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs font-medium transition-all"
+                    >
+                      Flip Back
+                    </button>
+                    <button
+                      onClick={onExploreHacks}
+                      className="px-4 py-1.5 rounded-full bg-white text-[#0d253d] text-xs font-bold hover:bg-white/90 transition-all shadow-sm"
+                    >
+                      Explore Indoor Hacks
+                    </button>
+                  </div>
+                </GradientBackground>
+              </div>
             </div>
           </div>
 
-          {/* Pillar 3: Deterministic Impact Receipts */}
-          <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-[#f55702]/[0.03] to-white border border-[#f55702]/30 hover:border-[#f55702] shadow-sm transition-all space-y-4 flex flex-col justify-between">
-            <div className="space-y-3">
-              <span className="text-sm font-bold font-tabular text-[#f55702] tracking-wider block">
-                03
-              </span>
-              <h3 className="font-heading-md text-xl font-bold text-[#0d253d]">
-                3. Verifiable Impact Receipts
-              </h3>
-              <p className="font-body-md text-xs sm:text-sm text-[#475569] leading-relaxed">
-                No vague greenwashing. Every routine swap calculates exact inhaled particulate dose prevented (µg PM₂.₅), cigarette equivalents avoided, and avoided emissions.
-              </p>
-            </div>
-            <div className="pt-4 border-t border-[#f55702]/20">
-              <button
-                onClick={onOpenShare}
-                className="text-xs font-bold text-[#f55702] hover:underline"
-              >
-                Share Verified Receipt
-              </button>
+          {/* Pillar 3: Verifiable Impact Receipts Flip Card */}
+          <div className="relative perspective-[1000px] w-full min-h-[380px]">
+            <div
+              className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
+                flippedCards.receipts ? 'rotate-y-180' : ''
+              }`}
+            >
+              {/* FRONT FACE */}
+              <div className="absolute inset-0 w-full h-full rounded-3xl p-6 sm:p-8 bg-white border border-[#e3e8ee] hover:border-[#533afd] shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between backface-hidden">
+                <div className="space-y-3">
+                  <span className="text-sm font-extrabold font-tabular text-[#533afd] tracking-wider block">
+                    03
+                  </span>
+                  <h3 className="font-heading-md text-xl font-bold text-[#0d253d]">
+                    3. Verifiable Impact Receipts
+                  </h3>
+                  <p className="font-body-md text-xs sm:text-sm text-[#475569] leading-relaxed">
+                    No vague greenwashing. Every routine swap calculates exact inhaled particulate dose prevented (µg PM₂.₅), cigarette equivalents avoided, and avoided emissions.
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-[#e3e8ee] flex items-center justify-between">
+                  <button
+                    onClick={() => toggleCardFlip('receipts')}
+                    className="text-xs font-semibold text-[#533afd] hover:underline"
+                  >
+                    Action Blueprint & Flip
+                  </button>
+                  <button
+                    onClick={onOpenShare}
+                    className="text-xs font-medium text-[#64748d] hover:text-[#0d253d]"
+                  >
+                    Share Receipt
+                  </button>
+                </div>
+              </div>
+
+              {/* BACK FACE (Styled with Seamless Brand Linear Gradient) */}
+              <div className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-[#533afd]/40 shadow-xl backface-hidden rotate-y-180">
+                <GradientBackground
+                  className="w-full h-full p-6 text-white flex flex-col justify-between"
+                  gradientType="linear-gradient"
+                  gradientOrigin="top-left"
+                  noiseIntensity={0.5}
+                  noisePatternAlpha={25}
+                  noisePatternSize={80}
+                  noisePatternRefreshInterval={2}
+                >
+                  <div className="space-y-3">
+                    <span className="text-xs font-bold font-tabular text-white/80 uppercase tracking-wider block">
+                      Deterministic Receipts
+                    </span>
+                    <h4 className="text-lg font-bold text-white">
+                      Inhaled Dose Differential
+                    </h4>
+                    <p className="text-xs text-white/90 leading-relaxed">
+                      Mass-balance differential equations calculate particulate exposure reduction down to microgram precision. Ready for 1-click sharing on WhatsApp and X.
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t border-white/20 flex items-center justify-between gap-2">
+                    <button
+                      onClick={() => toggleCardFlip('receipts')}
+                      className="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs font-medium transition-all"
+                    >
+                      Flip Back
+                    </button>
+                    <button
+                      onClick={onOpenShare}
+                      className="px-4 py-1.5 rounded-full bg-white text-[#0d253d] text-xs font-bold hover:bg-white/90 transition-all shadow-sm"
+                    >
+                      Share Verified Receipt
+                    </button>
+                  </div>
+                </GradientBackground>
+              </div>
             </div>
           </div>
         </div>
