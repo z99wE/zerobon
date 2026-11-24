@@ -28,10 +28,10 @@ export interface GradientBackgroundProps {
 }
 
 const DEFAULT_BRAND_COLORS: ColorStop[] = [
-  { color: "rgba(13, 37, 61, 1)", stop: "0%" },     // Dark Slate
-  { color: "rgba(35, 25, 95, 1)", stop: "35%" },    // Deep Indigo
-  { color: "rgba(83, 58, 253, 0.85)", stop: "70%" },// Electric Indigo
-  { color: "rgba(120, 100, 255, 0.7)", stop: "100%" }
+  { color: "rgba(13, 37, 61, 1)", stop: "0%" },      // Dark Slate
+  { color: "rgba(35, 25, 95, 1)", stop: "35%" },     // Deep Indigo
+  { color: "rgba(83, 58, 253, 0.95)", stop: "70%" }, // Electric Indigo
+  { color: "rgba(120, 100, 255, 0.85)", stop: "100%" }
 ];
 
 const ORIGIN_MAP: Record<string, string> = {
@@ -52,8 +52,8 @@ export const GradientBackground: React.FC<GradientBackgroundProps> = ({
   children,
   gradientOrigin = "bottom-middle",
   colors = DEFAULT_BRAND_COLORS,
-  gradientSize = "130% 130%",
-  noiseIntensity = 0.8,
+  gradientSize = "140% 140%",
+  noiseIntensity = 0.9,
   noisePatternSize = 90,
   noisePatternRefreshInterval = 2,
 }) => {
@@ -68,7 +68,6 @@ export const GradientBackground: React.FC<GradientBackgroundProps> = ({
     let animId = 0;
     let frame = 0;
 
-    // Pattern tile for grain performance
     const patternCanvas = document.createElement("canvas");
     const patternSize = Math.max(16, Math.min(256, Math.floor(noisePatternSize)));
     patternCanvas.width = patternSize;
@@ -79,14 +78,14 @@ export const GradientBackground: React.FC<GradientBackgroundProps> = ({
     const generateNoiseTile = () => {
       const imgData = pCtx.createImageData(patternSize, patternSize);
       const data = imgData.data;
-      const alphaVal = Math.floor(Math.min(1, Math.max(0, noiseIntensity)) * 48);
+      const alphaVal = Math.floor(Math.min(1, Math.max(0, noiseIntensity)) * 55);
 
       for (let i = 0; i < data.length; i += 4) {
         const val = Math.floor(Math.random() * 255);
-        data[i] = val;     // R
-        data[i + 1] = val; // G
-        data[i + 2] = val; // B
-        data[i + 3] = alphaVal; // A
+        data[i] = val;
+        data[i + 1] = val;
+        data[i + 2] = val;
+        data[i + 3] = alphaVal;
       }
       pCtx.putImageData(imgData, 0, 0);
     };
@@ -97,8 +96,12 @@ export const GradientBackground: React.FC<GradientBackgroundProps> = ({
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
       const dpr = Math.min(2, window.devicePixelRatio || 1);
-      canvas.width = Math.max(1, Math.floor(rect.width * dpr));
-      canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+      const w = Math.max(1, Math.floor(rect.width * dpr));
+      const h = Math.max(1, Math.floor(rect.height * dpr));
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+      }
     };
 
     const ro = new ResizeObserver(resize);
@@ -144,6 +147,15 @@ export const GradientBackground: React.FC<GradientBackgroundProps> = ({
         ...style,
       }}
     >
+      {/* Fallback CSS SVG noise overlay ensures guaranteed high-contrast grain on any browser */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 w-full h-full opacity-35 mix-blend-overlay"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+        }}
+      />
+      {/* Live animated canvas noise */}
       <canvas
         ref={canvasRef}
         aria-hidden="true"

@@ -345,19 +345,62 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* High-End Branded Versioned Footer */}
-      <footer className="w-full bg-[#f6f9fc] border-t-2 border-[#533afd]/20 pt-14 pb-12 text-[#64748d] text-xs">
-        <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
+      {/* High-End Branded Versioned Footer with Prominent Community CTA Banner */}
+      <footer className="w-full bg-[#f6f9fc] border-t-2 border-[#533afd]/20 pt-16 pb-14 text-[#64748d] text-xs">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 space-y-12">
+          {/* Prominent Footer Hero Call-to-Action (CTA) Entity */}
+          <div className="w-full rounded-3xl p-8 sm:p-10 bg-gradient-to-br from-[#0d253d] via-[#1a123f] to-[#533afd] text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+            <div className="relative z-10 max-w-xl space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white/90 text-[11px] font-semibold backdrop-blur-sm">
+                <span className="w-2 h-2 rounded-full bg-[#533afd] ring-2 ring-white/60 animate-pulse" />
+                <span>ZeroBon Community Clean Air Initiative</span>
+              </div>
+              <h3 className="font-heading-lg text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                Ready to protect your home and neighborhood?
+              </h3>
+              <p className="font-body-md text-sm text-white/80 leading-relaxed">
+                Join thousands of families shifting routines, building $35 DIY cleansers, and sharing verifiable breath receipts. Make clean air accessible to all.
+              </p>
+            </div>
+
+            <div className="relative z-10 flex flex-wrap items-center gap-3 w-full md:w-auto">
+              <button
+                onClick={() => {
+                  setActiveTab('routines');
+                  window.scrollTo({ top: 400, behavior: 'smooth' });
+                }}
+                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white text-[#0d253d] text-xs font-bold hover:bg-white/90 transition-all shadow-md focus:ring-2 focus:ring-white"
+              >
+                <span>Adopt First Routine</span>
+                <ArrowRight className="w-4 h-4 text-[#533afd]" />
+              </button>
+
+              <button
+                onClick={() => setShowShareModal(true)}
+                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white/15 hover:bg-white/25 text-white text-xs font-semibold border border-white/20 transition-all backdrop-blur-sm focus:ring-2 focus:ring-white"
+              >
+                <Share2 className="w-4 h-4" />
+                <span>Share Clean Air Impact</span>
+              </button>
+            </div>
+
+            {/* Subtle background glow effect */}
+            <div 
+              aria-hidden="true" 
+              className="absolute -right-10 -bottom-10 w-72 h-72 rounded-full bg-[#533afd]/30 blur-3xl pointer-events-none" 
+            />
+          </div>
+
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-10 border-b border-[#e3e8ee]">
             {/* Brand Logo & Mission */}
             <div className="space-y-2">
               <div className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-xl bg-[#533afd] flex items-center justify-center text-white text-xs font-bold shadow-sm ring-2 ring-[#533afd]/20">
+                <div className="w-8 h-8 rounded-xl bg-[#533afd] flex items-center justify-center text-white text-sm font-bold shadow-sm ring-2 ring-[#533afd]/20">
                   ZB
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[#0d253d] font-bold text-base tracking-tight">ZeroBon</span>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#533afd]/10 text-[#533afd] border border-[#533afd]/20">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-[#0d253d] font-bold text-lg tracking-tight">ZeroBon</span>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#533afd]/10 text-[#533afd] border border-[#533afd]/20">
                     v4.2 D2C Edition
                   </span>
                 </div>
@@ -370,32 +413,44 @@ export const App: React.FC = () => {
             {/* Quick Actions & Navigation */}
             <div className="flex flex-wrap items-center gap-6">
               <button
-                onClick={() => setActiveTab('routines')}
-                className="text-[#0d253d] hover:text-[#533afd] font-medium transition-colors"
+                onClick={() => {
+                  setActiveTab('routines');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="text-[#0d253d] hover:text-[#533afd] font-semibold transition-colors"
               >
                 Routines
               </button>
               <button
-                onClick={() => setActiveTab('hacks')}
-                className="text-[#0d253d] hover:text-[#533afd] font-medium transition-colors"
+                onClick={() => {
+                  setActiveTab('hacks');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="text-[#0d253d] hover:text-[#533afd] font-semibold transition-colors"
               >
                 Indoor Hacks
               </button>
               <button
-                onClick={() => setActiveTab('radar')}
-                className="text-[#0d253d] hover:text-[#533afd] font-medium transition-colors"
+                onClick={() => {
+                  setActiveTab('radar');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="text-[#0d253d] hover:text-[#533afd] font-semibold transition-colors"
               >
                 Air Forecast
               </button>
               <button
-                onClick={() => setActiveTab('copilot')}
-                className="text-[#0d253d] hover:text-[#533afd] font-medium transition-colors"
+                onClick={() => {
+                  setActiveTab('copilot');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="text-[#0d253d] hover:text-[#533afd] font-semibold transition-colors"
               >
                 AI Assistant
               </button>
               <button
                 onClick={() => setShowShareModal(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-medium transition-all shadow-sm"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-semibold transition-all shadow-sm"
               >
                 <Share2 className="w-3.5 h-3.5" />
                 <span>Share Impact</span>
@@ -404,7 +459,7 @@ export const App: React.FC = () => {
           </div>
 
           {/* Lower Footer: Microclimate City Status & Attribution */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 text-[11px] text-[#64748d]">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 text-[11px] text-[#64748d]">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#533afd] animate-pulse" />
               <span>Active City Microclimate:</span>
