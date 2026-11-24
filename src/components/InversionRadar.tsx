@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { generate24HourAtmosphericForecast } from '../engine/physics';
 import { HourlyAtmosphericForecast } from '../types';
-import { Sun, Wind, Clock, ArrowRight, ShieldCheck, Thermometer } from 'lucide-react';
+import { Sun, Wind, ShieldCheck, Thermometer } from 'lucide-react';
 
 export const InversionRadar: React.FC = () => {
   const forecast = generate24HourAtmosphericForecast();
@@ -55,10 +55,6 @@ export const InversionRadar: React.FC = () => {
       <div className="w-full bg-white rounded-3xl p-6 sm:p-8 border border-[#e3e8ee] shadow-sm space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#e3e8ee]">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#533afd]/10 text-[#533afd] text-xs font-semibold">
-              <span className="w-2 h-2 rounded-full bg-[#533afd] animate-pulse" />
-              <span>Diurnal Planetary Boundary Dynamics</span>
-            </div>
             <h2 className="font-heading-lg text-2xl sm:text-3xl text-[#0d253d] font-bold">
               Clean Air Window & Inversion Forecast
             </h2>
@@ -173,16 +169,6 @@ export const InversionRadar: React.FC = () => {
                     className="cursor-pointer transition-transform"
                     onClick={() => setSelectedHour(p.item)}
                   >
-                    {isSelected && (
-                      <circle
-                        cx={p.x}
-                        cy={p.y}
-                        r="12"
-                        fill="#533afd"
-                        fillOpacity="0.25"
-                        className="animate-ping"
-                      />
-                    )}
                     <circle
                       cx={p.x}
                       cy={p.y}
@@ -292,13 +278,6 @@ export const InversionRadar: React.FC = () => {
         <div className="p-6 rounded-3xl bg-gradient-to-br from-[#0d253d] via-[#151c36] to-[#1e1b4b] text-white shadow-xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/15">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-white/10 border border-white/15 text-white text-[11px] font-medium backdrop-blur-sm mb-1.5">
-                <span>Selected Hour: {selectedHour.hour}</span>
-                <span className="text-white/40">•</span>
-                <span className={selectedHour.isMiddayCleanWindow ? 'text-[#a5b4fc] font-bold' : 'text-slate-300'}>
-                  {selectedHour.inversionStrength}
-                </span>
-              </div>
               <h3 className="font-heading-md text-xl sm:text-2xl font-bold text-white">
                 {selectedHour.isMiddayCleanWindow
                   ? 'Active Clean Air Window (Solar Convection)'
@@ -377,13 +356,10 @@ export const InversionRadar: React.FC = () => {
         </div>
       </div>
 
-      {/* 5. Three Everyday Diurnal Routine Strategy Cards */}
+      {/* 5. Three Everyday Diurnal Routine Strategy Cards (Clean Text • No Icons) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div className="p-6 rounded-3xl bg-white border border-[#e3e8ee] hover:border-[#533afd]/40 shadow-sm transition-all space-y-3 flex flex-col justify-between">
           <div className="space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-[#533afd]/10 text-[#533afd] flex items-center justify-center font-bold">
-              <Clock className="w-5 h-5" />
-            </div>
             <h4 className="font-heading-sm text-base font-bold text-[#0d253d]">
               Morning Inversion Peak (7:00 – 10:00 AM)
             </h4>
@@ -398,9 +374,6 @@ export const InversionRadar: React.FC = () => {
 
         <div className="p-6 rounded-3xl bg-white border-2 border-[#533afd]/30 shadow-md transition-all space-y-3 flex flex-col justify-between">
           <div className="space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-[#533afd] text-white flex items-center justify-center font-bold shadow-sm">
-              <Sun className="w-5 h-5 text-[#ffd166]" />
-            </div>
             <h4 className="font-heading-sm text-base font-bold text-[#0d253d]">
               Midday Clean Air Window (11:30 AM – 3:30 PM)
             </h4>
@@ -415,9 +388,6 @@ export const InversionRadar: React.FC = () => {
 
         <div className="p-6 rounded-3xl bg-white border border-[#e3e8ee] hover:border-[#533afd]/40 shadow-sm transition-all space-y-3 flex flex-col justify-between">
           <div className="space-y-2">
-            <div className="w-10 h-10 rounded-2xl bg-[#0d253d] text-white flex items-center justify-center font-bold">
-              <ArrowRight className="w-5 h-5 text-[#533afd]" />
-            </div>
             <h4 className="font-heading-sm text-base font-bold text-[#0d253d]">
               Evening Inversion Return (5:00 – 10:00 PM)
             </h4>

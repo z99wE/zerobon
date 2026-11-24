@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  ArrowRight, 
-  ShieldCheck, 
-  Sun, 
-  HeartHandshake, 
-  Share2 
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { GradientBackground } from './ui/noisy-gradient-backgrounds';
 import { CityAirProfile } from '../engine/city-data';
 
@@ -30,8 +24,8 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
   onOpenAssistant,
   onOpenShare,
 }) => {
-  // Cursor tracking for gentle dynamic gradient noise shift
-  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 50, y: 55 });
+  // Cursor tracking for gentle dynamic angle shift (no circular blot or hotspot)
+  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 50, y: 50 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -42,26 +36,27 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
     }
   };
 
-  // Dynamic radiant gradient shifting with cursor coordinates
-  const dynamicGradient = `radial-gradient(135% 135% at ${mousePos.x.toFixed(1)}% ${mousePos.y.toFixed(1)}%, #533afd 0%, #2e1870 34%, #0d253d 70%, #060f1b 100%)`;
+  // Seamless, classy linear gradient across deep midnight & indigo tones (zero circular blots or hotspots)
+  const angle = 135 + (mousePos.x - 50) * 0.15;
+  const dynamicGradient = `linear-gradient(${angle.toFixed(1)}deg, #0d253d 0%, #151d3b 35%, #241b52 65%, #0f182c 100%)`;
 
   return (
     <section aria-label="ZeroBon Clean Air Landing" className="w-full space-y-12">
-      {/* 1. Flagship Hero Element with Gentle Shifting Noisy Gradient & Soft Bleeding Edges */}
+      {/* 1. Flagship Hero Element with Seamless Classy Gradient & Feathered Background Bleed */}
       <div className="relative w-full">
-        {/* Soft Ambient Underglow Layer Bleeding Into the Div */}
+        {/* Soft Ambient Underglow Layer Bleeding Seamlessly Into Page */}
         <div 
           aria-hidden="true" 
-          className="absolute -inset-4 sm:-inset-6 rounded-[52px] bg-gradient-to-b from-[#533afd]/25 via-[#533afd]/10 to-transparent blur-3xl pointer-events-none -z-10"
+          className="absolute -inset-4 sm:-inset-6 rounded-[52px] bg-gradient-to-b from-[#533afd]/15 via-[#533afd]/5 to-transparent blur-3xl pointer-events-none -z-10"
         />
 
-        {/* Hero Card Container with Feathered Bleed Edges (No Hard Border Edges) */}
+        {/* Hero Card Container - Seamless Linear Bleed (No Hard Box Cutoff) */}
         <div
           onMouseMove={handleMouseMove}
           className="relative w-full rounded-3xl sm:rounded-[42px] overflow-hidden transition-all duration-300"
           style={{
-            maskImage: 'radial-gradient(112% 108% at 50% 50%, black 75%, transparent 100%)',
-            WebkitMaskImage: 'radial-gradient(112% 108% at 50% 50%, black 75%, transparent 100%)',
+            maskImage: 'linear-gradient(to bottom, black 82%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 82%, transparent 100%)',
           }}
         >
           <GradientBackground
@@ -175,10 +170,10 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         </div>
       </div>
 
-      {/* 2. Problem Statement Alignment Pillars (The 3 Core Challenges of Winter Smog) */}
+      {/* 2. Problem Statement Alignment Pillars (Styled in Warm Flip-Card Orange • No Icons) */}
       <div className="space-y-6">
         <div className="text-center max-w-2xl mx-auto space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#533afd]/10 text-[#533afd] text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#f55702]/10 text-[#f55702] text-xs font-semibold">
             <span>Tailored Solution Architecture</span>
           </div>
           <h2 className="font-heading-lg text-2xl sm:text-3xl text-[#0d253d] font-bold">
@@ -191,11 +186,11 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Pillar 1: Low-Emission Daily Routines */}
-          <div className="rounded-3xl p-6 sm:p-8 bg-white border border-[#e3e8ee] hover:border-[#533afd]/40 shadow-sm transition-all space-y-4 flex flex-col justify-between">
+          <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-[#f55702]/[0.03] to-white border border-[#f55702]/30 hover:border-[#f55702] shadow-sm transition-all space-y-4 flex flex-col justify-between">
             <div className="space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-[#533afd]/10 text-[#533afd] flex items-center justify-center font-bold">
-                <Sun className="w-6 h-6" />
-              </div>
+              <span className="text-sm font-bold font-tabular text-[#f55702] tracking-wider block">
+                01
+              </span>
               <h3 className="font-heading-md text-xl font-bold text-[#0d253d]">
                 1. Low-Emission Routines
               </h3>
@@ -203,23 +198,22 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 Cold night air traps vehicle exhaust within 150m of ground level. ZeroBon shifts school drop-offs, commutes, and workouts into golden solar convective mixing windows.
               </p>
             </div>
-            <div className="pt-4 border-t border-[#e3e8ee]">
+            <div className="pt-4 border-t border-[#f55702]/20">
               <button
                 onClick={onExploreRoutines}
-                className="text-xs font-bold text-[#533afd] flex items-center gap-1.5 hover:underline"
+                className="text-xs font-bold text-[#f55702] hover:underline"
               >
-                <span>View Routine Swaps</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                View Routine Swaps
               </button>
             </div>
           </div>
 
           {/* Pillar 2: DIY Indoor Air Sanctuaries */}
-          <div className="rounded-3xl p-6 sm:p-8 bg-white border border-[#e3e8ee] hover:border-[#533afd]/40 shadow-sm transition-all space-y-4 flex flex-col justify-between">
+          <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-[#f55702]/[0.03] to-white border border-[#f55702]/30 hover:border-[#f55702] shadow-sm transition-all space-y-4 flex flex-col justify-between">
             <div className="space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-[#533afd]/10 text-[#533afd] flex items-center justify-center font-bold">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
+              <span className="text-sm font-bold font-tabular text-[#f55702] tracking-wider block">
+                02
+              </span>
               <h3 className="font-heading-md text-xl font-bold text-[#0d253d]">
                 2. $35 DIY Indoor Sanctuaries
               </h3>
@@ -227,23 +221,22 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 Commercial purifiers cost upwards of $400. Build high-performing Corsi-Rosenthal boxes for $35, seal drafty window sashes, and purge kitchen frying soot in minutes.
               </p>
             </div>
-            <div className="pt-4 border-t border-[#e3e8ee]">
+            <div className="pt-4 border-t border-[#f55702]/20">
               <button
                 onClick={onExploreHacks}
-                className="text-xs font-bold text-[#533afd] flex items-center gap-1.5 hover:underline"
+                className="text-xs font-bold text-[#f55702] hover:underline"
               >
-                <span>Explore Indoor Hacks</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                Explore Indoor Hacks
               </button>
             </div>
           </div>
 
           {/* Pillar 3: Deterministic Impact Receipts */}
-          <div className="rounded-3xl p-6 sm:p-8 bg-white border border-[#e3e8ee] hover:border-[#533afd]/40 shadow-sm transition-all space-y-4 flex flex-col justify-between">
+          <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-[#f55702]/[0.03] to-white border border-[#f55702]/30 hover:border-[#f55702] shadow-sm transition-all space-y-4 flex flex-col justify-between">
             <div className="space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-[#533afd]/10 text-[#533afd] flex items-center justify-center font-bold">
-                <HeartHandshake className="w-6 h-6" />
-              </div>
+              <span className="text-sm font-bold font-tabular text-[#f55702] tracking-wider block">
+                03
+              </span>
               <h3 className="font-heading-md text-xl font-bold text-[#0d253d]">
                 3. Verifiable Impact Receipts
               </h3>
@@ -251,13 +244,12 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 No vague greenwashing. Every routine swap calculates exact inhaled particulate dose prevented (µg PM₂.₅), cigarette equivalents avoided, and avoided emissions.
               </p>
             </div>
-            <div className="pt-4 border-t border-[#e3e8ee]">
+            <div className="pt-4 border-t border-[#f55702]/20">
               <button
                 onClick={onOpenShare}
-                className="text-xs font-bold text-[#533afd] flex items-center gap-1.5 hover:underline"
+                className="text-xs font-bold text-[#f55702] hover:underline"
               >
-                <span>Share Verified Receipt</span>
-                <Share2 className="w-3.5 h-3.5" />
+                Share Verified Receipt
               </button>
             </div>
           </div>

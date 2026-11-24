@@ -58,14 +58,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center gap-2 text-left focus:outline-none focus:ring-2 focus:ring-[#533afd] rounded-lg p-1"
             aria-label="ZeroBon Home"
           >
-            <div className="w-7 h-7 rounded-full bg-[#533afd] flex items-center justify-center text-white text-xs font-semibold">
-              ZB
-            </div>
-            <div>
-              <span className="text-xl font-medium tracking-tight text-[#0d253d] font-sans block leading-none">
-                ZeroBon
-              </span>
-            </div>
+            <span className="text-xl font-bold tracking-tight text-[#0d253d] font-sans block leading-none">
+              ZeroBon
+            </span>
           </button>
 
           <span className="text-[#e3e8ee] text-sm hidden md:inline">/</span>

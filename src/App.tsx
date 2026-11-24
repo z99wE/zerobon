@@ -263,16 +263,8 @@ export const App: React.FC = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-10 border-b border-[#e3e8ee]">
             {/* Brand Logo & Mission */}
             <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-[#533afd] flex items-center justify-center text-white text-sm font-bold shadow-sm ring-2 ring-[#533afd]/20">
-                  ZB
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="text-[#0d253d] font-bold text-lg tracking-tight">ZeroBon</span>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#533afd]/10 text-[#533afd] border border-[#533afd]/20">
-                    v4.3 D2C Edition
-                  </span>
-                </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[#0d253d] font-bold text-xl tracking-tight">ZeroBon</span>
               </div>
               <p className="font-body-md text-xs text-[#475569] max-w-md leading-relaxed">
                 Empowering households, schools, and communities with physics-verified winter smog routines, DIY air cleansers, and live atmospheric guidance.
@@ -339,11 +331,45 @@ export const App: React.FC = () => {
           </div>
         </div>
 
-        {/* Matching Top Gradient Brand Ribbon at Very Bottom */}
-        <div 
-          aria-hidden="true" 
-          className="w-full h-2 bg-gradient-to-r from-[#533afd] via-[#b9b9f9] via-[#f5e9d4] to-[#ea2261]" 
-        />
+        {/* Seamless Ambient Mesh Gradient Mirroring Top Header */}
+        <div className="relative w-full h-16 sm:h-20 overflow-hidden pointer-events-none select-none">
+          <svg
+            className="absolute inset-0 w-full h-full opacity-65 mix-blend-multiply"
+            viewBox="0 0 1440 120"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+          >
+            <g filter="url(#stripe-blur-footer)">
+              <path
+                d="M-100 20C200 80 480 10 720 70C960 120 1240 30 1540 80V140H-100V20Z"
+                fill="url(#footer-grad-1)"
+              />
+              <path
+                d="M-50 40C260 10 540 80 840 30C1140 90 1380 20 1600 60V140H-50V40Z"
+                fill="url(#footer-grad-2)"
+                opacity="0.8"
+              />
+            </g>
+            <defs>
+              <filter id="stripe-blur-footer" x="-100" y="-100" width="1700" height="350" filterUnits="userSpaceOnUse">
+                <feGaussianBlur stdDeviation="35" />
+              </filter>
+              <linearGradient id="footer-grad-1" x1="-100" y1="20" x2="1540" y2="100" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#533afd" stopOpacity="0.7" />
+                <stop offset="35%" stopColor="#b9b9f9" stopOpacity="0.8" />
+                <stop offset="70%" stopColor="#f5e9d4" stopOpacity="0.7" />
+                <stop offset="100%" stopColor="#ea2261" stopOpacity="0.6" />
+              </linearGradient>
+              <linearGradient id="footer-grad-2" x1="1600" y1="100" x2="-50" y2="20" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#ea2261" stopOpacity="0.5" />
+                <stop offset="40%" stopColor="#f5e9d4" stopOpacity="0.7" />
+                <stop offset="70%" stopColor="#b9b9f9" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#533afd" stopOpacity="0.7" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
       </footer>
 
       {/* Breath Receipt Modal */}
