@@ -21,8 +21,8 @@ function Noise({
   patternScaleX = 1, // How much to scale the noise pattern tiling horizontally
   patternScaleY = 1, // How much to scale the noise pattern tiling vertically
   patternRefreshInterval = 1,
-  patternAlpha = 50,
-  intensity = 1,
+  patternAlpha = 30, // Reduced by 40% across app
+  intensity = 0.6,   // Reduced by 40% across app
 }: NoiseProps) {
   const grainRef = useRef<HTMLCanvasElement | null>(null);
   // Ref to store the CSS dimensions of the canvas to avoid repeated getBoundingClientRect in loop
@@ -193,8 +193,8 @@ function GradientBackground({
   noisePatternScaleX = 1,
   noisePatternScaleY = 1,
   noisePatternRefreshInterval = 1,
-  noisePatternAlpha = 50,
-  noiseIntensity = 1,
+  noisePatternAlpha = 30,
+  noiseIntensity = 0.6,
   
   // Additional styling
   className = '',

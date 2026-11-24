@@ -309,7 +309,7 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
           return (
             <div
               key={swap.id}
-              className="relative min-h-[440px] rounded-3xl transition-all perspective-1000 group cursor-pointer"
+              className="relative min-h-[530px] sm:min-h-[510px] rounded-3xl transition-all perspective-1000 group cursor-pointer"
               onClick={(e) => {
                 // If user clicks a button inside card, let button handler deal with it
                 if ((e.target as HTMLElement).closest('button')) return;
@@ -323,7 +323,7 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
               >
                 {/* FRONT FACE */}
                 <div
-                  className={`w-full h-full rounded-3xl p-6 bg-white border flex flex-col justify-between transition-all backface-hidden ${
+                  className={`w-full h-full rounded-3xl p-5 sm:p-6 bg-white border flex flex-col justify-between transition-all backface-hidden ${
                     isDone
                       ? 'border-[#533afd] shadow-md ring-1 ring-[#533afd]/30'
                       : 'border-[#e3e8ee] hover:border-[#533afd]/50 hover:shadow-lg shadow-sm'
@@ -331,7 +331,7 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                 >
                   <div>
                     {/* Card Category & Badge & Flip Button */}
-                    <div className="flex items-center justify-between gap-2 mb-3">
+                    <div className="flex items-center justify-between gap-2 mb-2.5">
                       <div className="flex items-center gap-2.5">
                         <div className="w-9 h-9 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] flex items-center justify-center text-[#533afd]">
                           <Icon className="w-4 h-4" />
@@ -370,23 +370,23 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                     </div>
 
                     {/* Title & Description */}
-                    <h3 className="font-heading-md text-lg text-[#0d253d] mb-1.5">
+                    <h3 className="font-heading-md text-base sm:text-lg text-[#0d253d] mb-1">
                       {swap.title}
                     </h3>
-                    <p className="font-body-md text-xs text-[#475569] leading-relaxed mb-4">
+                    <p className="font-body-md text-xs text-[#475569] leading-relaxed mb-3">
                       {swap.description}
                     </p>
 
                     {/* Plain Human Reason Box */}
-                    <div className="p-3.5 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] mb-4 text-xs text-[#273951]">
-                      <span className="font-medium text-[#0d253d] block mb-1">Why this works:</span>
+                    <div className="p-3 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] mb-3 text-xs text-[#273951]">
+                      <span className="font-medium text-[#0d253d] block mb-0.5">Why this works:</span>
                       <p className="text-[11px] text-[#475569] leading-relaxed">
                         {swap.humanReason}
                       </p>
                     </div>
 
                     {/* Impact Metrics Row - Brand Styled */}
-                    <div className="grid grid-cols-3 gap-2 py-3 border-t border-b border-[#e3e8ee] mb-5">
+                    <div className="grid grid-cols-3 gap-2 py-2.5 border-t border-b border-[#e3e8ee] mb-3">
                       <div className="text-left">
                         <span className="text-[10px] text-[#64748d] block">Dose Protected</span>
                         <span className="font-tabular text-sm font-semibold text-[#533afd]">
@@ -434,22 +434,23 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                   </div>
                 </div>
 
-                {/* BACK FACE (Styled with Noisy Gradient Background) */}
+                {/* BACK FACE (Styled with Noisy Gradient Background - Unclipped) */}
                 <div
                   className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-[#533afd]/40 shadow-xl backface-hidden rotate-y-180"
                 >
                   <GradientBackground
-                    className="w-full h-full p-6 text-white flex flex-col justify-between"
+                    className="w-full h-full p-5 sm:p-6 text-white flex flex-col justify-between"
                     gradientOrigin="bottom-middle"
-                    noiseIntensity={1.0}
-                    noisePatternSize={100}
+                    noiseIntensity={0.6}
+                    noisePatternAlpha={30}
+                    noisePatternSize={90}
                     noisePatternRefreshInterval={2}
                   >
                     <div>
                       {/* Back Header */}
-                      <div className="flex items-center justify-between pb-3 border-b border-white/15 mb-4">
+                      <div className="flex items-center justify-between pb-2.5 border-b border-white/15 mb-3">
                         <div className="flex items-center gap-2">
-                          <span className="w-2.5 h-2.5 rounded-full bg-[#533afd] ring-2 ring-white/60 animate-pulse" />
+                          <span className="w-2 h-2 rounded-full bg-[#533afd] ring-2 ring-white/60 animate-pulse" />
                           <span className="text-xs font-semibold tracking-wide uppercase text-white/95">
                             Practical Living Wisdom
                           </span>
@@ -461,41 +462,41 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                             toggleFlip(swap.id);
                           }}
                           aria-label="Flip back to front face"
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 hover:bg-white text-white hover:text-[#0d253d] text-xs font-semibold border border-white/30 transition-all backdrop-blur-sm shadow-sm"
+                          className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 hover:bg-white text-white hover:text-[#0d253d] text-xs font-semibold border border-white/30 transition-all backdrop-blur-sm shadow-sm"
                         >
-                          <RotateCw className="w-3.5 h-3.5" />
+                          <RotateCw className="w-3 h-3" />
                           <span>Flip Back</span>
                         </button>
                       </div>
 
-                      <h4 className="font-heading-md text-xl text-white font-bold mb-3">
+                      <h4 className="font-heading-md text-base sm:text-lg text-white font-bold mb-2">
                         {swap.title}
                       </h4>
 
                       {/* Actionable Non-Technical D2C Insights */}
-                      <div className="space-y-3 text-xs leading-relaxed">
-                        <div className="p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
+                      <div className="space-y-2 text-xs leading-relaxed">
+                        <div className="p-2.5 rounded-xl bg-white/10 border border-white/15 backdrop-blur-sm">
                           <span className="font-semibold text-white/90 block mb-0.5">Quick Action:</span>
                           <p className="text-white/80">{swap.d2cTips.quickAction}</p>
                         </div>
 
-                        <div className="p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
+                        <div className="p-2.5 rounded-xl bg-white/10 border border-white/15 backdrop-blur-sm">
                           <span className="font-semibold text-white/90 block mb-0.5">Family & Health Benefit:</span>
                           <p className="text-white/80">{swap.d2cTips.familyBenefit}</p>
                         </div>
 
-                        <div className="p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
+                        <div className="p-2.5 rounded-xl bg-white/10 border border-white/15 backdrop-blur-sm">
                           <span className="font-semibold text-white/90 block mb-0.5">Smart Pro Tip:</span>
                           <p className="text-white/80">{swap.d2cTips.proTip}</p>
                         </div>
                       </div>
                     </div>
 
-                    {/* Back Bottom Button */}
-                    <div className="pt-4 border-t border-white/15 flex items-center justify-between gap-3">
+                    {/* Back Bottom Button - Elevated & Never Clipped */}
+                    <div className="pt-3 border-t border-white/15 flex items-center justify-between gap-3">
                       <div className="flex items-center gap-1.5 text-[11px] text-white/70">
                         <Info className="w-3.5 h-3.5 text-white/90" />
-                        <span>Zero technical jargon • High impact living</span>
+                        <span>Actionable daily routine wisdom</span>
                       </div>
                       <button
                         type="button"

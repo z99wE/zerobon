@@ -242,7 +242,7 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
           return (
             <div
               key={hack.id}
-              className="relative min-h-[400px] rounded-3xl transition-all perspective-1000 group cursor-pointer"
+              className="relative min-h-[460px] sm:min-h-[440px] rounded-3xl transition-all perspective-1000 group cursor-pointer"
               onClick={(e) => {
                 if ((e.target as HTMLElement).closest('button')) return;
                 toggleFlip(hack.id);
@@ -359,8 +359,9 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
                   <GradientBackground
                     className="w-full h-full p-6 text-white flex flex-col justify-between"
                     gradientOrigin="bottom-middle"
-                    noiseIntensity={1.0}
-                    noisePatternSize={100}
+                    noiseIntensity={0.6}
+                    noisePatternAlpha={30}
+                    noisePatternSize={90}
                     noisePatternRefreshInterval={2}
                   >
                     <div>

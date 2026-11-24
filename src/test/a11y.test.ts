@@ -17,13 +17,8 @@ describe('WCAG 2.1 AA Accessibility Automated axe Audits', () => {
       </header>
       <main id="main-content" role="main">
         <h1>Navigate severe winter smog with intelligent daily routines</h1>
-        <section aria-label="Diurnal Atmospheric Clean Air Horizon">
-          <h2>Diurnal Clean Air Horizon</h2>
-          <div role="img" aria-label="Timeline showing morning inversion from 06:00 to 11:30, golden clean air window from 11:30 to 15:30, and evening inversion return from 15:30 to 22:00">
-            <span>06:00 Morning Trap</span>
-            <span>11:30 Golden Clean Air Window</span>
-            <span>15:30 Evening Return</span>
-          </div>
+        <section aria-label="Microclimate Overview">
+          <p>Clean Air Window: 11:30 AM – 3:30 PM. Boundary mixing depth: 950m.</p>
         </section>
         <section aria-labelledby="heading-routines">
           <h2 id="heading-routines">Daily Routine Optimizer</h2>

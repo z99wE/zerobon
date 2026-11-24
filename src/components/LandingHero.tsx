@@ -3,7 +3,6 @@ import {
   ArrowRight, 
   ShieldCheck, 
   Sun, 
-  MapPin, 
   HeartHandshake, 
   Share2 
 } from 'lucide-react';
@@ -67,83 +66,23 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         >
           <GradientBackground
             customGradient={dynamicGradient}
-            noiseIntensity={1.5}
-            noisePatternAlpha={70}
+            noiseIntensity={0.9}
+            noisePatternAlpha={42}
             noisePatternSize={75}
             noisePatternRefreshInterval={1}
-            className="w-full min-h-[600px] sm:min-h-[640px] p-6 sm:p-12 lg:p-16 flex flex-col justify-between text-white relative z-10"
+            className="w-full min-h-[560px] sm:min-h-[600px] p-6 sm:p-12 lg:p-16 flex flex-col justify-between text-white relative z-10"
           >
-            {/* Top Location Bar & Microclimate Status */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-white/15">
-              <div className="flex items-center gap-2 text-xs text-white/90">
-                <MapPin className="w-4 h-4 text-white" />
-                <span className="font-semibold text-sm">{selectedCity}</span>
+            {/* Top Microclimate Status (Clean Text Only • No Icons • No Pill Tags) */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-white/15 text-xs text-white/90">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-sm text-white">{selectedCity}</span>
                 <span className="text-white/40">•</span>
-                <span className="text-white/80 font-medium">Urban Microclimate</span>
+                <span className="text-white/80">Urban Microclimate</span>
               </div>
-              <div className="text-xs text-white/70 font-tabular">
-                Boundary Mixing Depth: <span className="text-white font-semibold">{cityProfile.pblHeightMeters}m</span>
-              </div>
-            </div>
-
-            {/* Diurnal Time Horizon Visualization (Replaces Pill Tags) */}
-            <div className="w-full bg-black/25 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-white/10 space-y-2.5 my-3">
-              <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                <div className="flex items-center gap-2 font-medium text-white">
-                  <Sun className="w-4 h-4 text-[#ffd166]" />
-                  <span className="tracking-wide">Diurnal Atmospheric Clean Air Horizon</span>
-                </div>
-                <div className="flex items-center gap-3 text-[11px] text-white/70">
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-slate-500" /> Morning / Evening Inversion
-                  </span>
-                  <span className="flex items-center gap-1.5 text-white font-semibold">
-                    <span className="w-2 h-2 rounded-full bg-[#533afd] ring-2 ring-white/80 animate-pulse" /> {cityProfile.cleanWindowHours} Golden Window
-                  </span>
-                </div>
-              </div>
-
-              {/* Time Horizon Progression Gauge */}
-              <div className="relative w-full h-8 sm:h-9 bg-white/10 rounded-xl overflow-hidden flex items-center p-1">
-                {/* Phase 1: Morning Inversion Trap (06:00 - 11:30) */}
-                <div 
-                  className="h-full rounded-l-lg bg-gradient-to-r from-slate-900/80 to-slate-800/70 flex items-center justify-between px-3 relative"
-                  style={{ width: '46%' }}
-                >
-                  <span className="text-[10px] text-white/70 font-semibold uppercase tracking-wider truncate">
-                    06:00 Surface Inversion Trap
-                  </span>
-                  <span className="text-[10px] text-white/40 font-tabular hidden sm:inline">140m Stagnant</span>
-                </div>
-
-                {/* Phase 2: Golden Convective Window (11:30 - 15:30) */}
-                <div 
-                  className="h-full rounded-md bg-gradient-to-r from-[#533afd] via-[#7d67ff] to-[#533afd] shadow-[0_0_20px_rgba(125,103,255,0.7)] flex items-center justify-center px-2 relative z-10"
-                  style={{ width: '26%' }}
-                >
-                  <span className="text-[10px] sm:text-xs text-white font-bold tracking-wider truncate flex items-center gap-1.5">
-                    <Sun className="w-3.5 h-3.5 text-[#ffd166] animate-spin-slow" />
-                    <span>{cityProfile.cleanWindowHours} Golden Window</span>
-                  </span>
-                </div>
-
-                {/* Phase 3: Evening Inversion Return (15:30 - 22:00) */}
-                <div 
-                  className="h-full rounded-r-lg bg-gradient-to-r from-slate-800/70 to-slate-900/90 flex items-center justify-between px-3 flex-1"
-                >
-                  <span className="text-[10px] text-white/40 font-tabular hidden sm:inline">15:30 Sunset Cooling</span>
-                  <span className="text-[10px] text-white/70 font-semibold uppercase tracking-wider truncate ml-auto">
-                    Evening Return 22:00
-                  </span>
-                </div>
-              </div>
-
-              {/* Diurnal Horizon Time Milestones */}
-              <div className="flex items-center justify-between text-[10px] text-white/50 px-1 font-tabular">
-                <span>06:00 Cold Ground Trap</span>
-                <span className="text-white/80 font-medium">11:30 AM Solar Boundary Expansion</span>
-                <span className="text-white/80 font-medium">3:30 PM Peak Dilution</span>
-                <span>22:00 Stagnation Cap</span>
+              <div className="flex items-center gap-3 text-xs text-white/80 font-normal">
+                <span>Clean Air Window: <strong className="text-white font-semibold">{cityProfile.cleanWindowHours}</strong></span>
+                <span className="text-white/40">•</span>
+                <span>Boundary Layer: <strong className="text-white font-semibold">{cityProfile.pblHeightMeters}m</strong></span>
               </div>
             </div>
 
