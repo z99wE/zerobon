@@ -6,10 +6,13 @@ import {
   Flame, 
   Home, 
   Check, 
-  Share2
+  Share2,
+  RotateCw,
+  Info
 } from 'lucide-react';
 import { BreathReceipt } from '../types';
 import { computeBreathReceipt } from '../engine/physics';
+import { GradientBackground } from './ui/noisy-gradient-backgrounds';
 
 interface RoutineSwapItem {
   id: string;
@@ -24,6 +27,12 @@ interface RoutineSwapItem {
   noxAvoidedGrams: number;
   icon: React.ElementType;
   lifestyleMatch: string[];
+  // D2C back face wisdom
+  d2cTips: {
+    quickAction: string;
+    familyBenefit: string;
+    proTip: string;
+  };
 }
 
 const ROUTINE_SWAPS: RoutineSwapItem[] = [
@@ -40,6 +49,11 @@ const ROUTINE_SWAPS: RoutineSwapItem[] = [
     noxAvoidedGrams: 9.4,
     icon: Bus,
     lifestyleMatch: ['Commuters', 'All Families'],
+    d2cTips: {
+      quickAction: 'Leave your car at home 2 mornings a week and board the nearest air-conditioned metro train.',
+      familyBenefit: 'Bypasses morning bumper-to-bumper smog plumes, lowering blood pressure and particulate inhalation.',
+      proTip: 'Wear a comfortable cloth or N95 mask during walking connections between station doors and your office.',
+    },
   },
   {
     id: 'midday-exercise',
@@ -54,6 +68,11 @@ const ROUTINE_SWAPS: RoutineSwapItem[] = [
     noxAvoidedGrams: 0,
     icon: Sun,
     lifestyleMatch: ['Fitness Enthusiasts', 'All Families'],
+    d2cTips: {
+      quickAction: 'Schedule your runs or brisk walks between 12:00 PM and 3:00 PM when solar warming dilutes smog.',
+      familyBenefit: 'Spares deep lung alveoli from heavy morning diesel soot deposits while maintaining cardiovascular health.',
+      proTip: 'Do morning mobility or yoga indoors, then take your cardio outside during lunchtime sunshine.',
+    },
   },
   {
     id: 'school-walking-bus',
@@ -68,6 +87,11 @@ const ROUTINE_SWAPS: RoutineSwapItem[] = [
     noxAvoidedGrams: 6.2,
     icon: Baby,
     lifestyleMatch: ['Families with Kids'],
+    d2cTips: {
+      quickAction: 'Team up with 2 neighboring parents to take turns walking kids to school on foot with sealed pediatric N95s.',
+      familyBenefit: 'Kids avoid breathing the thick cloud of exhaust that pools from 50 idling SUVs at school gates.',
+      proTip: 'Pack spare masks in school bags and ask administrators to keep school corridor doors shut during drop-offs.',
+    },
   },
   {
     id: 'induction-cooking',
@@ -82,6 +106,11 @@ const ROUTINE_SWAPS: RoutineSwapItem[] = [
     noxAvoidedGrams: 3.5,
     icon: Flame,
     lifestyleMatch: ['All Families', 'Apartment Residents'],
+    d2cTips: {
+      quickAction: 'Keep pan lids closed while simmering and turn on the range exhaust fan 2 minutes before igniting burners.',
+      familyBenefit: 'Keeps kitchen NOx and burnt oil particulates from drafting into bedrooms where children sleep.',
+      proTip: 'Switching to electric kettles and induction pans eliminates up to 60% of winter indoor particulate spikes.',
+    },
   },
   {
     id: 'remote-work-smog-day',
@@ -96,6 +125,11 @@ const ROUTINE_SWAPS: RoutineSwapItem[] = [
     noxAvoidedGrams: 21.0,
     icon: Home,
     lifestyleMatch: ['Commuters', 'Apartment Residents'],
+    d2cTips: {
+      quickAction: 'Check morning AQI: if outdoor levels exceed 200 µg/m³, request a work-from-home focus day.',
+      familyBenefit: 'Saves 2 hours of stressful road exposure while keeping your home air cleansed and peaceful.',
+      proTip: 'Set up your desk in the bedroom or study that has active window draft seals and continuous air purification.',
+    },
   },
 ];
 
@@ -115,8 +149,13 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
 }) => {
   const [selectedFilter, setSelectedFilter] = useState<string>('All');
   const [committedSwaps, setCommittedSwaps] = useState<Record<string, boolean>>({});
+  const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({});
 
   const filterOptions = ['All', 'Families with Kids', 'Commuters', 'Fitness Enthusiasts', 'Apartment Residents'];
+
+  const toggleFlip = (id: string) => {
+    setFlippedCards((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const filteredSwaps = ROUTINE_SWAPS.filter((item) => {
     if (selectedFilter === 'All') return true;
@@ -265,101 +304,213 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
         {filteredSwaps.map((swap) => {
           const Icon = swap.icon;
           const isDone = !!committedSwaps[swap.id];
+          const isFlipped = !!flippedCards[swap.id];
 
           return (
             <div
               key={swap.id}
-              className={`rounded-3xl p-6 bg-white border transition-all ${
-                isDone
-                  ? 'border-[#533afd] shadow-md ring-1 ring-[#533afd]/30'
-                  : 'border-[#e3e8ee] hover:border-[#a8c3de] shadow-sm'
-              }`}
+              className="relative min-h-[420px] rounded-3xl transition-all"
+              style={{ perspective: '1000px' }}
             >
-              {/* Card Category & Badge */}
-              <div className="flex items-center justify-between gap-2 mb-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] flex items-center justify-center text-[#533afd]">
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-semibold text-[#0d253d] block">
-                      {swap.category}
-                    </span>
-                    <span className="text-[11px] text-[#64748d]">
-                      {swap.lifestyleMatch.join(' • ')}
-                    </span>
-                  </div>
-                </div>
-
-                {isDone && (
-                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#f6f9fc] border border-[#e3e8ee] text-[#533afd] text-xs font-medium">
-                    <Check className="w-3.5 h-3.5" />
-                    <span>Adopted</span>
-                  </span>
-                )}
-              </div>
-
-              {/* Title & Description */}
-              <h3 className="font-heading-md text-lg text-[#0d253d] mb-1.5">
-                {swap.title}
-              </h3>
-              <p className="font-body-md text-xs text-[#475569] leading-relaxed mb-4">
-                {swap.description}
-              </p>
-
-              {/* Plain Human Reason Box */}
-              <div className="p-3.5 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] mb-4 text-xs text-[#273951]">
-                <span className="font-medium text-[#0d253d] block mb-1">Why this works:</span>
-                <p className="text-[11px] text-[#475569] leading-relaxed">
-                  {swap.humanReason}
-                </p>
-              </div>
-
-              {/* Impact Metrics Row - Brand Styled */}
-              <div className="grid grid-cols-3 gap-2 py-3 border-t border-b border-[#e3e8ee] mb-5">
-                <div className="text-left">
-                  <span className="text-[10px] text-[#64748d] block">Dose Protected</span>
-                  <span className="font-tabular text-sm font-semibold text-[#533afd]">
-                    +{swap.doseSavedUg} µg
-                  </span>
-                </div>
-                <div className="text-left">
-                  <span className="text-[10px] text-[#64748d] block">Cigarettes Saved</span>
-                  <span className="font-tabular text-sm font-semibold text-[#0d253d]">
-                    {swap.cigarettesSaved} cigs
-                  </span>
-                </div>
-                <div className="text-left">
-                  <span className="text-[10px] text-[#64748d] block">Carbon Cut</span>
-                  <span className="font-tabular text-sm font-semibold text-[#0d253d]">
-                    {swap.co2eAvoidedGrams > 0 ? `${(swap.co2eAvoidedGrams / 1000).toFixed(1)}kg CO₂` : 'Zero Fuel'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center justify-between gap-3">
-                <button
-                  onClick={() => handleCommit(swap)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-full text-xs font-medium transition-all focus:ring-2 focus:ring-[#533afd] ${
+              <div
+                className="w-full h-full relative transition-transform duration-500"
+                style={{
+                  transformStyle: 'preserve-3d',
+                  transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                }}
+              >
+                {/* FRONT FACE */}
+                <div
+                  className={`w-full h-full rounded-3xl p-6 bg-white border flex flex-col justify-between transition-all ${
                     isDone
-                      ? 'bg-[#f6f9fc] text-[#0d253d] border border-[#e3e8ee] hover:bg-[#e3e8ee]'
-                      : 'bg-[#533afd] hover:bg-[#432ec9] text-white shadow-sm'
+                      ? 'border-[#533afd] shadow-md ring-1 ring-[#533afd]/30'
+                      : 'border-[#e3e8ee] hover:border-[#a8c3de] shadow-sm'
                   }`}
+                  style={{
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden',
+                  }}
                 >
-                  <Check className="w-3.5 h-3.5" />
-                  <span>{isDone ? 'Update Receipt' : 'Adopt Routine Swap'}</span>
-                </button>
+                  <div>
+                    {/* Card Category & Badge & Flip Button */}
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] flex items-center justify-center text-[#533afd]">
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="text-xs font-semibold text-[#0d253d] block">
+                            {swap.category}
+                          </span>
+                          <span className="text-[11px] text-[#64748d]">
+                            {swap.lifestyleMatch.join(' • ')}
+                          </span>
+                        </div>
+                      </div>
 
-                {isDone && (
-                  <button
-                    onClick={onTriggerShare}
-                    aria-label={`Share ${swap.title} on Social Media`}
-                    className="p-2.5 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#533afd] border border-[#e3e8ee] transition-all focus:ring-2 focus:ring-[#533afd]"
+                      <div className="flex items-center gap-2">
+                        {isDone && (
+                          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#f6f9fc] border border-[#e3e8ee] text-[#533afd] text-xs font-medium">
+                            <Check className="w-3.5 h-3.5" />
+                            <span>Adopted</span>
+                          </span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => toggleFlip(swap.id)}
+                          aria-label={`Flip card to see lifestyle tips for ${swap.title}`}
+                          className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] text-[11px] font-medium border border-[#e3e8ee] transition-all"
+                          title="Flip card for family & habit advice"
+                        >
+                          <RotateCw className="w-3 h-3 text-[#533afd]" />
+                          <span>Tips</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Title & Description */}
+                    <h3 className="font-heading-md text-lg text-[#0d253d] mb-1.5">
+                      {swap.title}
+                    </h3>
+                    <p className="font-body-md text-xs text-[#475569] leading-relaxed mb-4">
+                      {swap.description}
+                    </p>
+
+                    {/* Plain Human Reason Box */}
+                    <div className="p-3.5 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] mb-4 text-xs text-[#273951]">
+                      <span className="font-medium text-[#0d253d] block mb-1">Why this works:</span>
+                      <p className="text-[11px] text-[#475569] leading-relaxed">
+                        {swap.humanReason}
+                      </p>
+                    </div>
+
+                    {/* Impact Metrics Row - Brand Styled */}
+                    <div className="grid grid-cols-3 gap-2 py-3 border-t border-b border-[#e3e8ee] mb-5">
+                      <div className="text-left">
+                        <span className="text-[10px] text-[#64748d] block">Dose Protected</span>
+                        <span className="font-tabular text-sm font-semibold text-[#533afd]">
+                          +{swap.doseSavedUg} µg
+                        </span>
+                      </div>
+                      <div className="text-left">
+                        <span className="text-[10px] text-[#64748d] block">Cigarettes Saved</span>
+                        <span className="font-tabular text-sm font-semibold text-[#0d253d]">
+                          {swap.cigarettesSaved} cigs
+                        </span>
+                      </div>
+                      <div className="text-left">
+                        <span className="text-[10px] text-[#64748d] block">Carbon Cut</span>
+                        <span className="font-tabular text-sm font-semibold text-[#0d253d]">
+                          {swap.co2eAvoidedGrams > 0 ? `${(swap.co2eAvoidedGrams / 1000).toFixed(1)}kg CO₂` : 'Zero Fuel'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center justify-between gap-3 pt-2">
+                    <button
+                      onClick={() => handleCommit(swap)}
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-full text-xs font-medium transition-all focus:ring-2 focus:ring-[#533afd] ${
+                        isDone
+                          ? 'bg-[#f6f9fc] text-[#0d253d] border border-[#e3e8ee] hover:bg-[#e3e8ee]'
+                          : 'bg-[#533afd] hover:bg-[#432ec9] text-white shadow-sm'
+                      }`}
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      <span>{isDone ? 'Update Receipt' : 'Adopt Routine Swap'}</span>
+                    </button>
+
+                    {isDone && (
+                      <button
+                        onClick={onTriggerShare}
+                        aria-label={`Share ${swap.title} on Social Media`}
+                        className="p-2.5 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#533afd] border border-[#e3e8ee] transition-all focus:ring-2 focus:ring-[#533afd]"
+                      >
+                        <Share2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* BACK FACE (Styled with Noisy Gradient Background) */}
+                <div
+                  className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-[#533afd]/40 shadow-xl"
+                  style={{
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden',
+                    transform: 'rotateY(180deg)',
+                  }}
+                >
+                  <GradientBackground
+                    className="w-full h-full p-6 text-white flex flex-col justify-between"
+                    gradientOrigin="bottom-middle"
+                    noiseIntensity={0.85}
+                    noisePatternSize={85}
+                    noisePatternRefreshInterval={2}
                   >
-                    <Share2 className="w-4 h-4" />
-                  </button>
-                )}
+                    <div>
+                      {/* Back Header */}
+                      <div className="flex items-center justify-between pb-3 border-b border-white/15 mb-4">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-[#533afd] ring-2 ring-white/50" />
+                          <span className="text-xs font-semibold tracking-wide uppercase text-white/90">
+                            Practical Living Wisdom
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => toggleFlip(swap.id)}
+                          aria-label="Flip back to front face"
+                          className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-medium border border-white/20 transition-all backdrop-blur-sm"
+                        >
+                          <RotateCw className="w-3 h-3" />
+                          <span>Flip Back</span>
+                        </button>
+                      </div>
+
+                      <h4 className="font-heading-md text-xl text-white font-bold mb-3">
+                        {swap.title}
+                      </h4>
+
+                      {/* Actionable Non-Technical D2C Insights */}
+                      <div className="space-y-3 text-xs leading-relaxed">
+                        <div className="p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
+                          <span className="font-semibold text-white/90 block mb-0.5">Quick Action:</span>
+                          <p className="text-white/80">{swap.d2cTips.quickAction}</p>
+                        </div>
+
+                        <div className="p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
+                          <span className="font-semibold text-white/90 block mb-0.5">Family & Health Benefit:</span>
+                          <p className="text-white/80">{swap.d2cTips.familyBenefit}</p>
+                        </div>
+
+                        <div className="p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
+                          <span className="font-semibold text-white/90 block mb-0.5">Smart Pro Tip:</span>
+                          <p className="text-white/80">{swap.d2cTips.proTip}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Back Bottom Button */}
+                    <div className="pt-4 border-t border-white/15 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-1.5 text-[11px] text-white/70">
+                        <Info className="w-3.5 h-3.5 text-white/90" />
+                        <span>Zero technical jargon • High impact living</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleCommit(swap);
+                          toggleFlip(swap.id);
+                        }}
+                        className="px-4 py-2 rounded-full bg-white text-[#0d253d] font-semibold text-xs hover:bg-white/90 transition-all shadow-sm"
+                      >
+                        Adopt & Flip
+                      </button>
+                    </div>
+                  </GradientBackground>
+                </div>
               </div>
             </div>
           );

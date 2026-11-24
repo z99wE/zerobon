@@ -5,7 +5,6 @@ import { DailyRoutineOptimizer } from './components/DailyRoutineOptimizer';
 import { IndoorAirHacks } from './components/IndoorAirHacks';
 import { InversionRadar } from './components/InversionRadar';
 import { HardenedCopilot } from './components/HardenedCopilot';
-import { GlyphStream } from './components/GlyphStream';
 import { BreathReceiptModal } from './components/BreathReceiptModal';
 import { SocialShareModal } from './components/SocialShareModal';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -132,9 +131,6 @@ export const App: React.FC = () => {
       >
         Skip to main content
       </a>
-
-      {/* Subtle Liquid Branded Glyph Stream Cursor Interaction */}
-      <GlyphStream />
 
       {/* Atmospheric Gradient Mesh Upper Third */}
       <GradientMesh />
@@ -349,30 +345,79 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* Consumer D2C Footer */}
-      <footer className="w-full bg-[#f6f9fc] border-t border-[#e3e8ee] py-12 text-[#64748d] text-xs">
-        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col sm:flex-row items-center gap-3">
-            <div className="w-5 h-5 rounded-full bg-[#533afd] flex items-center justify-center text-white text-[10px] font-bold">
-              ZB
+      {/* High-End Branded Versioned Footer */}
+      <footer className="w-full bg-[#f6f9fc] border-t-2 border-[#533afd]/20 pt-14 pb-12 text-[#64748d] text-xs">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-10 border-b border-[#e3e8ee]">
+            {/* Brand Logo & Mission */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-xl bg-[#533afd] flex items-center justify-center text-white text-xs font-bold shadow-sm ring-2 ring-[#533afd]/20">
+                  ZB
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[#0d253d] font-bold text-base tracking-tight">ZeroBon</span>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#533afd]/10 text-[#533afd] border border-[#533afd]/20">
+                    v4.2 D2C Edition
+                  </span>
+                </div>
+              </div>
+              <p className="font-body-md text-xs text-[#475569] max-w-md leading-relaxed">
+                Empowering households, schools, and communities with physics-verified winter smog routines, DIY air cleansers, and live atmospheric guidance.
+              </p>
             </div>
-            <span className="text-[#0d253d] font-semibold">ZeroBon</span>
-            <span className="hidden sm:inline text-[#e3e8ee]">•</span>
-            <span>Winter Smog & Urban Clean Air Platform</span>
+
+            {/* Quick Actions & Navigation */}
+            <div className="flex flex-wrap items-center gap-6">
+              <button
+                onClick={() => setActiveTab('routines')}
+                className="text-[#0d253d] hover:text-[#533afd] font-medium transition-colors"
+              >
+                Routines
+              </button>
+              <button
+                onClick={() => setActiveTab('hacks')}
+                className="text-[#0d253d] hover:text-[#533afd] font-medium transition-colors"
+              >
+                Indoor Hacks
+              </button>
+              <button
+                onClick={() => setActiveTab('radar')}
+                className="text-[#0d253d] hover:text-[#533afd] font-medium transition-colors"
+              >
+                Air Forecast
+              </button>
+              <button
+                onClick={() => setActiveTab('copilot')}
+                className="text-[#0d253d] hover:text-[#533afd] font-medium transition-colors"
+              >
+                AI Assistant
+              </button>
+              <button
+                onClick={() => setShowShareModal(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-medium transition-all shadow-sm"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                <span>Share Impact</span>
+              </button>
+            </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setShowShareModal(true)}
-              className="flex items-center gap-1.5 text-[#533afd] font-medium hover:underline"
-            >
-              <Share2 className="w-3.5 h-3.5" />
-              <span>Share Clean Air Impact</span>
-            </button>
-            <span className="text-[#e3e8ee]">•</span>
-            <span className="text-[#475569]">
-              Physics-Informed Health Ledger
-            </span>
+          {/* Lower Footer: Microclimate City Status & Attribution */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 text-[11px] text-[#64748d]">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#533afd] animate-pulse" />
+              <span>Active City Microclimate:</span>
+              <span className="font-semibold text-[#0d253d]">{selectedCity}</span>
+              <span className="text-[#a8c3de]">•</span>
+              <span>Clean Window: {cityProfile.cleanWindowHours}</span>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <span>Physics Mass-Balance Engine</span>
+              <span className="text-[#e3e8ee]">•</span>
+              <span>Zero-Hallucination Health Ledger</span>
+            </div>
           </div>
         </div>
       </footer>

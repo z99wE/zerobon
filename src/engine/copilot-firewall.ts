@@ -65,10 +65,24 @@ export async function executeHardenedCopilotPipeline(
   }
 
   // Check for canary leakage attempt or base64 decoding attack
+  // Note: Only flag base64 if it does NOT contain English spaces (true base64 payloads don't have spaces between words)
+  // and has typical base64 characteristics (such as padding '=' or high density of typical base64 strings)
+  const isActualBase64 = (str: string) => {
+    // If the input contains spaces, it's regular text, not a raw base64 encoded blob
+    if (/\s/.test(str)) return false;
+    if (str.length < 40) return false;
+    // Check if it strictly matches base64 charset
+    if (!/^[A-Za-z0-9+/=]+$/.test(str)) return false;
+    // Base64 lengths are multiples of 4 (with padding '=')
+    if (str.length % 4 !== 0 && !str.includes('=')) return false;
+    // Avoid false positives on long camelCase words unless they look like real base64 chunks
+    return /(?:[A-Za-z0-9+/]{4}){10,}(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(str);
+  };
+
   if (sanitized.toLowerCase().includes('canary') || sanitized.toLowerCase().includes('zerobon_sec')) {
     attackDetected = true;
     attackType = 'canary_leak_attempt';
-  } else if (/^[A-Za-z0-9+/=]{40,}$/.test(sanitized.replace(/\s+/g, ''))) {
+  } else if (isActualBase64(sanitized)) {
     attackDetected = true;
     attackType = 'base64_smuggle';
   }
