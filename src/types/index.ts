@@ -98,10 +98,10 @@ export const VERIFIED_HACK_IDS = [
 
 export const CopilotResponseSchema = z.object({
   intent_valid: z.boolean(),
-  routine_advice: z.array(z.string().max(180)).max(3),
-  iaq_hack_ids: z.array(z.enum(VERIFIED_HACK_IDS)).max(2),
+  routine_advice: z.array(z.string().max(500)).max(5),
+  iaq_hack_ids: z.array(z.enum(VERIFIED_HACK_IDS)).max(3),
   pet_animation_state: z.enum(['calm', 'alert_mask', 'ventilate', 'celebrate']),
-  safety_note: z.string().max(140).optional(),
+  safety_note: z.string().max(250).optional(),
 });
 
 export type CopilotResponse = z.infer<typeof CopilotResponseSchema>;

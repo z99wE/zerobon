@@ -7,11 +7,7 @@ import {
   Home, 
   Check, 
   Share2, 
-  Sparkles, 
-  Wind, 
-  Thermometer, 
-  Clock, 
-  Layers
+  Sparkles
 } from 'lucide-react';
 import { BreathReceipt } from '../types';
 import { computeBreathReceipt } from '../engine/physics';
@@ -19,10 +15,10 @@ import { computeBreathReceipt } from '../engine/physics';
 interface RoutineSwapItem {
   id: string;
   title: string;
-  category: 'Commute' | 'Exercise' | 'Family & School' | 'Home Energy';
+  category: string;
   description: string;
   actionDetails: string;
-  inversionReason: string;
+  humanReason: string;
   doseSavedUg: number;
   cigarettesSaved: number;
   co2eAvoidedGrams: number;
@@ -34,11 +30,11 @@ interface RoutineSwapItem {
 const ROUTINE_SWAPS: RoutineSwapItem[] = [
   {
     id: 'metro-commute',
-    title: 'Electric Metro Commute Switch',
-    category: 'Commute',
+    title: 'Switch Commute to Electric Metro',
+    category: 'Daily Commute',
     description: 'Switch from solo petrol/diesel drive to underground electric metro or electric bus.',
-    actionDetails: 'Air-filtered underground transit cabin keeps exposure under 35 µg/m³ while taking a vehicle off jammed surface roads.',
-    inversionReason: 'During 8:00 AM surface temperature inversions, tailpipe exhaust remains trapped within 200m of the ground.',
+    actionDetails: 'Air-filtered underground transit cabin keeps exposure under 35 µg/m³ while removing a vehicle from congested roads.',
+    humanReason: 'Morning cold air pools vehicle exhaust close to the road. Underground rail completely avoids traffic fumes.',
     doseSavedUg: 58,
     cigarettesSaved: 2.6,
     co2eAvoidedGrams: 1420,
@@ -48,11 +44,11 @@ const ROUTINE_SWAPS: RoutineSwapItem[] = [
   },
   {
     id: 'midday-exercise',
-    title: 'Shift Outdoor Run to Midday Mixing Window',
-    category: 'Exercise',
-    description: 'Move cardio from 6:30 AM stagnant smog to 1:00 PM when the boundary layer expands.',
-    actionDetails: 'Solar heating elevates boundary layer height from 180m to 850m, dispersing surface smog by up to 60%.',
-    inversionReason: 'Morning ground inversion concentrates particulates at head height. Midday thermal convection ventilates the city.',
+    title: 'Shift Outdoor Run to Midday Hours',
+    category: 'Fitness & Health',
+    description: 'Move workouts from early morning cold smog to midday when rising warm air disperses the smoke.',
+    actionDetails: 'Midday sunlight expands the vertical mixing layer by 4x, diluting surface pollution significantly.',
+    humanReason: 'Heavy breathing during morning runs multiplies particulate intake by 10x. Midday air is far more dispersed.',
     doseSavedUg: 84,
     cigarettesSaved: 3.8,
     co2eAvoidedGrams: 0,
@@ -62,11 +58,11 @@ const ROUTINE_SWAPS: RoutineSwapItem[] = [
   },
   {
     id: 'school-walking-bus',
-    title: 'Walking School Bus with N95 Respiration',
+    title: 'Walking Pod with N95 Respiration',
     category: 'Family & School',
-    description: 'Coordinate neighborhood walking pod with certified N95 masks, bypassing idling car queues at school gates.',
+    description: 'Coordinate a neighborhood walking pod with certified N95 masks, bypassing idling car queues at school gates.',
     actionDetails: 'Eliminates dense micro-hotspots of diesel exhaust idling right where children assemble outside school gates.',
-    inversionReason: 'Idling combustion exhaust around school drop-off zones creates localized spikes over 450 µg/m³.',
+    humanReason: 'Car exhaust around school drop-off zones creates dangerous particulate spikes. Walking with masks protects children.',
     doseSavedUg: 62,
     cigarettesSaved: 2.8,
     co2eAvoidedGrams: 890,
@@ -76,11 +72,11 @@ const ROUTINE_SWAPS: RoutineSwapItem[] = [
   },
   {
     id: 'induction-cooking',
-    title: 'Electric Induction Cooking Swap',
-    category: 'Home Energy',
+    title: 'Cook with Electric Induction & Sealed Lids',
+    category: 'Home Habits',
     description: 'Prepare dinner on electric induction cooktop with lids sealed rather than open-flame gas or deep frying.',
-    actionDetails: 'Prevents indoor ultrafine particle spikes (often > 200 µg/m³) and unburned hydrocarbons inside closed winter homes.',
-    inversionReason: 'Because outdoor air is too toxic to ventilate freely, indoor combustion products stay trapped for hours.',
+    actionDetails: 'Prevents indoor ultrafine particle spikes and unburned hydrocarbons inside closed winter homes.',
+    humanReason: 'Gas stoves produce nitrogen dioxide and fine soot. In winter, closed windows keep these fumes inside your home.',
     doseSavedUg: 46,
     cigarettesSaved: 2.1,
     co2eAvoidedGrams: 420,
@@ -90,11 +86,11 @@ const ROUTINE_SWAPS: RoutineSwapItem[] = [
   },
   {
     id: 'remote-work-smog-day',
-    title: 'Smog-Emergency Remote Work Day',
-    category: 'Commute',
-    description: 'Work from your filtered home sanctuary on high-inversion alert days to avoid peak road exposure.',
-    actionDetails: 'Completely bypasses 90+ minutes of high-concentration road tunnel and bumper-to-bumper particulate inhalation.',
-    inversionReason: 'Traffic emissions on cold, windless winter mornings become secondary particulate precursors through photochemical smog.',
+    title: 'Remote Work on High-Smog Days',
+    category: 'Work & Living',
+    description: 'Work from your filtered home sanctuary on high-pollution days to avoid peak road exposure.',
+    actionDetails: 'Completely bypasses 90+ minutes of dense road tunnel and bumper-to-bumper particulate inhalation.',
+    humanReason: 'Eliminating the daily commute avoids breathing concentrated road exhaust during peak traffic jams.',
     doseSavedUg: 96,
     cigarettesSaved: 4.4,
     co2eAvoidedGrams: 3250,
@@ -106,14 +102,15 @@ const ROUTINE_SWAPS: RoutineSwapItem[] = [
 
 interface DailyRoutineOptimizerProps {
   outdoorPm25: number;
-  selectedLocation: string;
+  selectedCity: string;
+  cleanWindowHours: string;
   onCommitReceipt: (receipt: BreathReceipt) => void;
   onTriggerShare: () => void;
 }
 
 export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
   outdoorPm25,
-  selectedLocation,
+  selectedCity,
   onCommitReceipt,
   onTriggerShare,
 }) => {
@@ -131,7 +128,7 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
     setCommittedSwaps((prev) => ({ ...prev, [swap.id]: true }));
 
     const receipt = computeBreathReceipt(
-      selectedLocation,
+      selectedCity,
       swap.title,
       {
         concentration_ug_m3: 35,
@@ -148,7 +145,6 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
       'metro_transit'
     );
 
-    // Override with custom swap stats
     const enrichedReceipt: BreathReceipt = {
       ...receipt,
       actionTitle: swap.title,
@@ -178,101 +174,70 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
       aria-labelledby="routines-heading"
       className="w-full space-y-6"
     >
-      {/* Section Header & Weather Context */}
+      {/* Section Header - De-slopped, Pure Brand Aesthetic */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#e3e8ee] shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#e3e8ee]">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#533afd]" />
-              <span className="font-micro-cap text-[#533afd] font-semibold">
-                Low-Emission Daily Routines
-              </span>
-            </div>
             <h2 id="routines-heading" className="font-heading-lg text-2xl sm:text-3xl text-[#0d253d]">
-              Inversion-Smart Daily Routines
+              Daily Routine Optimizer
             </h2>
             <p className="font-body-md text-sm text-[#475569] mt-1 max-w-2xl">
-              Shift high-exposure activities away from morning stagnation traps and switch to low-emission transport alternatives tailored to your lifestyle.
+              Shift high-exposure activities away from morning stagnation traps. Choose routines that cut pollution and protect your family in {selectedCity}.
             </p>
           </div>
 
-          {/* Weather & Atmospheric Dispersion Pill */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
-            <div className="flex items-center gap-2">
-              <Thermometer className="w-4 h-4 text-[#533afd]" />
-              <span className="text-xs text-[#273951]">14°C Calm</span>
-            </div>
-            <span className="text-[#a8c3de] hidden sm:inline">•</span>
-            <div className="flex items-center gap-2">
-              <Wind className="w-4 h-4 text-[#ea2261]" />
-              <span className="text-xs font-medium text-[#ea2261]">
-                Trap: Inversion &lt; 250m
-              </span>
-            </div>
-            <span className="text-[#a8c3de] hidden sm:inline">•</span>
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-[#128c7e]" />
-              <span className="text-xs font-semibold text-[#128c7e]">
-                Clean Window: 11:30 AM – 3:30 PM
-              </span>
-            </div>
-          </div>
+          <button
+            onClick={onTriggerShare}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#533afd] text-xs font-semibold border border-[#e3e8ee] transition-all self-start md:self-auto"
+          >
+            <Share2 className="w-3.5 h-3.5" />
+            <span>Share My Progress</span>
+          </button>
         </div>
 
-        {/* Live Impact Tally Bar */}
+        {/* Live Impact Tally Bar - Brand Monochromatic Palette */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6">
           <div className="p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
-            <span className="text-[11px] font-medium text-[#64748d] uppercase tracking-wider block mb-1">
-              Active Swaps
+            <span className="text-xs font-medium text-[#64748d] block mb-1">
+              Active Habits
             </span>
             <div className="flex items-baseline gap-1">
               <span className="font-tabular text-2xl font-bold text-[#0d253d]">{totalCommitted}</span>
-              <span className="text-xs text-[#64748d]">/ {ROUTINE_SWAPS.length}</span>
+              <span className="text-xs text-[#64748d]">/ {ROUTINE_SWAPS.length} completed</span>
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#533afd]/5 border border-[#533afd]/20">
-            <span className="text-[11px] font-medium text-[#533afd] uppercase tracking-wider block mb-1">
+          <div className="p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
+            <span className="text-xs font-medium text-[#64748d] block mb-1">
               Lung Dose Prevented
             </span>
             <div className="flex items-baseline gap-1">
               <span className="font-tabular text-2xl font-bold text-[#533afd]">
                 {cumulativeDose}
               </span>
-              <span className="text-xs text-[#533afd]/80">µg PM₂.₅</span>
+              <span className="text-xs text-[#64748d]">µg PM₂.₅</span>
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#34d399]/10 border border-[#34d399]/30">
-            <span className="text-[11px] font-medium text-[#128c7e] uppercase tracking-wider block mb-1">
+          <div className="p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
+            <span className="text-xs font-medium text-[#64748d] block mb-1">
               Cigarettes Saved
             </span>
             <div className="flex items-baseline gap-1">
-              <span className="font-tabular text-2xl font-bold text-[#128c7e]">
+              <span className="font-tabular text-2xl font-bold text-[#0d253d]">
                 {cumulativeCigarettes.toFixed(1)}
               </span>
-              <span className="text-xs text-[#128c7e]">cigs avoided</span>
+              <span className="text-xs text-[#64748d]">cigs avoided</span>
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] flex flex-col justify-between">
-            <div>
-              <span className="text-[11px] font-medium text-[#64748d] uppercase tracking-wider block mb-1">
-                CO₂e Avoided
-              </span>
-              <span className="font-tabular text-2xl font-bold text-[#0d253d]">
-                {cumulativeCo2Kg.toFixed(1)} kg
-              </span>
-            </div>
-            {totalCommitted > 0 && (
-              <button
-                onClick={onTriggerShare}
-                className="mt-2 flex items-center gap-1 text-xs text-[#533afd] font-semibold hover:underline"
-              >
-                <Share2 className="w-3 h-3" />
-                <span>Share Total</span>
-              </button>
-            )}
+          <div className="p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
+            <span className="text-xs font-medium text-[#64748d] block mb-1">
+              Emissions Avoided
+            </span>
+            <span className="font-tabular text-2xl font-bold text-[#0d253d]">
+              {cumulativeCo2Kg.toFixed(1)} kg CO₂
+            </span>
           </div>
         </div>
       </div>
@@ -287,7 +252,7 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
             onClick={() => setSelectedFilter(opt)}
             className={`whitespace-nowrap px-4 py-2 rounded-full text-xs transition-all focus:outline-none focus:ring-2 focus:ring-[#533afd] ${
               selectedFilter === opt
-                ? 'bg-[#0d253d] text-white font-medium shadow-sm'
+                ? 'bg-[#533afd] text-white font-medium shadow-sm'
                 : 'bg-white text-[#273951] hover:bg-[#f6f9fc] border border-[#e3e8ee]'
             }`}
           >
@@ -307,30 +272,30 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
               key={swap.id}
               className={`rounded-3xl p-6 bg-white border transition-all ${
                 isDone
-                  ? 'border-[#34d399] shadow-md ring-1 ring-[#34d399]/40'
+                  ? 'border-[#533afd] shadow-md ring-1 ring-[#533afd]/30'
                   : 'border-[#e3e8ee] hover:border-[#a8c3de] shadow-sm'
               }`}
             >
               {/* Card Category & Badge */}
               <div className="flex items-center justify-between gap-2 mb-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-2xl bg-[#533afd]/10 flex items-center justify-center text-[#533afd]">
-                    <Icon className="w-5 h-5" />
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] flex items-center justify-center text-[#533afd]">
+                    <Icon className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[11px] font-semibold text-[#533afd] uppercase tracking-wider block">
+                    <span className="text-xs font-semibold text-[#0d253d] block">
                       {swap.category}
                     </span>
-                    <span className="text-xs text-[#64748d]">
+                    <span className="text-[11px] text-[#64748d]">
                       {swap.lifestyleMatch.join(' • ')}
                     </span>
                   </div>
                 </div>
 
                 {isDone && (
-                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#34d399]/20 text-[#0f5132] text-xs font-medium">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#f6f9fc] border border-[#e3e8ee] text-[#533afd] text-xs font-medium">
                     <Check className="w-3.5 h-3.5" />
-                    <span>Committed</span>
+                    <span>Adopted</span>
                   </span>
                 )}
               </div>
@@ -343,35 +308,32 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                 {swap.description}
               </p>
 
-              {/* Inversion Context Box */}
-              <div className="p-3 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] mb-4 text-xs text-[#273951] space-y-1.5">
-                <div className="flex items-start gap-1.5">
-                  <Layers className="w-3.5 h-3.5 text-[#533afd] flex-shrink-0 mt-0.5" />
-                  <span className="font-medium text-[#0d253d]">Atmospheric Reason:</span>
-                </div>
-                <p className="text-[11px] text-[#475569] pl-5">
-                  {swap.inversionReason}
+              {/* Plain Human Reason Box */}
+              <div className="p-3.5 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] mb-4 text-xs text-[#273951]">
+                <span className="font-medium text-[#0d253d] block mb-1">Why this works:</span>
+                <p className="text-[11px] text-[#475569] leading-relaxed">
+                  {swap.humanReason}
                 </p>
               </div>
 
-              {/* Impact Metrics Row */}
+              {/* Impact Metrics Row - Brand Styled */}
               <div className="grid grid-cols-3 gap-2 py-3 border-t border-b border-[#e3e8ee] mb-5">
                 <div className="text-left">
-                  <span className="text-[10px] text-[#64748d] block">Lung Dose Avoided</span>
+                  <span className="text-[10px] text-[#64748d] block">Dose Protected</span>
                   <span className="font-tabular text-sm font-semibold text-[#533afd]">
                     +{swap.doseSavedUg} µg
                   </span>
                 </div>
                 <div className="text-left">
-                  <span className="text-[10px] text-[#64748d] block">Cigarettes Equivalent</span>
-                  <span className="font-tabular text-sm font-semibold text-[#128c7e]">
+                  <span className="text-[10px] text-[#64748d] block">Cigarettes Saved</span>
+                  <span className="font-tabular text-sm font-semibold text-[#0d253d]">
                     {swap.cigarettesSaved} cigs
                   </span>
                 </div>
                 <div className="text-left">
-                  <span className="text-[10px] text-[#64748d] block">Avoided Emissions</span>
+                  <span className="text-[10px] text-[#64748d] block">Carbon Cut</span>
                   <span className="font-tabular text-sm font-semibold text-[#0d253d]">
-                    {swap.co2eAvoidedGrams > 0 ? `${(swap.co2eAvoidedGrams / 1000).toFixed(1)}kg CO₂` : 'Zero Tailpipe'}
+                    {swap.co2eAvoidedGrams > 0 ? `${(swap.co2eAvoidedGrams / 1000).toFixed(1)}kg CO₂` : 'Zero Fuel'}
                   </span>
                 </div>
               </div>
@@ -387,7 +349,7 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                   }`}
                 >
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>{isDone ? 'Update Receipt' : 'Commit Routine Swap'}</span>
+                  <span>{isDone ? 'Update Receipt' : 'Adopt Routine Swap'}</span>
                 </button>
 
                 {isDone && (

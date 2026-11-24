@@ -1,6 +1,7 @@
-import React from 'react';
-import { Share2, MapPin, CloudFog } from 'lucide-react';
+import React, { useState } from 'react';
+import { Share2, MapPin, Search } from 'lucide-react';
 import { ArchitectureBulb } from './ArchitectureDiagram';
+import { TOP_CITIES } from '../engine/city-data';
 
 export type D2CTab = 'routines' | 'hacks' | 'radar' | 'copilot' | 'scanner';
 
@@ -8,69 +9,114 @@ interface NavbarProps {
   activeTab: D2CTab;
   onSelectTab: (tab: D2CTab) => void;
   outdoorPm25: number;
+  temperatureC: number;
   onOpenShare: () => void;
-  selectedLocation: string;
-  onSelectLocation: (loc: string) => void;
+  selectedCity: string;
+  onSelectCity: (city: string) => void;
 }
-
-export const LOCATIONS = [
-  'Delhi NCR (Anand Vihar)',
-  'South Delhi (RK Puram)',
-  'Gurugram (Cyber City)',
-  'Noida (Sector 62)',
-  'Central Delhi (Lodhi Road)',
-];
 
 export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   onSelectTab,
   outdoorPm25,
+  temperatureC,
   onOpenShare,
-  selectedLocation,
-  onSelectLocation,
+  selectedCity,
+  onSelectCity,
 }) => {
+  const [isCitySearchOpen, setIsCitySearchOpen] = useState(false);
+  const [cityInput, setCityInput] = useState('');
+
+  const handleCitySubmit = (name: string) => {
+    if (name.trim()) {
+      onSelectCity(name.trim());
+      setIsCitySearchOpen(false);
+      setCityInput('');
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-[#e3e8ee] transition-all">
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
-        {/* Brand Name & Location Pill */}
+    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-[#e3e8ee] transition-all">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+        {/* Brand Name & City Picker */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => onSelectTab('routines')}
-            className="flex items-center gap-2.5 text-left focus:outline-none focus:ring-2 focus:ring-[#533afd] rounded-lg p-1"
+            className="flex items-center gap-2 text-left focus:outline-none focus:ring-2 focus:ring-[#533afd] rounded-lg p-1"
             aria-label="ZeroBon Home"
           >
-            <div className="w-7 h-7 rounded-full bg-[#533afd] flex items-center justify-center shadow-sm">
-              <CloudFog className="w-4 h-4 text-white" />
+            <div className="w-7 h-7 rounded-full bg-[#533afd] flex items-center justify-center text-white text-xs font-semibold">
+              ZB
             </div>
             <div>
               <span className="text-xl font-medium tracking-tight text-[#0d253d] font-sans block leading-none">
                 ZeroBon
               </span>
-              <span className="text-[10px] text-[#64748d] font-light hidden sm:inline">
-                Clean Air Assistant
-              </span>
             </div>
           </button>
 
-          <span className="text-[#a8c3de] text-xs hidden md:inline">|</span>
+          <span className="text-[#e3e8ee] text-sm hidden md:inline">/</span>
 
-          {/* D2C Location Selector */}
-          <div className="relative hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f6f9fc] border border-[#e3e8ee]">
-            <MapPin className="w-3.5 h-3.5 text-[#533afd] flex-shrink-0" />
-            <label htmlFor="location-select" className="sr-only">Select your metropolitan location</label>
-            <select
-              id="location-select"
-              aria-label="Select metropolitan location"
-              value={selectedLocation}
-              onChange={(e) => onSelectLocation(e.target.value)}
-              className="bg-transparent text-xs font-normal text-[#273951] hover:text-[#0d253d] cursor-pointer outline-none focus:ring-1 focus:ring-[#533afd] rounded"
+          {/* City Selector Button & Search Popover */}
+          <div className="relative">
+            <button
+              onClick={() => setIsCitySearchOpen(!isCitySearchOpen)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#f6f9fc] hover:bg-[#e3e8ee] border border-[#e3e8ee] text-xs font-medium text-[#0d253d] transition-all focus:ring-2 focus:ring-[#533afd]"
+              aria-label={`Current city ${selectedCity}. Click to change city.`}
             >
-              {LOCATIONS.map((loc) => (
-                <option key={loc} value={loc} className="bg-white text-[#0d253d]">
-                  {loc}
-                </option>
-              ))}
-            </select>
+              <MapPin className="w-3.5 h-3.5 text-[#533afd]" />
+              <span className="max-w-[120px] truncate">{selectedCity}</span>
+            </button>
+
+            {isCitySearchOpen && (
+              <div className="absolute top-10 left-0 w-72 bg-white rounded-2xl shadow-xl border border-[#e3e8ee] p-3 z-50 animate-fadeIn">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleCitySubmit(cityInput);
+                  }}
+                  className="flex items-center gap-1.5 p-2 bg-[#f6f9fc] rounded-xl border border-[#e3e8ee] mb-2"
+                >
+                  <Search className="w-3.5 h-3.5 text-[#64748d]" />
+                  <input
+                    type="text"
+                    value={cityInput}
+                    onChange={(e) => setCityInput(e.target.value)}
+                    placeholder="Type ANY city name..."
+                    className="w-full bg-transparent text-xs text-[#0d253d] outline-none"
+                    autoFocus
+                  />
+                  <button
+                    type="submit"
+                    className="text-[11px] font-semibold text-[#533afd] px-2 py-0.5"
+                  >
+                    Set
+                  </button>
+                </form>
+
+                <span className="text-[10px] text-[#64748d] font-semibold uppercase tracking-wider block mb-1.5 px-1">
+                  Popular Metros
+                </span>
+                <div className="max-h-48 overflow-y-auto space-y-1">
+                  {TOP_CITIES.map((c) => (
+                    <button
+                      key={c.name}
+                      onClick={() => handleCitySubmit(c.name)}
+                      className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors flex items-center justify-between ${
+                        selectedCity === c.name
+                          ? 'bg-[#533afd] text-white font-medium'
+                          : 'text-[#273951] hover:bg-[#f6f9fc]'
+                      }`}
+                    >
+                      <span>{c.name}</span>
+                      <span className={`text-[10px] ${selectedCity === c.name ? 'text-white/80' : 'text-[#64748d]'}`}>
+                        {c.country}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -100,21 +146,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           ))}
         </nav>
 
-        {/* Right Actions: Weather Badge + Share CTA + Architecture Bulb */}
+        {/* Right Actions: Refined Weather Badge + Share CTA + Architecture Bulb */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Live Weather / AQI badge */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#f6f9fc] border border-[#e3e8ee]">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                outdoorPm25 < 60
-                  ? 'bg-[#34d399]'
-                  : outdoorPm25 < 150
-                  ? 'bg-[#f59e0b]'
-                  : 'bg-[#ea2261] animate-pulse'
-              }`}
-            />
-            <span className="font-tabular text-xs text-[#273951]">
-              14°C • <strong className="text-[#0d253d] font-semibold">{Math.round(outdoorPm25)} µg/m³ PM₂.₅</strong>
+          {/* Refined Brand Weather & PM2.5 Box */}
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
+            <span className="font-tabular text-xs text-[#0d253d] font-medium">
+              {temperatureC}°C · {Math.round(outdoorPm25)} µg/m³
             </span>
           </div>
 
@@ -122,7 +159,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onOpenShare}
             aria-label="Share clean air impact on social media"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-medium transition-all shadow-sm focus:ring-2 focus:ring-[#533afd] focus:outline-none"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-medium transition-all shadow-sm focus:ring-2 focus:ring-[#533afd] focus:outline-none"
           >
             <Share2 className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Share Impact</span>

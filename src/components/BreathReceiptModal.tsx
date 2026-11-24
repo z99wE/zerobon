@@ -17,7 +17,7 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
       particleCount: 40,
       spread: 60,
       origin: { y: 0.65 },
-      colors: ['#533afd', '#b9b9f9', '#34d399'],
+      colors: ['#533afd', '#b9b9f9', '#0d253d'],
       disableForReducedMotion: true,
     });
   }, []);
@@ -43,10 +43,6 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
 
           {/* Environmental Transaction Header */}
           <div className="border-b border-[#e3e8ee] pb-4">
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#34d399]" />
-              <span className="font-micro-cap text-[#128c7e] font-semibold">Verified Environmental Impact</span>
-            </div>
             <h2 id="receipt-title" className="font-heading-lg text-xl sm:text-2xl text-[#0d253d]">
               Deterministic Breath Receipt
             </h2>
@@ -58,7 +54,7 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
 
           {/* Primary Inhaled Dose Hero Box */}
           <div className="my-5 text-center py-5 px-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
-            <span className="font-micro-cap text-[#475569] block mb-1">
+            <span className="text-xs text-[#64748d] block mb-1">
               Personal Lung Dose Prevented
             </span>
             <div className="flex items-baseline justify-center gap-2">
@@ -67,8 +63,8 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
               </span>
               <span className="font-body-md text-sm text-[#475569]">µg PM₂.₅</span>
             </div>
-            <div className="mt-2.5 inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#34d399]/20 text-[#0f5132] font-tabular text-xs font-medium">
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#128c7e]" />
+            <div className="mt-2.5 inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white border border-[#e3e8ee] text-[#0d253d] font-tabular text-xs font-medium">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#533afd]" />
               <span>= {receipt.cigaretteEquivalentsSaved} Cigarette Equivalents Saved</span>
             </div>
           </div>
@@ -76,12 +72,12 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
           {/* Detailed Impact Ledger */}
           <div className="space-y-2.5 border-t border-b border-[#e3e8ee] py-4">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[#64748d]">Location / Household</span>
+              <span className="text-[#64748d]">City / Location</span>
               <span className="text-[#0d253d] font-medium">{receipt.tenantName}</span>
             </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[#64748d]">Clean Air Action</span>
+              <span className="text-[#64748d]">Adopted Action</span>
               <span className="text-[#533afd] font-semibold">{receipt.actionTitle}</span>
             </div>
 
@@ -100,18 +96,18 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
             </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[#64748d]">Community Multiplier</span>
-              <span className="font-tabular text-[#128c7e] font-semibold">
+              <span className="text-[#64748d]">Community Impact Multiplier</span>
+              <span className="font-tabular text-[#533afd] font-semibold">
                 {receipt.neighborhoodMultiplier}x Collective Impact
               </span>
             </div>
           </div>
 
-          {/* Action CTAs: Share Impact (WhatsApp, LinkedIn, Facebook) + Done */}
+          {/* Action CTAs: Share Impact (WhatsApp, LinkedIn, Facebook, X) + Done */}
           <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-1.5 text-[11px] text-[#64748d]">
               <ShieldCheck className="w-3.5 h-3.5 text-[#533afd]" />
-              <span>IPCC / EPA Physical Dose Model</span>
+              <span>Physics Inhaled Dose Model</span>
             </div>
 
             <div className="flex items-center gap-2">

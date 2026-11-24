@@ -18,13 +18,13 @@ describe('Social Sharing Functionality & Full Text Formatting', () => {
   };
 
   it('formulates complete full share text containing all critical metrics', () => {
-    const shareText = `🌬️ ZeroBon Clean Air Impact Report:
+    const shareText = `ZeroBon Clean Air Impact Report:
 Protecting our family & neighborhood during this winter smog crisis!
 
-✅ Action: ${mockReceipt.actionTitle}
-🫁 Lung Dose Prevented: ${mockReceipt.doseSavedUg} µg PM2.5 (${mockReceipt.cigaretteEquivalentsSaved} cigarettes equivalent saved)
-🌱 Direct Emissions Avoided: ${mockReceipt.co2eAvoidedGrams}g CO₂e | ${mockReceipt.noxAvoidedGrams}g NOₓ
-✨ Community Multiplier: ${mockReceipt.neighborhoodMultiplier}x neighborhood collective impact
+Action: ${mockReceipt.actionTitle}
+Lung Dose Prevented: ${mockReceipt.doseSavedUg} µg PM2.5 (${mockReceipt.cigaretteEquivalentsSaved} cigarettes equivalent saved)
+Direct Emissions Avoided: ${mockReceipt.co2eAvoidedGrams}g CO₂e | ${mockReceipt.noxAvoidedGrams}g NOₓ
+Community Multiplier: ${mockReceipt.neighborhoodMultiplier}x neighborhood collective impact
 
 Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
 
@@ -37,19 +37,15 @@ Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
     expect(shareText).toContain('https://zerobon.pages.dev');
   });
 
-  it('generates valid WhatsApp, LinkedIn, and Facebook share URLs', () => {
+  it('generates valid WhatsApp and Twitter share URLs with encoded full text', () => {
     const shareText = `Test text for sharing`;
     const encoded = encodeURIComponent(shareText);
 
-    const whatsAppUrl = `https://api.whatsapp.com/send?text=${encoded}`;
-    expect(whatsAppUrl).toBe('https://api.whatsapp.com/send?text=Test%20text%20for%20sharing');
+    const whatsAppUrl = `https://wa.me/?text=${encoded}`;
+    expect(whatsAppUrl).toBe('https://wa.me/?text=Test%20text%20for%20sharing');
 
-    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://zerobon.pages.dev')}&summary=${encoded}`;
-    expect(linkedInUrl).toContain('linkedin.com/sharing/share-offsite');
-    expect(linkedInUrl).toContain(encoded);
-
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://zerobon.pages.dev')}&quote=${encoded}`;
-    expect(facebookUrl).toContain('facebook.com/sharer/sharer.php');
-    expect(facebookUrl).toContain(encoded);
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encoded}`;
+    expect(twitterUrl).toContain('twitter.com/intent/tweet');
+    expect(twitterUrl).toContain(encoded);
   });
 });
