@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
+import { Share2, CheckCircle2, ShieldCheck, X } from 'lucide-react';
 import { BreathReceipt } from '../types';
+import { SocialShareModal } from './SocialShareModal';
 
 interface BreathReceiptModalProps {
   receipt: BreathReceipt;
@@ -8,105 +10,136 @@ interface BreathReceiptModalProps {
 }
 
 export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt, onClose }) => {
+  const [showShareModal, setShowShareModal] = useState(false);
+
   useEffect(() => {
     confetti({
-      particleCount: 35,
-      spread: 55,
-      origin: { y: 0.7 },
+      particleCount: 40,
+      spread: 60,
+      origin: { y: 0.65 },
       colors: ['#533afd', '#b9b9f9', '#34d399'],
       disableForReducedMotion: true,
     });
   }, []);
 
   return (
-    <div 
-      role="dialog" 
-      aria-modal="true" 
-      aria-labelledby="receipt-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d253d]/50 backdrop-blur-sm animate-fadeIn"
-    >
-      {/* Stripe Financial Confirmation Card */}
-      <div className="relative w-full max-w-md bg-white rounded-2xl p-6 sm:p-8 border border-[#e3e8ee] shadow-2xl">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          aria-label="Close Breath Receipt Modal"
-          className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#64748d] hover:text-[#0d253d] flex items-center justify-center transition-all text-xs focus:ring-2 focus:ring-[#533afd]"
-        >
-          ✕
-        </button>
-
-        {/* Financial Header */}
-        <div className="border-b border-[#e3e8ee] pb-4">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full bg-[#34d399]" />
-            <span className="font-micro-cap text-[#64748d]">Verified Environmental Transaction</span>
-          </div>
-          <h2 id="receipt-title" className="font-heading-lg text-[#0d253d]">Deterministic Breath Receipt</h2>
-          <div className="flex items-center justify-between text-xs text-[#64748d] mt-1 font-tabular">
-            <span>Reference: {receipt.receiptId}</span>
-            <span>{receipt.timestamp}</span>
-          </div>
-        </div>
-
-        {/* Primary Inhaled Dose Hero Box */}
-        <div className="my-6 text-center py-5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
-          <span className="font-micro-cap text-[#64748d]">Personal Lung Dose Prevented</span>
-          <div className="flex items-baseline justify-center gap-2 mt-1">
-            <span className="font-tabular text-4xl sm:text-5xl font-light text-[#533afd]">
-              {receipt.doseSavedUg}
-            </span>
-            <span className="font-body-md text-sm text-[#64748d]">µg PM₂.₅</span>
-          </div>
-          <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#34d399]/15 text-[#0d253d] font-tabular text-xs font-normal">
-            <span>= {receipt.cigaretteEquivalentsSaved} Cigarette Equivalents Saved</span>
-          </div>
-        </div>
-
-        {/* Tabular Atmospheric & Emissions Ledger */}
-        <div className="space-y-3 border-t border-b border-[#e3e8ee] py-4">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-[#64748d] font-light">Household / Tenant</span>
-            <span className="text-[#0d253d] font-medium">{receipt.tenantName}</span>
-          </div>
-
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-[#64748d] font-light">Routine Action</span>
-            <span className="text-[#533afd] font-medium">{receipt.actionTitle}</span>
-          </div>
-
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-[#64748d] font-light">Avoided CO₂e Emission</span>
-            <span className="font-tabular text-[#0d253d] font-medium">{receipt.co2eAvoidedGrams} g CO₂e</span>
-          </div>
-
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-[#64748d] font-light">Avoided Smog-Forming NOₓ</span>
-            <span className="font-tabular text-[#0d253d] font-medium">{receipt.noxAvoidedGrams} g NOₓ</span>
-          </div>
-
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-[#64748d] font-light">Primary Exhaust PM₂.₅</span>
-            <span className="font-tabular text-[#0d253d] font-medium">{receipt.primaryPm25AvoidedGrams} g PM₂.₅</span>
-          </div>
-
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-[#64748d] font-light">Community Multiplier</span>
-            <span className="font-tabular text-[#34d399] font-medium">{receipt.neighborhoodMultiplier}x Impact</span>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-5 flex items-center justify-between">
-          <span className="font-caption text-[#64748d]">IPCC/EPA Tier-1 Physics Model</span>
+    <>
+      <div 
+        role="dialog" 
+        aria-modal="true" 
+        aria-labelledby="receipt-title"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d253d]/60 backdrop-blur-sm animate-fadeIn"
+      >
+        {/* Modern D2C Impact Receipt Card */}
+        <div className="relative w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 border border-[#e3e8ee] shadow-2xl">
+          {/* Close Button */}
           <button
             onClick={onClose}
-            className="button-primary-pill"
+            aria-label="Close Breath Receipt Modal"
+            className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#475569] hover:text-[#0d253d] flex items-center justify-center transition-all text-sm focus:ring-2 focus:ring-[#533afd]"
           >
-            Done
+            <X className="w-4 h-4" />
           </button>
+
+          {/* Environmental Transaction Header */}
+          <div className="border-b border-[#e3e8ee] pb-4">
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#34d399]" />
+              <span className="font-micro-cap text-[#128c7e] font-semibold">Verified Environmental Impact</span>
+            </div>
+            <h2 id="receipt-title" className="font-heading-lg text-xl sm:text-2xl text-[#0d253d]">
+              Deterministic Breath Receipt
+            </h2>
+            <div className="flex items-center justify-between text-xs text-[#64748d] mt-1.5 font-tabular">
+              <span>Ref: {receipt.receiptId}</span>
+              <span>{receipt.timestamp}</span>
+            </div>
+          </div>
+
+          {/* Primary Inhaled Dose Hero Box */}
+          <div className="my-5 text-center py-5 px-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
+            <span className="font-micro-cap text-[#475569] block mb-1">
+              Personal Lung Dose Prevented
+            </span>
+            <div className="flex items-baseline justify-center gap-2">
+              <span className="font-tabular text-4xl sm:text-5xl font-semibold text-[#533afd]">
+                {receipt.doseSavedUg}
+              </span>
+              <span className="font-body-md text-sm text-[#475569]">µg PM₂.₅</span>
+            </div>
+            <div className="mt-2.5 inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#34d399]/20 text-[#0f5132] font-tabular text-xs font-medium">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#128c7e]" />
+              <span>= {receipt.cigaretteEquivalentsSaved} Cigarette Equivalents Saved</span>
+            </div>
+          </div>
+
+          {/* Detailed Impact Ledger */}
+          <div className="space-y-2.5 border-t border-b border-[#e3e8ee] py-4">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-[#64748d]">Location / Household</span>
+              <span className="text-[#0d253d] font-medium">{receipt.tenantName}</span>
+            </div>
+
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-[#64748d]">Clean Air Action</span>
+              <span className="text-[#533afd] font-semibold">{receipt.actionTitle}</span>
+            </div>
+
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-[#64748d]">Direct Avoided Emissions</span>
+              <span className="font-tabular text-[#0d253d] font-medium">
+                {receipt.co2eAvoidedGrams}g CO₂e • {receipt.noxAvoidedGrams}g NOₓ
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-[#64748d]">Avoided Exhaust Particulates</span>
+              <span className="font-tabular text-[#0d253d] font-medium">
+                {receipt.primaryPm25AvoidedGrams}g PM₂.₅
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-[#64748d]">Community Multiplier</span>
+              <span className="font-tabular text-[#128c7e] font-semibold">
+                {receipt.neighborhoodMultiplier}x Collective Impact
+              </span>
+            </div>
+          </div>
+
+          {/* Action CTAs: Share Impact (WhatsApp, LinkedIn, Facebook) + Done */}
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-1.5 text-[11px] text-[#64748d]">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#533afd]" />
+              <span>IPCC / EPA Physical Dose Model</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowShareModal(true)}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-medium transition-all shadow-sm focus:ring-2 focus:ring-[#533afd]"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                <span>Share Impact</span>
+              </button>
+
+              <button
+                onClick={onClose}
+                className="px-4 py-2 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] text-xs font-medium transition-all border border-[#e3e8ee] focus:ring-2 focus:ring-[#533afd]"
+              >
+                Done
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+
+      {showShareModal && (
+        <SocialShareModal
+          receipt={receipt}
+          onClose={() => setShowShareModal(false)}
+        />
+      )}
+    </>
   );
 };

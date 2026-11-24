@@ -2,32 +2,40 @@ import { describe, it, expect } from 'vitest';
 import * as axe from 'axe-core';
 
 describe('WCAG 2.1 AA Accessibility Automated axe Audits', () => {
-  it('passes axe audit on main application layout structure', async () => {
+  it('passes axe audit on D2C main application layout structure', async () => {
     const container = document.createElement('div');
     container.innerHTML = `
       <header role="banner">
         <nav aria-label="Main Navigation">
           <a href="#main-content">Skip to content</a>
-          <button aria-current="page">3D Terrarium</button>
+          <button aria-current="page">Daily Routines</button>
+          <button>Indoor Hacks</button>
+          <button>Smog Radar</button>
+          <button>AI Assistant</button>
+          <button>Sky Scanner</button>
         </nav>
       </header>
       <main id="main-content" role="main">
-        <h1>Zerobon Atmospheric Infrastructure</h1>
-        <section aria-labelledby="heading-radar">
-          <h2 id="heading-radar">Thermal Inversion Radar</h2>
-          <button aria-label="Select 11:30 clean window" aria-pressed="true">11h</button>
+        <h1>Navigate severe winter smog with intelligent daily routines</h1>
+        <section aria-labelledby="heading-routines">
+          <h2 id="heading-routines">Inversion-Smart Daily Routines</h2>
+          <div role="tablist" aria-label="Lifestyle Filters">
+            <button role="tab" aria-selected="true">All</button>
+            <button role="tab" aria-selected="false">Families with Kids</button>
+          </div>
+          <button aria-label="Commit Electric Metro Commute Switch">Commit Routine Swap</button>
         </section>
-        <section aria-labelledby="heading-form">
-          <h2 id="heading-form">Zero-Trust Copilot</h2>
-          <form>
-            <label for="copilot-input">Ask Copilot</label>
-            <input id="copilot-input" type="text" />
-            <button type="submit">Submit</button>
-          </form>
+        <section aria-labelledby="heading-hacks">
+          <h2 id="heading-hacks">Indoor Air Sanctuary Controls</h2>
+          <button role="switch" aria-checked="true" aria-label="Toggle DIY Corsi-Rosenthal Box">Toggle</button>
+        </section>
+        <section aria-labelledby="heading-radar">
+          <h2 id="heading-radar">Thermal Inversion & Boundary Layer Dispersion</h2>
+          <button aria-label="Select 11:30 clean window" aria-pressed="true">11h</button>
         </section>
       </main>
       <footer role="contentinfo">
-        <p>Zerobon Platform</p>
+        <p>ZeroBon Platform</p>
       </footer>
     `;
     document.body.appendChild(container);
@@ -36,13 +44,17 @@ describe('WCAG 2.1 AA Accessibility Automated axe Audits', () => {
     document.body.removeChild(container);
   });
 
-  it('verifies breath receipt modal passes dialog accessibility checks', async () => {
+  it('verifies breath receipt and social share modal pass dialog accessibility checks', async () => {
     const modal = document.createElement('div');
     modal.innerHTML = `
       <div role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <h2 id="modal-title">Deterministic Breath Receipt</h2>
         <button aria-label="Close modal">Close</button>
         <p>Details of protected lung dose.</p>
+        <button aria-label="Share full text on WhatsApp">WhatsApp</button>
+        <button aria-label="Share full text on LinkedIn">LinkedIn</button>
+        <button aria-label="Share full text on Facebook">Facebook</button>
+        <button aria-label="Copy full impact text to clipboard">Copy Text</button>
       </div>
     `;
     document.body.appendChild(modal);

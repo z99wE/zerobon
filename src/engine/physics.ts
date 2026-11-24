@@ -49,6 +49,13 @@ export function stepAnalytical(
 }
 
 /**
+ * Computes cumulative inhaled particulate dose D in micrograms
+ */
+export function computeInhaledDose(p: InhaledDoseParams): number {
+  return p.concentration_ug_m3 * p.minute_ventilation_m3_min * p.duration_minutes * (1 - Math.min(0.999, Math.max(0, p.mask_efficiency)));
+}
+
+/**
  * Deterministic breath dose and counterfactual receipt calculator
  */
 export function computeBreathReceipt(
@@ -58,12 +65,8 @@ export function computeBreathReceipt(
   counterfactual: InhaledDoseParams,
   actionType: 'corsi_rosenthal' | 'metro_transit' | 'wfh_smog_day' | 'ev_carpool' | 'window_airing'
 ): BreathReceipt {
-  const calcDose = (p: InhaledDoseParams) => {
-    return p.concentration_ug_m3 * p.minute_ventilation_m3_min * p.duration_minutes * (1 - Math.min(0.999, Math.max(0, p.mask_efficiency)));
-  };
-
-  const actualDose = calcDose(intervention);
-  const baselineDose = calcDose(counterfactual);
+  const actualDose = computeInhaledDose(intervention);
+  const baselineDose = computeInhaledDose(counterfactual);
   const doseSaved = Math.max(0, baselineDose - actualDose);
   const cigsSaved = doseSaved / CIGARETTE_EQUIVALENT_PM25_UG;
 

@@ -1,34 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar } from './components/Navbar';
+import { Navbar, D2CTab, LOCATIONS } from './components/Navbar';
 import { GradientMesh } from './components/GradientMesh';
-import { AtmosphericTerrarium } from './components/AtmosphericTerrarium';
-import { H3CommunityBiome } from './components/H3CommunityBiome';
+import { DailyRoutineOptimizer } from './components/DailyRoutineOptimizer';
+import { IndoorAirHacks } from './components/IndoorAirHacks';
 import { InversionRadar } from './components/InversionRadar';
 import { HardenedCopilot } from './components/HardenedCopilot';
 import { OpticalHazeEstimator } from './components/OpticalHazeEstimator';
-import { MultiTenantAdmin } from './components/MultiTenantAdmin';
 import { BreathReceiptModal } from './components/BreathReceiptModal';
+import { SocialShareModal } from './components/SocialShareModal';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { DEMO_TENANTS } from './engine/tenancy';
 import { DEFAULT_PHYSICS_PARAMS, stepAnalytical, computeBreathReceipt } from './engine/physics';
-import { TenantConfig, BreathReceipt, MassBalanceParams } from './types';
+import { BreathReceipt, MassBalanceParams } from './types';
+import { 
+  Wind, 
+  Sun, 
+  Share2, 
+  ArrowRight,
+  MapPin
+} from 'lucide-react';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'terrarium' | 'biome' | 'radar' | 'copilot' | 'turbidity' | 'admin'>('terrarium');
-  const [selectedTenant, setSelectedTenant] = useState<TenantConfig>(DEMO_TENANTS[0] ?? {
-    id: 'tenant-family-chen',
-    name: 'The Chen Household',
-    type: 'family',
-    h3Index: '87283082bffffff',
-    subdomain: 'chen.zerobon.io',
-    totalMembers: 4,
-    activePledgesCount: 3,
-    collectiveEmissionsSavedKg: 14.8,
-  });
+  const [activeTab, setActiveTab] = useState<D2CTab>('routines');
+  const [selectedLocation, setSelectedLocation] = useState<string>(LOCATIONS[0] ?? 'Delhi NCR (Anand Vihar)');
 
   // Ambient & Indoor Physics State
-  const [outdoorPm25, setOutdoorPm25] = useState(245);
-  const [indoorPm25, setIndoorPm25] = useState(135);
+  const [outdoorPm25, setOutdoorPm25] = useState<number>(245);
+  const [indoorPm25, setIndoorPm25] = useState<number>(135);
 
   // Active IAQ Hacks
   const [activeHacks, setActiveHacks] = useState({
@@ -38,10 +35,11 @@ export const App: React.FC = () => {
     windowOpen: false,
   });
 
-  // Breath receipt modal state
+  // Modals state
   const [activeReceipt, setActiveReceipt] = useState<BreathReceipt | null>(null);
+  const [showShareModal, setShowShareModal] = useState<boolean>(false);
 
-  // Real-time Physics Differential Loop
+  // Real-time Physics Differential Loop (Analytical Mass-Balance)
   useEffect(() => {
     const interval = setInterval(() => {
       setIndoorPm25((prevCin) => {
@@ -67,14 +65,14 @@ export const App: React.FC = () => {
 
       if (nextVal) {
         const titleMap = {
-          corsiRosenthal: 'Corsi-Rosenthal Box Air Cleanser (+350 CADR)',
-          kitchenExhaust: 'Kitchen Range Hood High Exhaust Purge',
-          draftSealing: 'Magnetic Window Sash Draft Sealing',
+          corsiRosenthal: 'DIY Corsi-Rosenthal Air Cleanser (+360 CADR)',
+          kitchenExhaust: 'High-Velocity Kitchen Range Hood Flush',
+          draftSealing: 'Magnetic Window Sash & Sill Draft Sealing',
           windowOpen: 'Midday Inversion Window Clean Air Flush',
         };
 
         const receipt = computeBreathReceipt(
-          selectedTenant.name,
+          selectedLocation,
           titleMap[key],
           {
             concentration_ug_m3: Math.max(15, indoorPm25 * 0.4),
@@ -98,30 +96,26 @@ export const App: React.FC = () => {
     });
   };
 
-  const handleManualReceipt = () => {
-    const receipt = computeBreathReceipt(
-      selectedTenant.name,
-      'Multi-Modal IAQ Envelope Defense',
-      {
-        concentration_ug_m3: indoorPm25,
-        duration_minutes: 180,
-        minute_ventilation_m3_min: 0.012,
-        mask_efficiency: indoorPm25 > 90 ? 0.95 : 0.0,
-      },
-      {
-        concentration_ug_m3: outdoorPm25,
-        duration_minutes: 180,
-        minute_ventilation_m3_min: 0.012,
-        mask_efficiency: 0.0,
-      },
-      'corsi_rosenthal'
-    );
-    setActiveReceipt(receipt);
+
+  // Generic receipt for sharing from top CTA if no receipt currently open
+  const defaultShareReceipt: BreathReceipt = activeReceipt ?? {
+    receiptId: 'ZB-COMMUNITY-LIVE',
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    tenantName: selectedLocation,
+    actionTitle: 'Inversion-Aware Routine & Indoor Defense Swaps',
+    inhaledDoseUg: 24,
+    counterfactualDoseUg: 112,
+    doseSavedUg: 88,
+    cigaretteEquivalentsSaved: 4.0,
+    co2eAvoidedGrams: 2850,
+    noxAvoidedGrams: 18.2,
+    primaryPm25AvoidedGrams: 1.4,
+    neighborhoodMultiplier: 3.2,
   };
 
   return (
     <div className="relative min-h-screen bg-white text-[#0d253d] flex flex-col font-sans selection:bg-[#533afd]/20 selection:text-[#533afd]">
-      {/* Skip to Content for Keyboard and Screen Reader Accessibility */}
+      {/* Skip to Content for Accessibility */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[100] px-4 py-2 bg-[#533afd] text-white rounded-full text-xs font-medium shadow-lg outline-none ring-2 ring-white"
@@ -129,191 +123,239 @@ export const App: React.FC = () => {
         Skip to main content
       </a>
 
-      {/* Stripe Signature Atmospheric Gradient Mesh Upper Third */}
+      {/* Atmospheric Gradient Mesh Upper Third */}
       <GradientMesh />
 
-      {/* Floating Top Navigation */}
+      {/* D2C Top Navigation */}
       <Navbar
         activeTab={activeTab}
         onSelectTab={setActiveTab}
-        selectedTenant={selectedTenant}
-        onSelectTenant={setSelectedTenant}
         outdoorPm25={outdoorPm25}
+        onOpenShare={() => setShowShareModal(true)}
+        selectedLocation={selectedLocation}
+        onSelectLocation={setSelectedLocation}
       />
 
-      {/* Hero Section floating above the Gradient Mesh */}
-      <section className="relative z-10 max-w-[1200px] w-full mx-auto px-4 sm:px-6 pt-12 pb-14 text-left">
+      {/* D2C Hero Section */}
+      <section 
+        aria-label="Hero Section"
+        className="relative z-10 max-w-[1240px] w-full mx-auto px-4 sm:px-6 pt-10 pb-10 text-left"
+      >
         <div className="max-w-3xl">
-          {/* Söhne Thin Display Headline (-1.4px letter-spacing at 56px, weight 300) */}
-          <h1 className="font-display-xxl text-[#0d253d] mb-4">
-            Financial-grade precision for the air you breathe.
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 border border-[#e3e8ee] shadow-sm mb-4">
+            <span className="w-2 h-2 rounded-full bg-[#533afd] animate-pulse" />
+            <span className="text-xs font-medium text-[#533afd]">
+              GenAI Clean Air Assistant • Winter Smog Defense
+            </span>
+          </div>
+
+          {/* Söhne Thin Display Headline */}
+          <h1 className="font-display-xxl text-[#0d253d] mb-4 text-3xl sm:text-4xl md:text-5xl font-light tracking-tight">
+            Protect your family and community from severe winter smog.
           </h1>
 
-          <p className="font-body-lg text-[#273951] max-w-2xl leading-relaxed mb-6">
-            A physics-informed indoor mass-balance engine bound to a living 3D atmospheric familiar. Deterministic breath-cost receipts, multi-tenant isolation, and zero-trust LLM security at the global edge.
+          <p className="font-body-lg text-[#273951] max-w-2xl text-base sm:text-lg leading-relaxed mb-6 font-light">
+            Actionable low-emission daily routines, DIY indoor air quality hacks, and sustainable lifestyle alternatives tailored to your location. Backed by verified receipts that prove the exact lung dose you protect and emissions you prevent.
           </p>
 
-          {/* Single-Voltage CTA: Electric Indigo Pill + Secondary Pill */}
+          {/* Primary Action Buttons */}
           <div className="flex flex-wrap items-center gap-3">
             <button
-              onClick={() => setActiveTab('terrarium')}
-              className="button-primary-pill"
+              onClick={() => setActiveTab('routines')}
+              className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-sm font-medium transition-all shadow-md focus:ring-2 focus:ring-[#533afd] focus:outline-none"
             >
-              <span>Explore 3D Terrarium</span>
-              <span>→</span>
+              <span>Explore Daily Routines</span>
+              <ArrowRight className="w-4 h-4" />
             </button>
 
             <button
-              onClick={handleManualReceipt}
-              className="button-secondary-pill"
+              onClick={() => setActiveTab('hacks')}
+              className="flex items-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-[#f6f9fc] text-[#0d253d] text-sm font-medium transition-all border border-[#e3e8ee] shadow-sm focus:ring-2 focus:ring-[#533afd] focus:outline-none"
             >
-              <span>View Deterministic Receipt</span>
+              <span>Try Indoor Hacks</span>
+            </button>
+
+            <button
+              onClick={() => setShowShareModal(true)}
+              className="flex items-center gap-2 px-5 py-3 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#533afd] text-sm font-medium transition-all border border-[#e3e8ee] focus:ring-2 focus:ring-[#533afd] focus:outline-none"
+            >
+              <Share2 className="w-4 h-4" />
+              <span>Share Impact</span>
             </button>
           </div>
         </div>
 
-        {/* Ambient Winter Smog Scrubber Control (Card Feature Light) */}
-        <div className="mt-10 max-w-md card-feature-light p-4 bg-white/90 backdrop-blur-md">
-          <div className="flex items-center justify-between mb-2">
-            <label htmlFor="smog-simulator-slider" className="font-micro-cap text-[#475569] cursor-pointer">
-              Simulate Ambient Smog Event
-            </label>
-            <span className="font-tabular text-xs text-[#0d253d] font-medium" aria-live="polite">
-              {outdoorPm25} µg/m³ PM₂.₅
-            </span>
+        {/* Live Weather & Atmospheric Smog Control Banner */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Weather Status Card */}
+          <div className="p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-[#e3e8ee] shadow-sm flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-semibold text-[#64748d] uppercase tracking-wider">
+                Current Weather & Wind
+              </span>
+              <span className="flex items-center gap-1 text-xs text-[#533afd] font-medium">
+                <MapPin className="w-3 h-3" />
+                <span>{selectedLocation.split(' ')[0]}</span>
+              </span>
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="font-tabular text-3xl font-semibold text-[#0d253d]">14°C</span>
+              <span className="text-xs text-[#475569]">Light Fog • 68% Humidity</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-[#64748d] mt-2">
+              <Wind className="w-3.5 h-3.5 text-[#533afd]" />
+              <span>Wind: 3.8 km/h NW (Stagnant Dispersion)</span>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="font-tabular text-xs text-[#475569]">15</span>
+
+          {/* Thermal Inversion Status */}
+          <div className="p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-[#e3e8ee] shadow-sm flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-semibold text-[#ea2261] uppercase tracking-wider">
+                Boundary Layer Inversion
+              </span>
+              <span className="w-2 h-2 rounded-full bg-[#ea2261] animate-pulse" />
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="font-tabular text-3xl font-semibold text-[#ea2261]">
+                {Math.round(outdoorPm25)}
+              </span>
+              <span className="text-xs text-[#ea2261] font-medium">µg/m³ PM₂.₅ (Severe)</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-[#128c7e] font-medium mt-2">
+              <Sun className="w-3.5 h-3.5" />
+              <span>Golden Window: 11:30 AM – 3:30 PM</span>
+            </div>
+          </div>
+
+          {/* Interactive Ambient Smog Simulator Slider */}
+          <div className="p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-[#e3e8ee] shadow-sm flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-1">
+              <label htmlFor="smog-slider" className="text-[11px] font-semibold text-[#64748d] uppercase tracking-wider">
+                Simulate Smog Level
+              </label>
+              <span className="font-tabular text-xs font-bold text-[#0d253d]">
+                {outdoorPm25} µg/m³
+              </span>
+            </div>
             <input
-              id="smog-simulator-slider"
+              id="smog-slider"
               type="range"
-              min={15}
+              min={25}
               max={380}
               aria-label="Simulate Ambient Smog PM2.5 Level"
-              aria-valuemin={15}
+              aria-valuemin={25}
               aria-valuemax={380}
               aria-valuenow={outdoorPm25}
               aria-valuetext={`${outdoorPm25} micrograms per cubic meter`}
               value={outdoorPm25}
               onChange={(e) => setOutdoorPm25(Number(e.target.value))}
-              className="w-full focus:ring-2 focus:ring-[#533afd] focus:outline-none"
+              className="w-full accent-[#533afd] cursor-pointer"
             />
-            <span className="font-tabular text-xs text-[#475569]">380</span>
+            <div className="flex items-center justify-between text-[10px] text-[#64748d] mt-1">
+              <button 
+                onClick={() => setOutdoorPm25(35)}
+                className="hover:text-[#533afd] underline"
+              >
+                Clear (35)
+              </button>
+              <button 
+                onClick={() => setOutdoorPm25(245)}
+                className="hover:text-[#533afd] underline"
+              >
+                Winter Smog (245)
+              </button>
+              <button 
+                onClick={() => setOutdoorPm25(360)}
+                className="hover:text-[#ea2261] underline"
+              >
+                Emergency (360)
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Main Content Surface */}
-      <main id="main-content" tabIndex={-1} className="relative z-10 flex-1 max-w-[1200px] w-full mx-auto px-4 sm:px-6 pb-20 flex flex-col gap-10 outline-none">
-        {/* Problem Statement Reimagined as High-Impact Stripe-Style Marketing Copy */}
-        <section
-          id="problem-statement"
-          className="card-feature-light p-6 sm:p-8 md:p-10 bg-white border border-[#e3e8ee] shadow-sm relative overflow-hidden"
-        >
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#533afd]" />
-              <span className="font-micro-cap text-[#533afd]">The Zerobon Mandate</span>
-            </div>
-          </div>
-
-          <div className="max-w-3xl">
-            <h2 className="font-heading-lg sm:font-display-md text-[#0d253d] font-light tracking-tight mb-3">
-              Intelligent atmospheric defense for homes and neighborhoods.
-            </h2>
-            <p className="font-body-lg text-[#273951] font-light leading-relaxed">
-              When severe winter inversions trap toxic urban smog, Zerobon’s generative AI copilot guides your household through the crisis. Get dynamic routine swaps reshaped around clean air windows, discover proven indoor hacks that scrub particulates without costly hardware, and embrace sustainable lifestyle alternatives tailored to your floor level and daily commute—all backed by deterministic receipts that prove the exact lung dose you protect and emissions you prevent.
-            </p>
-          </div>
-        </section>
-        {/* Active Tab Subsystem */}
-        {activeTab === 'terrarium' && (
-          <div className="space-y-8 animate-fadeIn">
-            {/* Dark-App Dashboard Track Composited Above Canvas */}
-            <ErrorBoundary>
-              <AtmosphericTerrarium
-                indoorPm25={indoorPm25}
-                outdoorPm25={outdoorPm25}
-                activeHacks={activeHacks}
-                onTriggerHackToggle={handleToggleHack}
-                onOpenReceipt={handleManualReceipt}
-              />
-            </ErrorBoundary>
-
-            {/* 3 Stripe Feature Cards (White + Cream Band + Light) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="card-feature-light p-6">
-                <span className="font-micro-cap text-[#533afd]">Rust / WASM Engine</span>
-                <h4 className="font-heading-md text-[#0d253d] mt-1 mb-2">Mass-Balance Solver</h4>
-                <p className="font-tabular text-xs text-[#533afd] font-mono mb-2">
-                  dCin/dt = P·λ·Cout − (λ + kd + CADR/V)·Cin + Eindoor/V
-                </p>
-                <p className="font-body-md text-xs text-[#64748d] leading-relaxed">
-                  Computes real-time indoor fine particulate infiltration analytically without requiring proprietary hardware sensors.
-                </p>
-              </div>
-
-              {/* Warm Cream Band Card (Stripe Chromatic Interlude #f5e9d4) */}
-              <div className="card-cream-band p-6">
-                <span className="font-micro-cap text-[#9b6829]">Living Bio-Indicator</span>
-                <h4 className="font-heading-md text-[#0d253d] mt-1 mb-2">Lumi the Cloud Fox</h4>
-                <p className="font-body-md text-xs text-[#0d253d]/80 leading-relaxed">
-                  Transforms particulate physics into emotional habit loops. Shifts from relaxed blooming idle (Cin &lt; 15) to deploying an N95 respirator mask (&gt; 150 µg/m³).
-                </p>
-              </div>
-
-              <div className="card-feature-light p-6">
-                <span className="font-micro-cap text-[#533afd]">Deterministic Impact</span>
-                <h4 className="font-heading-md text-[#0d253d] mt-1 mb-2">Breath-Cost Accounting</h4>
-                <p className="font-body-md text-xs text-[#64748d] leading-relaxed">
-                  Converts avoided microgram PM2.5 lung doses directly into cigarette equivalents saved and verified IPCC CO2e emission reductions.
-                </p>
-              </div>
-            </div>
-          </div>
+      <main 
+        id="main-content" 
+        tabIndex={-1} 
+        className="relative z-10 flex-1 max-w-[1240px] w-full mx-auto px-4 sm:px-6 pb-20 outline-none space-y-10"
+      >
+        {/* Tab 1: Daily Routine Optimizer */}
+        {activeTab === 'routines' && (
+          <ErrorBoundary>
+            <DailyRoutineOptimizer
+              outdoorPm25={outdoorPm25}
+              selectedLocation={selectedLocation}
+              onCommitReceipt={(receipt) => setActiveReceipt(receipt)}
+              onTriggerShare={() => setShowShareModal(true)}
+            />
+          </ErrorBoundary>
         )}
 
-        {activeTab === 'biome' && (
-          <div className="animate-fadeIn">
-            <H3CommunityBiome tenantId={selectedTenant.id} />
-          </div>
+        {/* Tab 2: Indoor Air Quality Hacks */}
+        {activeTab === 'hacks' && (
+          <ErrorBoundary>
+            <IndoorAirHacks
+              indoorPm25={indoorPm25}
+              outdoorPm25={outdoorPm25}
+              activeHacks={activeHacks}
+              onToggleHack={handleToggleHack}
+              onGenerateReceipt={(receipt) => setActiveReceipt(receipt)}
+              onTriggerShare={() => setShowShareModal(true)}
+              locationName={selectedLocation}
+            />
+          </ErrorBoundary>
         )}
 
+        {/* Tab 3: Smog & Inversion Radar */}
         {activeTab === 'radar' && (
-          <div className="animate-fadeIn">
+          <ErrorBoundary>
             <InversionRadar />
-          </div>
+          </ErrorBoundary>
         )}
 
+        {/* Tab 4: GenAI Clean Air Assistant */}
         {activeTab === 'copilot' && (
-          <div className="animate-fadeIn">
+          <ErrorBoundary>
             <HardenedCopilot indoorPm25={indoorPm25} outdoorPm25={outdoorPm25} />
-          </div>
+          </ErrorBoundary>
         )}
 
-        {activeTab === 'turbidity' && (
-          <div className="animate-fadeIn">
+        {/* Tab 5: Sky Scanner */}
+        {activeTab === 'scanner' && (
+          <ErrorBoundary>
             <OpticalHazeEstimator onApplyEstimatedOutdoorPm25={(pm) => setOutdoorPm25(pm)} />
-          </div>
-        )}
-
-        {activeTab === 'admin' && (
-          <div className="animate-fadeIn">
-            <MultiTenantAdmin tenant={selectedTenant} />
-          </div>
+          </ErrorBoundary>
         )}
       </main>
 
-      {/* Stripe Site-Wide Footer (footer-light) */}
-      <footer className="w-full bg-[#f6f9fc] border-t border-[#e3e8ee] py-12 text-[#64748d] text-xs font-light">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-4 h-4 rounded-full bg-[#533afd]" />
-            <span className="text-[#0d253d] font-normal font-sans">Zerobon 4.0</span>
-            <span>• Stripe Inspired Atmospheric Architecture</span>
+      {/* Consumer D2C Footer */}
+      <footer className="w-full bg-[#f6f9fc] border-t border-[#e3e8ee] py-12 text-[#64748d] text-xs">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="w-5 h-5 rounded-full bg-[#533afd] flex items-center justify-center text-white text-[10px] font-bold">
+              ZB
+            </div>
+            <span className="text-[#0d253d] font-semibold">ZeroBon</span>
+            <span className="hidden sm:inline text-[#a8c3de]">•</span>
+            <span>GenAI Winter Smog & Urban Clean Air Platform</span>
           </div>
-          <div className="font-tabular text-[12px] text-[#64748d]">
-            Global Edge Network • Rust/WASM Mass-Balance • Sub-5ms CPU Latency
+
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setShowShareModal(true)}
+              className="flex items-center gap-1.5 text-[#533afd] font-medium hover:underline"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              <span>Share Clean Air Impact</span>
+            </button>
+            <span className="text-[#a8c3de]">•</span>
+            <span className="text-[#475569]">
+              Deterministic IPCC Physics Solver
+            </span>
           </div>
         </div>
       </footer>
@@ -323,6 +365,14 @@ export const App: React.FC = () => {
         <BreathReceiptModal
           receipt={activeReceipt}
           onClose={() => setActiveReceipt(null)}
+        />
+      )}
+
+      {/* Standalone Social Share Modal */}
+      {showShareModal && (
+        <SocialShareModal
+          receipt={defaultShareReceipt}
+          onClose={() => setShowShareModal(false)}
         />
       )}
     </div>
