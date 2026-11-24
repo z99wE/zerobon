@@ -309,27 +309,25 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
           return (
             <div
               key={swap.id}
-              className="relative min-h-[420px] rounded-3xl transition-all"
-              style={{ perspective: '1000px' }}
+              className="relative min-h-[440px] rounded-3xl transition-all perspective-1000 group cursor-pointer"
+              onClick={(e) => {
+                // If user clicks a button inside card, let button handler deal with it
+                if ((e.target as HTMLElement).closest('button')) return;
+                toggleFlip(swap.id);
+              }}
             >
               <div
-                className="w-full h-full relative transition-transform duration-500"
-                style={{
-                  transformStyle: 'preserve-3d',
-                  transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-                }}
+                className={`w-full h-full relative transition-transform duration-700 transform-style-3d ${
+                  isFlipped ? 'rotate-y-180' : ''
+                }`}
               >
                 {/* FRONT FACE */}
                 <div
-                  className={`w-full h-full rounded-3xl p-6 bg-white border flex flex-col justify-between transition-all ${
+                  className={`w-full h-full rounded-3xl p-6 bg-white border flex flex-col justify-between transition-all backface-hidden ${
                     isDone
                       ? 'border-[#533afd] shadow-md ring-1 ring-[#533afd]/30'
-                      : 'border-[#e3e8ee] hover:border-[#a8c3de] shadow-sm'
+                      : 'border-[#e3e8ee] hover:border-[#533afd]/50 hover:shadow-lg shadow-sm'
                   }`}
-                  style={{
-                    backfaceVisibility: 'hidden',
-                    WebkitBackfaceVisibility: 'hidden',
-                  }}
                 >
                   <div>
                     {/* Card Category & Badge & Flip Button */}
@@ -357,13 +355,16 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                         )}
                         <button
                           type="button"
-                          onClick={() => toggleFlip(swap.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleFlip(swap.id);
+                          }}
                           aria-label={`Flip card to see lifestyle tips for ${swap.title}`}
-                          className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] text-[11px] font-medium border border-[#e3e8ee] transition-all"
-                          title="Flip card for family & habit advice"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#f6f9fc] hover:bg-[#533afd] text-[#0d253d] hover:text-white text-xs font-semibold border border-[#e3e8ee] transition-all shadow-sm"
+                          title="Click to flip card"
                         >
-                          <RotateCw className="w-3 h-3 text-[#533afd]" />
-                          <span>Tips</span>
+                          <RotateCw className="w-3.5 h-3.5" />
+                          <span>Flip Card</span>
                         </button>
                       </div>
                     </div>
@@ -435,36 +436,34 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
 
                 {/* BACK FACE (Styled with Noisy Gradient Background) */}
                 <div
-                  className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-[#533afd]/40 shadow-xl"
-                  style={{
-                    backfaceVisibility: 'hidden',
-                    WebkitBackfaceVisibility: 'hidden',
-                    transform: 'rotateY(180deg)',
-                  }}
+                  className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-[#533afd]/40 shadow-xl backface-hidden rotate-y-180"
                 >
                   <GradientBackground
                     className="w-full h-full p-6 text-white flex flex-col justify-between"
                     gradientOrigin="bottom-middle"
-                    noiseIntensity={0.85}
-                    noisePatternSize={85}
+                    noiseIntensity={1.0}
+                    noisePatternSize={100}
                     noisePatternRefreshInterval={2}
                   >
                     <div>
                       {/* Back Header */}
                       <div className="flex items-center justify-between pb-3 border-b border-white/15 mb-4">
                         <div className="flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-[#533afd] ring-2 ring-white/50" />
-                          <span className="text-xs font-semibold tracking-wide uppercase text-white/90">
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#533afd] ring-2 ring-white/60 animate-pulse" />
+                          <span className="text-xs font-semibold tracking-wide uppercase text-white/95">
                             Practical Living Wisdom
                           </span>
                         </div>
                         <button
                           type="button"
-                          onClick={() => toggleFlip(swap.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleFlip(swap.id);
+                          }}
                           aria-label="Flip back to front face"
-                          className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-medium border border-white/20 transition-all backdrop-blur-sm"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 hover:bg-white text-white hover:text-[#0d253d] text-xs font-semibold border border-white/30 transition-all backdrop-blur-sm shadow-sm"
                         >
-                          <RotateCw className="w-3 h-3" />
+                          <RotateCw className="w-3.5 h-3.5" />
                           <span>Flip Back</span>
                         </button>
                       </div>

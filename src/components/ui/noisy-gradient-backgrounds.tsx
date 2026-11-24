@@ -53,8 +53,8 @@ export const GradientBackground: React.FC<GradientBackgroundProps> = ({
   gradientOrigin = "bottom-middle",
   colors = DEFAULT_BRAND_COLORS,
   gradientSize = "140% 140%",
-  noiseIntensity = 0.9,
-  noisePatternSize = 90,
+  noiseIntensity = 1.0,
+  noisePatternSize = 100,
   noisePatternRefreshInterval = 2,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -68,29 +68,32 @@ export const GradientBackground: React.FC<GradientBackgroundProps> = ({
     let animId = 0;
     let frame = 0;
 
+    // ReactBits / Grain engine pattern buffer
     const patternCanvas = document.createElement("canvas");
-    const patternSize = Math.max(16, Math.min(256, Math.floor(noisePatternSize)));
+    const patternSize = Math.max(32, Math.min(256, Math.floor(noisePatternSize)));
     patternCanvas.width = patternSize;
     patternCanvas.height = patternSize;
     const pCtx = patternCanvas.getContext("2d");
     if (!pCtx) return;
 
-    const generateNoiseTile = () => {
-      const imgData = pCtx.createImageData(patternSize, patternSize);
-      const data = imgData.data;
-      const alphaVal = Math.floor(Math.min(1, Math.max(0, noiseIntensity)) * 55);
+    const patternData = pCtx.createImageData(patternSize, patternSize);
+    const patternPixelDataLength = patternSize * patternSize * 4;
+    // Calculate alpha (0 to 255) based on noiseIntensity (0.1 to 2.0)
+    const patternAlpha = Math.floor(Math.min(180, Math.max(15, noiseIntensity * 45)));
 
-      for (let i = 0; i < data.length; i += 4) {
-        const val = Math.floor(Math.random() * 255);
-        data[i] = val;
-        data[i + 1] = val;
-        data[i + 2] = val;
-        data[i + 3] = alphaVal;
+    const updatePattern = () => {
+      const data = patternData.data;
+      for (let i = 0; i < patternPixelDataLength; i += 4) {
+        const val = (Math.random() * 255) | 0;
+        data[i] = val;         // R
+        data[i + 1] = val;     // G
+        data[i + 2] = val;     // B
+        data[i + 3] = patternAlpha; // A
       }
-      pCtx.putImageData(imgData, 0, 0);
+      pCtx.putImageData(patternData, 0, 0);
     };
 
-    generateNoiseTile();
+    updatePattern();
 
     const resize = () => {
       if (!canvas) return;
@@ -111,7 +114,7 @@ export const GradientBackground: React.FC<GradientBackgroundProps> = ({
     const render = () => {
       frame++;
       if (frame % noisePatternRefreshInterval === 0) {
-        generateNoiseTile();
+        updatePattern();
       }
 
       if (canvas && ctx) {
@@ -147,22 +150,25 @@ export const GradientBackground: React.FC<GradientBackgroundProps> = ({
         ...style,
       }}
     >
-      {/* Fallback CSS SVG noise overlay ensures guaranteed high-contrast grain on any browser */}
+      {/* High-definition SVG grain filter ensures visible tactile noise in all rendering engines */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 w-full h-full opacity-35 mix-blend-overlay"
+        className="pointer-events-none absolute inset-0 w-full h-full opacity-40 mix-blend-overlay z-[1]"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          backgroundRepeat: 'repeat',
         }}
       />
-      {/* Live animated canvas noise */}
+      {/* Live animated ReactBits canvas noise */}
       <canvas
         ref={canvasRef}
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 w-full h-full mix-blend-overlay opacity-80"
+        className="pointer-events-none absolute inset-0 w-full h-full mix-blend-overlay opacity-85 z-[2]"
         style={{ width: "100%", height: "100%" }}
       />
       <div className="relative z-10 w-full h-full">{children}</div>
     </div>
   );
 };
+
+export default GradientBackground;

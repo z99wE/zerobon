@@ -42,13 +42,8 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           noisePatternRefreshInterval={2}
           className="w-full min-h-[580px] sm:min-h-[620px] p-6 sm:p-12 lg:p-16 flex flex-col justify-between text-white"
         >
-          {/* Top Pill & Live Indicator */}
+          {/* Top Location Bar & Clean Air Window Indicator */}
           <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/15">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold">
-              <span className="w-2 h-2 rounded-full bg-[#533afd] ring-4 ring-white/50 animate-pulse" />
-              <span>Winter Smog Defense • Built for Families & Communities</span>
-            </div>
-
             <div className="flex items-center gap-2 text-xs text-white/90">
               <MapPin className="w-4 h-4 text-white" />
               <span className="font-semibold">{selectedCity}</span>
