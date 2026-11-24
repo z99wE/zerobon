@@ -38,14 +38,10 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
     <section aria-label="ZeroBon Clean Air Landing" className="w-full space-y-16">
       {/* 1. Flagship Hero Section: Seamlessly Integrated on Page (No Hard Box Cutoffs) */}
       <div className="w-full space-y-8 pt-2">
-        {/* Top Microclimate Status (High-Contrast Brand Colors • Crisp & Ultra-Readable) */}
-        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-white/95 border border-[#e3e8ee] shadow-sm text-xs">
-          <div className="flex items-center gap-2.5">
+        {/* Top Microclimate Status (Glassmorphism Surface • Crisp & Ultra-Readable) */}
+        <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 rounded-2xl bg-white/60 backdrop-blur-xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-xs">
+          <div className="flex items-center gap-2">
             <span className="font-bold text-sm text-[#0d253d] tracking-tight">{selectedCity}</span>
-            <span className="text-[#533afd] font-black">•</span>
-            <span className="text-[#533afd] font-bold tracking-wide uppercase text-[11px]">
-              Urban Microclimate Intelligence
-            </span>
           </div>
           <div className="flex items-center gap-3 text-xs">
             <span className="text-[#0d253d] font-semibold">
