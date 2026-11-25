@@ -572,10 +572,10 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         aria-label="Atmospheric Research & Ground-Truth Verification Data"
         className="group relative w-full rounded-3xl overflow-hidden border border-white/80 hover:border-[#533afd]/50 bg-white/70 backdrop-blur-2xl hover:bg-[#0d253d] p-8 sm:p-12 lg:p-16 transition-all duration-700 ease-out cursor-default shadow-[0_20px_60px_-15px_rgba(83,58,253,0.08)] hover:shadow-2xl hover:shadow-[#533afd]/20"
       >
-        {/* Ambient Glow Gradient Mesh in Background (Warms Up on Hover) */}
+        {/* Ambient Glow Gradient Mesh in Background (Warms Up on Hover • Strictly Brand Palette) */}
         <div 
           aria-hidden="true"
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none bg-[radial-gradient(ellipse_80%_80%_at_50%_-10%,rgba(83,58,253,0.35),transparent_65%),radial-gradient(ellipse_70%_70%_at_85%_90%,rgba(234,34,97,0.22),transparent_60%)]" 
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none bg-[radial-gradient(ellipse_80%_80%_at_50%_-10%,rgba(83,58,253,0.35),transparent_65%),radial-gradient(ellipse_70%_70%_at_85%_90%,rgba(185,185,249,0.22),transparent_60%)]" 
         />
 
         <div className="relative z-10 flex flex-col justify-between space-y-8">
@@ -583,7 +583,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           <div className="space-y-4">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-[#0d253d] group-hover:text-white transition-colors duration-500">
               Validated across{' '}
-              <span className="text-[#533afd] group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#b9b9f9] group-hover:via-white group-hover:to-[#ea2261] transition-all duration-500 underline decoration-[#533afd]/30 group-hover:decoration-white/30 decoration-4 underline-offset-8">
+              <span className="text-[#533afd] group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#b9b9f9] group-hover:via-white group-hover:to-[#b9b9f9] transition-all duration-500 underline decoration-[#533afd]/30 group-hover:decoration-white/30 decoration-4 underline-offset-8">
                 5,040 hourly atmospheric observations
               </span>{' '}
               in 15 winter smog basins.
@@ -595,7 +595,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             </p>
           </div>
 
-          {/* Telemetry Metric Cards in Liquid Glass Style - Sentence Case */}
+          {/* Telemetry Metric Cards in Liquid Glass Style - Sentence Case • Zero Pill Tags */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-[#e3e8ee] group-hover:border-white/15 transition-colors duration-500">
             <div className="p-4 rounded-2xl bg-white/80 group-hover:bg-white/10 border border-[#e3e8ee] group-hover:border-white/15 backdrop-blur-sm transition-all duration-500">
               <span className="text-xs text-[#64748d] group-hover:text-white/60 block mb-1">
@@ -628,7 +628,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               <span className="font-tabular text-2xl sm:text-3xl font-extrabold text-[#0d253d] group-hover:text-white transition-colors">
                 142m
               </span>
-              <span className="text-xs text-[#0d253d] group-hover:text-[#ea2261] block mt-1 font-medium">
+              <span className="text-xs text-[#533afd] group-hover:text-[#b9b9f9] block mt-1 font-medium">
                 Surface vehicle lid
               </span>
             </div>
