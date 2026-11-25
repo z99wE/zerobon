@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Share2, 
   Wrench, 
@@ -42,75 +42,83 @@ interface DIYHackDetail {
 const HACK_DETAILS: DIYHackDetail[] = [
   {
     id: 'corsiRosenthal',
-    title: 'DIY Corsi-Rosenthal Box Air Cleanser',
-    categoryLabel: 'Proven Home Filtration',
-    effectLabel: 'Cleans ~350 m³/h (85% reduction)',
-    costEst: '$35 – $45 (vs $400 HEPA unit)',
-    description: 'A cube built from 4 MERV-13 furnace filters taped to a 20-inch box fan. Matches commercial air purifiers with lower noise and longer filter life.',
-    humanExplanation: 'Four large filters provide an enormous surface area, pulling particles out of room air rapidly without burning out the fan motor.',
+    title: '$35 Box Fan Purifier (Corsi-Rosenthal Box)',
+    categoryLabel: 'DIY Home Purifier',
+    effectLabel: 'Cleans 85% of smoke in 20 mins',
+    costEst: '$35 (saves $350 vs commercial purifiers)',
+    description: 'Tape 4 standard home furnace filters around a standard 20-inch box fan. It cleans bedroom air as fast as a $400 store unit at a fraction of the price.',
+    humanExplanation: 'Four large filters trap smoke, soot, and dust without straining the fan motor. Runs quietly overnight while using less power than a lightbulb.',
     materials: [
-      '1x 20-inch box fan (3-speed)',
-      '4x 20x20x2" MERV-13 furnace filters',
-      '1x cardboard bottom base piece',
-      '1x roll of standard duct tape or gaffer tape',
+      '1x Standard 20-inch box fan ($20)',
+      '4x MERV-13 furnace filters (20"x20") ($15–$20 total)',
+      '1x Cardboard square for the bottom base',
+      '1x Roll of duct tape or packing tape',
     ],
     steps: [
-      'Tape 4 MERV-13 filters into a square cube with the airflow arrows pointing inward.',
-      'Tape the cardboard bottom firmly to seal the base of the cube.',
-      'Place the 20" box fan on top, blowing UPWARD into the room.',
-      'Tape all corners and seams securely to ensure no unfiltered air leaks past.',
+      'Stand the 4 filters in a square cube with the arrow marks pointing inward toward the center.',
+      'Tape the vertical edges together firmly with duct tape.',
+      'Tape the cardboard square to seal the bottom of the cube completely.',
+      'Place the box fan on top, blowing clean air upward toward the ceiling.',
+      'Tape all remaining seams tightly so air only enters through the filters. Plug in and run on low or medium.',
     ],
   },
   {
     id: 'draftSealing',
-    title: 'Magnetic Window Sash & Sill Sealing',
-    categoryLabel: 'Leakage Prevention',
-    effectLabel: 'Cuts outdoor air infiltration by 54%',
-    costEst: '$8 – $12',
-    description: 'Self-adhesive foam weatherstripping and silicone draft seals along sliding window sashes and door bottoms.',
-    humanExplanation: 'Most smog enters through tiny cracks around windows and doors. Sealing these gaps blocks outdoor haze from leaking into living areas.',
+    title: 'Seal Window & Door Cracks',
+    categoryLabel: 'Leak Prevention',
+    effectLabel: 'Blocks 54% of outdoor smoke leaks',
+    costEst: '$10 weather tape',
+    description: 'Stick peel-and-stick foam tape along rattling window seams and slide a draft stopper under exterior doors to block dirty winter drafts.',
+    humanExplanation: 'Over half of outdoor smog sneaks into living rooms through hairline cracks around windows and doors. Sealing them locks clean air inside.',
     materials: [
-      'Durable high-density foam rubber weatherstrip tape',
-      'Silicone door-bottom draft stopper',
-      'Rubbing alcohol for cleaning surfaces before application',
+      'Peel-and-stick foam weatherstrip tape',
+      'Door-bottom draft sweep or fabric roll',
+      'Cloth to wipe frames before applying',
     ],
     steps: [
-      'Clean window sills and sash channels thoroughly with rubbing alcohol.',
-      'Press self-adhesive silicone tape along every perimeter contact seam.',
-      'Install the door bottom seal along the exterior entrance door.',
-      'Check for remaining drafts using a lit candle or tissue paper on windy days.',
+      'Wipe window frames and sills dry with a cloth to remove dust.',
+      'Press self-adhesive foam tape along every gap where window panels meet.',
+      'Slide or stick the draft stopper along the bottom edge of your front door.',
+      'Check for leaks on a breezy evening—you shouldn\'t feel cool air drafts whistling in.',
     ],
   },
   {
     id: 'kitchenExhaust',
-    title: 'High-Velocity Kitchen Exhaust Flush',
-    categoryLabel: 'Indoor Source Control',
-    effectLabel: 'Flushes cooking particles in 12 mins',
-    costEst: '$0 (Existing Equipment)',
-    description: 'Run the range hood fan on high whenever frying or boiling, and keep kitchen doors closed to protect bedrooms.',
-    humanExplanation: 'Cooking oil fumes and gas flames create intense fine particle spikes. Venting them directly outside keeps sleeping rooms clean.',
-    materials: ['Ducted kitchen range hood or window exhaust fan', 'Kitchen barrier door or curtain'],
+    title: 'Kitchen Exhaust & Stove Venting',
+    categoryLabel: 'Cooking Soot Control',
+    effectLabel: 'Clears cooking smoke in 10 mins',
+    costEst: '$0 (Free)',
+    description: 'Turn your stove exhaust fan on high before turning on burners or heating oil, and keep bedroom doors shut so frying smoke doesn\'t drift.',
+    humanExplanation: 'Cooking oil fumes and gas flames release massive invisible spikes of fine soot. Venting them outdoors immediately protects family lungs.',
+    materials: [
+      'Kitchen exhaust fan or window vent',
+      'Cooking pot and pan lids',
+      'Bedroom doors kept shut while cooking',
+    ],
     steps: [
-      'Turn on the exhaust fan 2 minutes before heating oil or igniting burners.',
-      'Keep kitchen doors closed to isolate cooking fumes from living rooms.',
-      'Always use pot lids when simmering or boiling.',
-      'Leave the exhaust fan running for 10 minutes after cooking finishes.',
+      'Switch on the kitchen exhaust fan 2 minutes before you start cooking.',
+      'Keep kitchen and bedroom doors closed to isolate cooking smoke.',
+      'Always cover sizzling pans with lids to trap oil mist.',
+      'Keep the fan running for 10 minutes after turning off the stove.',
     ],
   },
   {
     id: 'windowOpen',
-    title: 'Midday Inversion Window Clean Air Flush',
-    categoryLabel: 'Solar Convective Airing',
-    effectLabel: 'Flushes indoor CO₂ without smog flood',
-    costEst: '$0 (Timing Optimization)',
-    description: 'Open cross-ventilating windows only during midday clean air hours, when solar warmth lifts and dilutes surface pollution.',
-    humanExplanation: 'Opening windows in early morning floods your home with trapped smog. Midday solar heating raises the smog lid, making airing safe.',
-    materials: ['Cross-room windows or balcony doors', 'Smartphone reminder set for 1:00 PM'],
+    title: 'Midday 15-Minute Air Flush',
+    categoryLabel: 'Fresh Air Timing',
+    effectLabel: 'Brings fresh oxygen without smog flood',
+    costEst: '$0 (Free timing trick)',
+    description: 'Only open windows between 12:00 PM and 3:00 PM. Sunlight warms the ground and pushes the smog layer high into the sky, making it safe to air out your home.',
+    humanExplanation: 'Never open windows in early morning or late evening when cold air traps car exhaust at ground level. Midday sun naturally dilutes pollution by up to 75%.',
+    materials: [
+      'Windows or balcony doors on opposite sides of home',
+      'Phone alarm set for 1:00 PM',
+    ],
     steps: [
-      'Verify clean air hours (typically 11:30 AM to 3:30 PM).',
-      'Open windows on opposite sides of your home for 15 to 20 minutes.',
-      'Close and latch all windows securely before 4:00 PM as evening cooling sets in.',
-      'Run your DIY filter on high for 20 minutes following the flush.',
+      'Check your city\'s clean window (typically 12:00 PM – 3:00 PM).',
+      'Open windows on two sides of the home for 15 minutes to create a fresh cross-breeze.',
+      'Close and lock all windows tightly by 3:30 PM before sunset cooling starts.',
+      'Turn on your DIY box fan purifier to quickly clean the fresh indoor air.',
     ],
   },
 ];
@@ -126,6 +134,19 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
 }) => {
   const [selectedHackModal, setSelectedHackModal] = useState<DIYHackDetail | null>(null);
   const [flippedHacks, setFlippedHacks] = useState<Record<string, boolean>>({});
+
+  // Close modal with Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedHackModal(null);
+      }
+    };
+    if (selectedHackModal) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [selectedHackModal]);
 
   const toggleFlip = (id: string) => {
     setFlippedHacks((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -242,7 +263,17 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
           return (
             <div
               key={hack.id}
-              className="relative min-h-[460px] sm:min-h-[440px] rounded-3xl transition-all perspective-1000 group cursor-pointer"
+              tabIndex={0}
+              role="region"
+              aria-label={`${hack.title}. Press Enter or Space to flip card.`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  if ((e.target as HTMLElement).tagName === 'BUTTON') return;
+                  e.preventDefault();
+                  toggleFlip(hack.id);
+                }
+              }}
+              className="relative min-h-[460px] sm:min-h-[440px] rounded-3xl transition-all perspective-1000 group cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#533afd] focus:ring-offset-2"
               onClick={(e) => {
                 if ((e.target as HTMLElement).closest('button')) return;
                 toggleFlip(hack.id);
@@ -449,9 +480,10 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
         >
           <div className="relative w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 border border-[#e3e8ee] shadow-2xl max-h-[90vh] overflow-y-auto">
             <button
+              autoFocus
               onClick={() => setSelectedHackModal(null)}
-              aria-label="Close DIY Guide"
-              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#475569] flex items-center justify-center text-xs"
+              aria-label="Close DIY Guide (or press Escape)"
+              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#475569] flex items-center justify-center text-xs focus:outline-none focus:ring-2 focus:ring-[#533afd]"
             >
               ✕
             </button>

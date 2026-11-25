@@ -309,7 +309,17 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
           return (
             <div
               key={swap.id}
-              className="relative min-h-[530px] sm:min-h-[510px] rounded-3xl transition-all perspective-1000 group cursor-pointer"
+              tabIndex={0}
+              role="region"
+              aria-label={`${swap.title}. Press Enter or Space to flip card.`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  if ((e.target as HTMLElement).tagName === 'BUTTON') return;
+                  e.preventDefault();
+                  toggleFlip(swap.id);
+                }
+              }}
+              className="relative min-h-[530px] sm:min-h-[510px] rounded-3xl transition-all perspective-1000 group cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#533afd] focus:ring-offset-2"
               onClick={(e) => {
                 // If user clicks a button inside card, let button handler deal with it
                 if ((e.target as HTMLElement).closest('button')) return;

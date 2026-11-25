@@ -157,7 +157,19 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Pillar 1: Low-Emission Routines Flip Card */}
-          <div className="relative perspective-[1000px] w-full min-h-[380px]">
+          <div 
+            tabIndex={0}
+            role="region"
+            aria-label="Pillar 1: Low-Emission Routines. Press Enter or Space to flip card."
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                if ((e.target as HTMLElement).tagName === 'BUTTON') return;
+                e.preventDefault();
+                toggleCardFlip('routines');
+              }
+            }}
+            className="relative perspective-[1000px] w-full min-h-[380px] rounded-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#533afd] focus:ring-offset-2"
+          >
             <div
               className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
                 flippedCards.routines ? 'rotate-y-180' : ''
@@ -235,7 +247,19 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           </div>
 
           {/* Pillar 2: $35 DIY Indoor Sanctuaries Flip Card */}
-          <div className="relative perspective-[1000px] w-full min-h-[380px]">
+          <div 
+            tabIndex={0}
+            role="region"
+            aria-label="Pillar 2: $35 DIY Indoor Sanctuaries. Press Enter or Space to flip card."
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                if ((e.target as HTMLElement).tagName === 'BUTTON') return;
+                e.preventDefault();
+                toggleCardFlip('hacks');
+              }
+            }}
+            className="relative perspective-[1000px] w-full min-h-[380px] rounded-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#533afd] focus:ring-offset-2"
+          >
             <div
               className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
                 flippedCards.hacks ? 'rotate-y-180' : ''
@@ -251,7 +275,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                     2. $35 DIY Indoor Sanctuaries
                   </h3>
                   <p className="font-body-md text-xs sm:text-sm text-[#475569] leading-relaxed">
-                    Commercial purifiers cost upwards of $400. Build high-performing Corsi-Rosenthal boxes for $35, seal drafty window sashes, and purge kitchen frying soot in minutes.
+                    Commercial purifiers cost upwards of $400. Build high-performing box fan purifiers for $35, seal drafty window sashes, and purge kitchen frying soot in minutes.
                   </p>
                 </div>
                 <div className="pt-4 border-t border-[#e3e8ee] flex items-center justify-between">
@@ -283,13 +307,13 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 >
                   <div className="space-y-3">
                     <span className="text-xs font-bold font-tabular text-white/80 uppercase tracking-wider block">
-                      Sanctuary Physics
+                      Sanctuary Blueprint
                     </span>
                     <h4 className="text-lg font-bold text-white">
-                      Corsi-Rosenthal Box Filtration
+                      Box Fan Air Cleanser
                     </h4>
                     <p className="text-xs text-white/90 leading-relaxed">
-                      Delivers over 350 m³/h Clean Air Delivery Rate (CADR). Four MERV-13 filters and a box fan achieve 85% indoor particulate reduction at 10% commercial cost.
+                      Four affordable home furnace filters and a box fan clear 85% of soot from living rooms in 20 minutes, costing 90% less than store purifiers.
                     </p>
                   </div>
 
@@ -313,7 +337,19 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           </div>
 
           {/* Pillar 3: Verifiable Impact Receipts Flip Card */}
-          <div className="relative perspective-[1000px] w-full min-h-[380px]">
+          <div 
+            tabIndex={0}
+            role="region"
+            aria-label="Pillar 3: Verifiable Impact Receipts. Press Enter or Space to flip card."
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                if ((e.target as HTMLElement).tagName === 'BUTTON') return;
+                e.preventDefault();
+                toggleCardFlip('receipts');
+              }
+            }}
+            className="relative perspective-[1000px] w-full min-h-[380px] rounded-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#533afd] focus:ring-offset-2"
+          >
             <div
               className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
                 flippedCards.receipts ? 'rotate-y-180' : ''

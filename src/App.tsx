@@ -58,7 +58,8 @@ export const App: React.FC = () => {
         };
 
         const step = stepAnalytical(prevCin, outdoorPm25, 0.04, currentParams);
-        return Math.round(step.cin * 10) / 10;
+        const nextVal = Math.round(step.cin * 10) / 10;
+        return nextVal === prevCin ? prevCin : nextVal;
       });
     }, 400);
 
