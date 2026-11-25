@@ -31,13 +31,20 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
     );
   }, [outdoorPm25, profile.terrainType, profile.pblHeightMeters, profile.temperatureC]);
   
-  // Real-time atmospheric selection: syncs to current local hour (no stale data)
-  const currentHourDecimal = new Date().getHours() + new Date().getMinutes() / 60;
-  const initialCurrentHour = forecast.reduce((prev, curr) => {
-    return Math.abs(curr.time24 - currentHourDecimal) < Math.abs(prev.time24 - currentHourDecimal) ? curr : prev;
-  }, forecast[0]) || forecast[0];
+  // Real-time atmospheric selection: syncs to current local hour and updates dynamically when forecast changes
+  const initialHourKey = useMemo(() => {
+    const currentHourDecimal = new Date().getHours() + new Date().getMinutes() / 60;
+    const closest = forecast.reduce((prev, curr) => {
+      return Math.abs(curr.time24 - currentHourDecimal) < Math.abs(prev.time24 - currentHourDecimal) ? curr : prev;
+    }, forecast[0]) || forecast[0];
+    return closest.hour;
+  }, [forecast]);
 
-  const [selectedHour, setSelectedHour] = useState<HourlyAtmosphericForecast>(initialCurrentHour);
+  const [selectedHourKey, setSelectedHourKey] = useState<string>(initialHourKey);
+  const selectedHour: HourlyAtmosphericForecast = useMemo(() => {
+    return forecast.find((h) => h.hour === selectedHourKey) ?? forecast[0];
+  }, [forecast, selectedHourKey]);
+  const setSelectedHour = (item: HourlyAtmosphericForecast) => setSelectedHourKey(item.hour);
 
   // SVG dimensions for the 24-hour Planetary Boundary Layer (PBL) altitude curve
   const svgWidth = 800;
@@ -46,30 +53,29 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
   const paddingY = 24;
   const maxPbl = 1400;
 
-  // Compute curve points
-  const points = forecast.map((item, index) => {
-    const x = paddingX + (index / (forecast.length - 1)) * (svgWidth - 2 * paddingX);
-    // Y inverted: 0 at bottom, maxPbl at top
-    const y = svgHeight - paddingY - (item.pblHeightMeters / maxPbl) * (svgHeight - 2 * paddingY);
-    return { x, y, item };
-  });
+  // Memoize curve geometry so hover/other state updates don't recompute Bézier paths
+  const { points, pathData, areaData, activePoint } = useMemo(() => {
+    const pts = forecast.map((item, index) => {
+      const x = paddingX + (index / (forecast.length - 1)) * (svgWidth - 2 * paddingX);
+      const y = svgHeight - paddingY - (item.pblHeightMeters / maxPbl) * (svgHeight - 2 * paddingY);
+      return { x, y, item };
+    });
 
-  // Construct SVG path string for the curve
-  const pathData = points.reduce((acc, curr, idx) => {
-    if (idx === 0) return `M ${curr.x} ${curr.y}`;
-    const prev = points[idx - 1];
-    const cpx1 = prev.x + (curr.x - prev.x) / 2;
-    const cpy1 = prev.y;
-    const cpx2 = prev.x + (curr.x - prev.x) / 2;
-    const cpy2 = curr.y;
-    return `${acc} C ${cpx1} ${cpy1}, ${cpx2} ${cpy2}, ${curr.x} ${curr.y}`;
-  }, '');
+    const pData = pts.reduce((acc, curr, idx) => {
+      if (idx === 0) return `M ${curr.x} ${curr.y}`;
+      const prev = pts[idx - 1];
+      const cpx1 = prev.x + (curr.x - prev.x) / 2;
+      const cpy1 = prev.y;
+      const cpx2 = prev.x + (curr.x - prev.x) / 2;
+      const cpy2 = curr.y;
+      return `${acc} C ${cpx1} ${cpy1}, ${cpx2} ${cpy2}, ${curr.x} ${curr.y}`;
+    }, '');
 
-  // Area under curve path
-  const areaData = `${pathData} L ${points[points.length - 1].x} ${svgHeight - paddingY} L ${points[0].x} ${svgHeight - paddingY} Z`;
+    const aData = `${pData} L ${pts[pts.length - 1].x} ${svgHeight - paddingY} L ${pts[0].x} ${svgHeight - paddingY} Z`;
+    const active = pts.find((p) => p.item.hour === selectedHour.hour) ?? pts[4];
 
-  // Find selected point coordinates
-  const activePoint = points.find((p) => p.item.hour === selectedHour.hour) ?? points[4];
+    return { points: pts, pathData: pData, areaData: aData, activePoint: active };
+  }, [forecast, selectedHour.hour]);
 
   return (
     <div className="w-full space-y-8">
@@ -295,7 +301,7 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
                     }`}>
                       {isClean ? 'Clean Window' : 'Inversion'}
                     </span>
-                    <span className={`text-[9px] block font-tabular ${isSelected ? 'text-white/70' : 'text-[#94a3b8]'}`}>
+                    <span className={`text-[9px] block font-tabular ${isSelected ? 'text-white/80' : 'text-[#475569]'}`}>
                       PBL: {item.pblHeightMeters}m
                     </span>
                   </div>

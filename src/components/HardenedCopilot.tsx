@@ -45,7 +45,9 @@ export const HardenedCopilot: React.FC<HardenedCopilotProps> = ({ indoorPm25, ou
 
   // Auto-scroll messages smoothly into view whenever messages change or loading starts
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (typeof messagesEndRef.current?.scrollIntoView === 'function') {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages, isLoading]);
 
   const suggestionChips = selectedTenant === 'school'

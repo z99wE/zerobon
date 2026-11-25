@@ -239,7 +239,7 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
               onChange={(e) => setRoomVolumeM3(Number(e.target.value))}
               className="w-full accent-[#533afd] cursor-pointer"
             />
-            <div className="flex justify-between text-[10px] text-[#94a3b8] mt-1">
+            <div className="flex justify-between text-[10px] text-[#475569] mt-1">
               <span>Studio (40 m³)</span>
               <span>Standard (90 m³)</span>
               <span>Large Hall (320 m³)</span>

@@ -1,4 +1,5 @@
 // src/engine/sanctuary-engine.ts
+import { z } from 'zod';
 import { MassBalanceParams } from '../types';
 
 export type BuildingType = 'brick_drafty' | 'standard_apartment' | 'modern_airtight';
@@ -76,15 +77,26 @@ export const DEFAULT_SANCTUARY_PROFILE: SanctuaryProfile = {
 
 const STORAGE_KEY = 'zerobon_sanctuary_profile_v1';
 
+const SanctuaryProfileSchema = z.object({
+  buildingType: z.enum(['brick_drafty', 'standard_apartment', 'modern_airtight']).catch(DEFAULT_SANCTUARY_PROFILE.buildingType),
+  floorLevel: z.enum(['ground_first', 'mid_rise', 'high_rise']).catch(DEFAULT_SANCTUARY_PROFILE.floorLevel),
+  roomZone: z.enum(['bedroom', 'master_suite', 'living_hall']).catch(DEFAULT_SANCTUARY_PROFILE.roomZone),
+  roomVolumeM3: z.number().finite().min(20).max(500).default(DEFAULT_SANCTUARY_PROFILE.roomVolumeM3),
+  customZoneName: z.string().trim().min(1).max(60).default(DEFAULT_SANCTUARY_PROFILE.customZoneName ?? 'Bedroom Sanctuary'),
+  isCustomized: z.boolean().optional(),
+});
+
 export function loadSanctuaryProfile(): SanctuaryProfile {
   if (typeof window === 'undefined') return DEFAULT_SANCTUARY_PROFILE;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_SANCTUARY_PROFILE;
-    const parsed = JSON.parse(raw);
+    const parsed = SanctuaryProfileSchema.safeParse(JSON.parse(raw));
+    if (!parsed.success) {
+      return DEFAULT_SANCTUARY_PROFILE;
+    }
     return {
-      ...DEFAULT_SANCTUARY_PROFILE,
-      ...parsed,
+      ...parsed.data,
       isCustomized: true,
     };
   } catch (err) {
