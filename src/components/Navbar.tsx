@@ -188,9 +188,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={onOpenSanctuaryCalibration}
               title="Calibrate your building type & floor elevation"
-              className="hidden lg:flex items-center px-3.5 py-1.5 rounded-full bg-[#533afd]/10 hover:bg-[#533afd]/20 border border-[#533afd]/25 text-[#533afd] text-xs font-bold transition-all"
+              className="hidden lg:flex items-center px-3.5 py-1.5 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] border border-[#e3e8ee] text-[#0d253d] text-xs font-medium transition-all"
             >
-              <span>{sanctuaryZoneName || 'Calibrate Home'}</span>
+              <span>{sanctuaryZoneName || 'Home'}</span>
             </button>
           )}
 

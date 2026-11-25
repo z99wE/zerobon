@@ -79,11 +79,11 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             {onOpenSanctuaryCalibration && (
               <button
                 onClick={onOpenSanctuaryCalibration}
-                className="flex items-center px-3 py-1 rounded-full bg-[#533afd]/10 hover:bg-[#533afd]/20 text-[#533afd] text-[11px] font-bold border border-[#533afd]/20 transition-all"
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 hover:bg-white text-[#0d253d] text-[11px] font-medium border border-[#e3e8ee] transition-all shadow-2xs"
               >
-                <span>{sanctuaryBadgeText || 'Calibrate Home'}</span>
+                <span>{sanctuaryBadgeText || 'Home'}</span>
                 {indoorPm25 !== undefined && (
-                  <span className="text-[10px] opacity-80">· Est. {Math.round(indoorPm25)} µg</span>
+                  <span className="text-[10px] text-[#64748d]">· Est. {Math.round(indoorPm25)} µg</span>
                 )}
               </button>
             )}
@@ -144,9 +144,9 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             {onOpenSanctuaryCalibration && (
               <button
                 onClick={onOpenSanctuaryCalibration}
-                className="px-6 py-4 rounded-full bg-[#533afd]/10 hover:bg-[#533afd]/15 text-[#533afd] text-sm font-semibold transition-all focus:ring-4 focus:ring-[#533afd]/20 focus:outline-none flex items-center justify-center"
+                className="px-6 py-4 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] text-sm font-semibold border border-[#e3e8ee] transition-all focus:ring-4 focus:ring-[#533afd]/20 focus:outline-none flex items-center justify-center"
               >
-                <span>Calibrate Home</span>
+                <span>Home</span>
               </button>
             )}
 
@@ -579,18 +579,6 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         />
 
         <div className="relative z-10 flex flex-col justify-between space-y-8">
-          {/* Pre-Hover Hint / Eyebrow (Swaps smoothly on hover) */}
-          <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-semibold">
-            <div className="flex items-center gap-2 text-[#533afd] group-hover:text-[#b9b9f9] transition-colors duration-500">
-              <span className="w-2 h-2 rounded-full bg-[#533afd] group-hover:bg-[#b9b9f9] animate-pulse" />
-              <span>Empirical ground-truth standard</span>
-            </div>
-            <div className="text-[#64748d] group-hover:text-white/70 text-xs font-normal transition-colors duration-500 flex items-center gap-1.5">
-              <span className="group-hover:hidden">Hover cursor to reveal atmospheric research data ↗</span>
-              <span className="hidden group-hover:inline text-[#b9b9f9] font-medium">Verified planetary inversion physics ✦</span>
-            </div>
-          </div>
-
           {/* Massive Bold Headline - High-Contrast Branding */}
           <div className="space-y-4">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-[#0d253d] group-hover:text-white transition-colors duration-500">

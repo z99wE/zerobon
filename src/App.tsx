@@ -214,7 +214,7 @@ export const App: React.FC = () => {
         onSyncLiveAir={handleSyncLiveAir}
         isLiveSyncing={isLiveSyncing}
         isLiveReading={Boolean(liveReading?.isLive)}
-        sanctuaryZoneName={sanctuaryProfile.isCustomized ? sanctuaryProfile.customZoneName : 'Calibrate Home'}
+        sanctuaryZoneName={sanctuaryProfile.isCustomized ? sanctuaryProfile.customZoneName : 'Home'}
       />
 
       {/* Main Content Surface - Displays Tab Directly Without Scrolling Friction */}
@@ -240,7 +240,7 @@ export const App: React.FC = () => {
               onSyncLiveAir={handleSyncLiveAir}
               isLiveSyncing={isLiveSyncing}
               isLiveReading={Boolean(liveReading?.isLive)}
-              sanctuaryBadgeText={sanctuaryProfile.isCustomized ? sanctuaryProfile.customZoneName : 'Calibrate Home'}
+              sanctuaryBadgeText={sanctuaryProfile.isCustomized ? sanctuaryProfile.customZoneName : 'Home'}
               indoorPm25={indoorPm25}
             />
           </ErrorBoundary>
