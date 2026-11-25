@@ -226,275 +226,143 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Pillar 1: Low-Emission Routines Flip Card */}
-          <div 
-            tabIndex={0}
-            role="region"
-            aria-label="Pillar 1: Low-Emission Routines. Press Enter or Space to flip card."
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                if ((e.target as HTMLElement).tagName === 'BUTTON') return;
-                e.preventDefault();
-                toggleCardFlip('routines');
-              }
-            }}
-            className="relative perspective-[1000px] w-full min-h-[380px] rounded-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#533afd] focus:ring-offset-2"
-          >
+          {[
+            {
+              key: 'routines',
+              num: '01',
+              title: '1. Low-Emission Routines',
+              description:
+                'Cold night air traps vehicle exhaust within 150m of ground level. ZeroBon shifts school drop-offs, commutes, and workouts into golden solar convective mixing windows.',
+              frontAction: 'View Swaps',
+              backLabel: 'Routine Impact Blueprint',
+              backTitle: 'Solar Dilution Synchronization',
+              backDescription: `Rescheduling high-aerobic activities between ${cleanWindowHours || cityProfile.cleanWindowHours} avoids the 70% particle accumulation trapped beneath the nocturnal inversion lid.`,
+              backAction: 'Explore Routine Swaps',
+              onAction: onExploreRoutines,
+            },
+            {
+              key: 'hacks',
+              num: '02',
+              title: '2. $35 DIY Indoor Sanctuaries',
+              description:
+                'Commercial purifiers cost upwards of $400. Build high-performing box fan purifiers for $35, seal drafty window sashes, and purge kitchen frying soot in minutes.',
+              frontAction: 'View Hacks',
+              backLabel: 'Sanctuary Blueprint',
+              backTitle: 'Box Fan Air Cleanser',
+              backDescription:
+                'Four affordable home furnace filters and a box fan clear 85% of soot from living rooms in 20 minutes, costing 90% less than store purifiers.',
+              backAction: 'Explore Indoor Hacks',
+              onAction: onExploreHacks,
+            },
+            {
+              key: 'receipts',
+              num: '03',
+              title: '3. Verifiable Impact Receipts',
+              description:
+                'No vague greenwashing. Every routine swap calculates exact inhaled particulate dose prevented (µg PM₂.₅), cigarette equivalents avoided, and avoided emissions.',
+              frontAction: 'Share Receipt',
+              backLabel: 'Deterministic Receipts',
+              backTitle: 'Inhaled Dose Differential',
+              backDescription:
+                'Mass-balance differential equations calculate particulate exposure reduction down to microgram precision. Ready for 1-click sharing on WhatsApp and X.',
+              backAction: 'Share Verified Receipt',
+              onAction: onOpenShare,
+            },
+          ].map((card) => (
             <div
-              className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
-                flippedCards.routines ? 'rotate-y-180' : ''
-              }`}
+              key={card.key}
+              tabIndex={0}
+              role="region"
+              aria-label={`Pillar ${card.num}: ${card.title}. Press Enter or Space to flip card.`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  if ((e.target as HTMLElement).tagName === 'BUTTON') return;
+                  e.preventDefault();
+                  toggleCardFlip(card.key);
+                }
+              }}
+              className="relative perspective-[1000px] w-full min-h-[380px] rounded-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#533afd] focus:ring-offset-2"
             >
-              {/* FRONT FACE */}
-              <div className="absolute inset-0 w-full h-full rounded-3xl p-6 sm:p-8 bg-white border border-[#e3e8ee] hover:border-[#533afd] shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between backface-hidden">
-                <div className="space-y-3">
-                  <span className="text-sm font-extrabold font-tabular text-[#533afd] tracking-wider block">
-                    01
-                  </span>
-                  <h3 className="font-heading-md text-xl font-bold text-[#0d253d]">
-                    1. Low-Emission Routines
-                  </h3>
-                  <p className="font-body-md text-xs sm:text-sm text-[#475569] leading-relaxed">
-                    Cold night air traps vehicle exhaust within 150m of ground level. ZeroBon shifts school drop-offs, commutes, and workouts into golden solar convective mixing windows.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-[#e3e8ee] flex items-center justify-between">
-                  <button
-                    onClick={() => toggleCardFlip('routines')}
-                    className="text-xs font-semibold text-[#533afd] hover:underline"
-                  >
-                    Action Blueprint & Flip
-                  </button>
-                  <button
-                    onClick={onExploreRoutines}
-                    className="text-xs font-medium text-[#64748d] hover:text-[#0d253d]"
-                  >
-                    View Swaps
-                  </button>
-                </div>
-              </div>
-
-              {/* BACK FACE (Styled with Seamless Brand Linear Gradient) */}
-              <div className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-[#533afd]/40 shadow-xl backface-hidden rotate-y-180">
-                <GradientBackground
-                  className="w-full h-full p-6 text-white flex flex-col justify-between"
-                  gradientType="linear-gradient"
-                  gradientOrigin="top-left"
-                  noiseIntensity={0.5}
-                  noisePatternAlpha={25}
-                  noisePatternSize={80}
-                  noisePatternRefreshInterval={2}
-                >
+              <div
+                className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
+                  flippedCards[card.key] ? 'rotate-y-180' : ''
+                }`}
+              >
+                {/* FRONT FACE */}
+                <div className="absolute inset-0 w-full h-full rounded-3xl p-6 sm:p-8 bg-white border border-[#e3e8ee] hover:border-[#533afd] shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between backface-hidden">
                   <div className="space-y-3">
-                    <span className="text-xs font-bold font-tabular text-white/80 uppercase tracking-wider block">
-                      Routine Impact Blueprint
+                    <span className="text-sm font-extrabold font-tabular text-[#533afd] tracking-wider block">
+                      {card.num}
                     </span>
-                    <h4 className="text-lg font-bold text-white">
-                      Solar Dilution Synchronization
-                    </h4>
-                    <p className="text-xs text-white/90 leading-relaxed">
-                      Rescheduling high-aerobic activities between 11:30 AM and 3:30 PM avoids the 70% particle accumulation trapped beneath the nocturnal inversion lid.
+                    <h3 className="font-heading-md text-xl font-bold text-[#0d253d]">
+                      {card.title}
+                    </h3>
+                    <p className="font-body-md text-xs sm:text-sm text-[#475569] leading-relaxed">
+                      {card.description}
                     </p>
                   </div>
-
-                  <div className="pt-4 border-t border-white/20 flex items-center justify-between gap-2">
+                  <div className="pt-4 border-t border-[#e3e8ee] flex items-center justify-between">
                     <button
-                      onClick={() => toggleCardFlip('routines')}
-                      className="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs font-medium transition-all"
+                      type="button"
+                      onClick={() => toggleCardFlip(card.key)}
+                      className="text-xs font-semibold text-[#533afd] hover:underline"
                     >
-                      Flip Back
+                      Action Blueprint & Flip
                     </button>
                     <button
-                      onClick={onExploreRoutines}
-                      className="px-4 py-1.5 rounded-full bg-white text-[#0d253d] text-xs font-bold hover:bg-white/90 transition-all shadow-sm"
+                      type="button"
+                      onClick={card.onAction}
+                      className="text-xs font-medium text-[#64748d] hover:text-[#0d253d]"
                     >
-                      Explore Routine Swaps
+                      {card.frontAction}
                     </button>
                   </div>
-                </GradientBackground>
+                </div>
+
+                {/* BACK FACE (Styled with Seamless Brand Linear Gradient) */}
+                <div className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-[#533afd]/40 shadow-xl backface-hidden rotate-y-180">
+                  <GradientBackground
+                    className="w-full h-full p-6 text-white flex flex-col justify-between"
+                    gradientType="linear-gradient"
+                    gradientOrigin="top-left"
+                    noiseIntensity={0.5}
+                    noisePatternAlpha={25}
+                    noisePatternSize={80}
+                    noisePatternRefreshInterval={2}
+                  >
+                    <div className="space-y-3">
+                      <span className="text-xs font-bold font-tabular text-white/80 uppercase tracking-wider block">
+                        {card.backLabel}
+                      </span>
+                      <h4 className="text-lg font-bold text-white">
+                        {card.backTitle}
+                      </h4>
+                      <p className="text-xs text-white/90 leading-relaxed">
+                        {card.backDescription}
+                      </p>
+                    </div>
+
+                    <div className="pt-4 border-t border-white/20 flex items-center justify-between gap-2">
+                      <button
+                        type="button"
+                        onClick={() => toggleCardFlip(card.key)}
+                        className="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs font-medium transition-all"
+                      >
+                        Flip Back
+                      </button>
+                      <button
+                        type="button"
+                        onClick={card.onAction}
+                        className="px-4 py-1.5 rounded-full bg-white text-[#0d253d] text-xs font-bold hover:bg-white/90 transition-all shadow-sm"
+                      >
+                        {card.backAction}
+                      </button>
+                    </div>
+                  </GradientBackground>
+                </div>
               </div>
             </div>
-          </div>
-
-          {/* Pillar 2: $35 DIY Indoor Sanctuaries Flip Card */}
-          <div 
-            tabIndex={0}
-            role="region"
-            aria-label="Pillar 2: $35 DIY Indoor Sanctuaries. Press Enter or Space to flip card."
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                if ((e.target as HTMLElement).tagName === 'BUTTON') return;
-                e.preventDefault();
-                toggleCardFlip('hacks');
-              }
-            }}
-            className="relative perspective-[1000px] w-full min-h-[380px] rounded-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#533afd] focus:ring-offset-2"
-          >
-            <div
-              className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
-                flippedCards.hacks ? 'rotate-y-180' : ''
-              }`}
-            >
-              {/* FRONT FACE */}
-              <div className="absolute inset-0 w-full h-full rounded-3xl p-6 sm:p-8 bg-white border border-[#e3e8ee] hover:border-[#533afd] shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between backface-hidden">
-                <div className="space-y-3">
-                  <span className="text-sm font-extrabold font-tabular text-[#533afd] tracking-wider block">
-                    02
-                  </span>
-                  <h3 className="font-heading-md text-xl font-bold text-[#0d253d]">
-                    2. $35 DIY Indoor Sanctuaries
-                  </h3>
-                  <p className="font-body-md text-xs sm:text-sm text-[#475569] leading-relaxed">
-                    Commercial purifiers cost upwards of $400. Build high-performing box fan purifiers for $35, seal drafty window sashes, and purge kitchen frying soot in minutes.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-[#e3e8ee] flex items-center justify-between">
-                  <button
-                    onClick={() => toggleCardFlip('hacks')}
-                    className="text-xs font-semibold text-[#533afd] hover:underline"
-                  >
-                    Action Blueprint & Flip
-                  </button>
-                  <button
-                    onClick={onExploreHacks}
-                    className="text-xs font-medium text-[#64748d] hover:text-[#0d253d]"
-                  >
-                    View Hacks
-                  </button>
-                </div>
-              </div>
-
-              {/* BACK FACE (Styled with Seamless Brand Linear Gradient) */}
-              <div className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-[#533afd]/40 shadow-xl backface-hidden rotate-y-180">
-                <GradientBackground
-                  className="w-full h-full p-6 text-white flex flex-col justify-between"
-                  gradientType="linear-gradient"
-                  gradientOrigin="top-left"
-                  noiseIntensity={0.5}
-                  noisePatternAlpha={25}
-                  noisePatternSize={80}
-                  noisePatternRefreshInterval={2}
-                >
-                  <div className="space-y-3">
-                    <span className="text-xs font-bold font-tabular text-white/80 uppercase tracking-wider block">
-                      Sanctuary Blueprint
-                    </span>
-                    <h4 className="text-lg font-bold text-white">
-                      Box Fan Air Cleanser
-                    </h4>
-                    <p className="text-xs text-white/90 leading-relaxed">
-                      Four affordable home furnace filters and a box fan clear 85% of soot from living rooms in 20 minutes, costing 90% less than store purifiers.
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-white/20 flex items-center justify-between gap-2">
-                    <button
-                      onClick={() => toggleCardFlip('hacks')}
-                      className="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs font-medium transition-all"
-                    >
-                      Flip Back
-                    </button>
-                    <button
-                      onClick={onExploreHacks}
-                      className="px-4 py-1.5 rounded-full bg-white text-[#0d253d] text-xs font-bold hover:bg-white/90 transition-all shadow-sm"
-                    >
-                      Explore Indoor Hacks
-                    </button>
-                  </div>
-                </GradientBackground>
-              </div>
-            </div>
-          </div>
-
-          {/* Pillar 3: Verifiable Impact Receipts Flip Card */}
-          <div 
-            tabIndex={0}
-            role="region"
-            aria-label="Pillar 3: Verifiable Impact Receipts. Press Enter or Space to flip card."
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                if ((e.target as HTMLElement).tagName === 'BUTTON') return;
-                e.preventDefault();
-                toggleCardFlip('receipts');
-              }
-            }}
-            className="relative perspective-[1000px] w-full min-h-[380px] rounded-3xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#533afd] focus:ring-offset-2"
-          >
-            <div
-              className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
-                flippedCards.receipts ? 'rotate-y-180' : ''
-              }`}
-            >
-              {/* FRONT FACE */}
-              <div className="absolute inset-0 w-full h-full rounded-3xl p-6 sm:p-8 bg-white border border-[#e3e8ee] hover:border-[#533afd] shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between backface-hidden">
-                <div className="space-y-3">
-                  <span className="text-sm font-extrabold font-tabular text-[#533afd] tracking-wider block">
-                    03
-                  </span>
-                  <h3 className="font-heading-md text-xl font-bold text-[#0d253d]">
-                    3. Verifiable Impact Receipts
-                  </h3>
-                  <p className="font-body-md text-xs sm:text-sm text-[#475569] leading-relaxed">
-                    No vague greenwashing. Every routine swap calculates exact inhaled particulate dose prevented (µg PM₂.₅), cigarette equivalents avoided, and avoided emissions.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-[#e3e8ee] flex items-center justify-between">
-                  <button
-                    onClick={() => toggleCardFlip('receipts')}
-                    className="text-xs font-semibold text-[#533afd] hover:underline"
-                  >
-                    Action Blueprint & Flip
-                  </button>
-                  <button
-                    onClick={onOpenShare}
-                    className="text-xs font-medium text-[#64748d] hover:text-[#0d253d]"
-                  >
-                    Share Receipt
-                  </button>
-                </div>
-              </div>
-
-              {/* BACK FACE (Styled with Seamless Brand Linear Gradient) */}
-              <div className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-[#533afd]/40 shadow-xl backface-hidden rotate-y-180">
-                <GradientBackground
-                  className="w-full h-full p-6 text-white flex flex-col justify-between"
-                  gradientType="linear-gradient"
-                  gradientOrigin="top-left"
-                  noiseIntensity={0.5}
-                  noisePatternAlpha={25}
-                  noisePatternSize={80}
-                  noisePatternRefreshInterval={2}
-                >
-                  <div className="space-y-3">
-                    <span className="text-xs font-bold font-tabular text-white/80 uppercase tracking-wider block">
-                      Deterministic Receipts
-                    </span>
-                    <h4 className="text-lg font-bold text-white">
-                      Inhaled Dose Differential
-                    </h4>
-                    <p className="text-xs text-white/90 leading-relaxed">
-                      Mass-balance differential equations calculate particulate exposure reduction down to microgram precision. Ready for 1-click sharing on WhatsApp and X.
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-white/20 flex items-center justify-between gap-2">
-                    <button
-                      onClick={() => toggleCardFlip('receipts')}
-                      className="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs font-medium transition-all"
-                    >
-                      Flip Back
-                    </button>
-                    <button
-                      onClick={onOpenShare}
-                      className="px-4 py-1.5 rounded-full bg-white text-[#0d253d] text-xs font-bold hover:bg-white/90 transition-all shadow-sm"
-                    >
-                      Share Verified Receipt
-                    </button>
-                  </div>
-                </GradientBackground>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 

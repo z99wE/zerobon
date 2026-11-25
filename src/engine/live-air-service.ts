@@ -1,5 +1,38 @@
 // src/engine/live-air-service.ts
+import { z } from 'zod';
 import { getCityProfile } from './city-data';
+
+const OpenMeteoGeocodingSchema = z.object({
+  results: z
+    .array(
+      z.object({
+        latitude: z.number().min(-90).max(90),
+        longitude: z.number().min(-180).max(180),
+        country: z.string().max(80).optional(),
+      })
+    )
+    .optional(),
+});
+
+const OpenMeteoAirQualitySchema = z.object({
+  current: z.object({
+    pm2_5: z.number().finite().min(0).max(2000),
+    pm10: z.number().finite().min(0).max(3000).optional(),
+    nitrogen_dioxide: z.number().finite().min(0).max(2000).optional(),
+  }),
+});
+
+const OpenMeteoWeatherSchema = z.object({
+  current: z.object({
+    temperature_2m: z.number().finite().min(-80).max(65).optional(),
+    relative_humidity_2m: z.number().finite().min(0).max(100).optional(),
+    wind_speed_10m: z.number().finite().min(0).max(300).optional(),
+  }),
+});
+
+function sanitizeCityQuery(cityName: string): string {
+  return cityName.replace(/[<>{}[\]\\;`]/g, '').trim().slice(0, 64);
+}
 
 export interface LiveAirReading {
   cityName: string;
@@ -141,7 +174,10 @@ export function calculateDynamicCleanWindow(
  * Uses static metro cache first, then falls back to Open-Meteo's free geocoding API.
  */
 export async function resolveCityCoordinates(cityName: string): Promise<{ lat: number; lon: number; country?: string }> {
-  const normalized = cityName.trim();
+  const normalized = sanitizeCityQuery(cityName);
+  if (!normalized) {
+    return { lat: 28.6139, lon: 77.2090, country: 'India' };
+  }
   if (CITY_COORDINATES[normalized]) {
     return CITY_COORDINATES[normalized];
   }
@@ -159,12 +195,12 @@ export async function resolveCityCoordinates(cityName: string): Promise<{ lat: n
     const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(normalized)}&count=1&language=en&format=json`;
     const res = await fetch(geoUrl);
     if (res.ok) {
-      const data = await res.json();
-      if (data?.results?.[0]) {
-        const item = data.results[0];
+      const parsed = OpenMeteoGeocodingSchema.safeParse(await res.json());
+      if (parsed.success && parsed.data.results?.[0]) {
+        const item = parsed.data.results[0];
         const resolved = {
-          lat: Number(item.latitude),
-          lon: Number(item.longitude),
+          lat: item.latitude,
+          lon: item.longitude,
           country: item.country || 'Global',
         };
         CITY_COORDINATES[normalized] = resolved;
@@ -176,6 +212,40 @@ export async function resolveCityCoordinates(cityName: string): Promise<{ lat: n
   }
 
   return { lat: 28.6139, lon: 77.2090, country: 'India' };
+}
+
+interface WeatherFallback {
+  temperatureC: number;
+  humidityPct: number;
+  windSpeedKmh: number;
+}
+
+async function parseWeatherTelemetry(
+  weatherRes: Response | null,
+  fallback: WeatherFallback
+): Promise<WeatherFallback> {
+  if (!weatherRes || !weatherRes.ok) return fallback;
+  try {
+    const parsed = OpenMeteoWeatherSchema.safeParse(await weatherRes.json());
+    if (!parsed.success) return fallback;
+    const current = parsed.data.current;
+    return {
+      temperatureC:
+        current.temperature_2m !== undefined
+          ? Math.round(current.temperature_2m)
+          : fallback.temperatureC,
+      humidityPct:
+        current.relative_humidity_2m !== undefined
+          ? Math.round(current.relative_humidity_2m)
+          : fallback.humidityPct,
+      windSpeedKmh:
+        current.wind_speed_10m !== undefined
+          ? Math.round(current.wind_speed_10m * 10) / 10
+          : fallback.windSpeedKmh,
+    };
+  } catch {
+    return fallback;
+  }
 }
 
 /**
@@ -213,33 +283,21 @@ export async function fetchLiveAirQuality(cityName: string): Promise<LiveAirRead
       throw new Error(`Open-Meteo Air Quality HTTP ${airRes.status}`);
     }
 
-    const airJson = await airRes.json();
-    const currentAir = airJson.current;
-
-    if (typeof currentAir?.pm2_5 !== 'number' || isNaN(currentAir.pm2_5)) {
+    const parsedAir = OpenMeteoAirQualitySchema.safeParse(await airRes.json());
+    if (!parsedAir.success) {
       throw new Error('Invalid PM2.5 in API response');
     }
+    const currentAir = parsedAir.data.current;
 
-    let tempC = profile.temperatureC;
-    let humidity = profile.humidityPct;
-    let wind = profile.windSpeedKmh;
-
-    if (weatherRes && weatherRes.ok) {
-      try {
-        const weatherJson = await weatherRes.json();
-        if (typeof weatherJson?.current?.temperature_2m === 'number') {
-          tempC = Math.round(weatherJson.current.temperature_2m);
-        }
-        if (typeof weatherJson?.current?.relative_humidity_2m === 'number') {
-          humidity = Math.round(weatherJson.current.relative_humidity_2m);
-        }
-        if (typeof weatherJson?.current?.wind_speed_10m === 'number') {
-          wind = Math.round(weatherJson.current.wind_speed_10m * 10) / 10;
-        }
-      } catch {
-        // ignore weather parse errors
-      }
-    }
+    const {
+      temperatureC: tempC,
+      humidityPct: humidity,
+      windSpeedKmh: wind,
+    } = await parseWeatherTelemetry(weatherRes, {
+      temperatureC: profile.temperatureC,
+      humidityPct: profile.humidityPct,
+      windSpeedKmh: profile.windSpeedKmh,
+    });
 
     const livePm25 = Math.round(currentAir.pm2_5);
     const dynamicWindow = calculateDynamicCleanWindow(profile.terrainType, livePm25, tempC, wind);

@@ -111,11 +111,13 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
         {/* Institution Name Customizer Bar (Hidden during printing) */}
         <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 p-3.5 rounded-2xl bg-white/60 backdrop-blur-md border border-[#e3e8ee]/80 print:hidden">
           <div>
-            <label className="text-[11px] font-medium text-[#64748d] block mb-1">
+            <label htmlFor="recess-institution-input" className="text-[11px] font-medium text-[#64748d] block mb-1">
               School or organization name
             </label>
             <input
+              id="recess-institution-input"
               type="text"
+              maxLength={100}
               value={institutionName}
               onChange={(e) => setInstitutionName(e.target.value)}
               className="w-full px-3 py-1.5 text-xs rounded-xl bg-white/90 border border-[#e3e8ee] text-[#0d253d] font-medium focus:outline-none focus:ring-2 focus:ring-[#533afd]/30"
@@ -123,11 +125,13 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
             />
           </div>
           <div>
-            <label className="text-[11px] font-medium text-[#64748d] block mb-1">
+            <label htmlFor="recess-scope-input" className="text-[11px] font-medium text-[#64748d] block mb-1">
               Student or division scope
             </label>
             <input
+              id="recess-scope-input"
               type="text"
+              maxLength={100}
               value={gradeGroup}
               onChange={(e) => setGradeGroup(e.target.value)}
               className="w-full px-3 py-1.5 text-xs rounded-xl bg-white/90 border border-[#e3e8ee] text-[#0d253d] font-medium focus:outline-none focus:ring-2 focus:ring-[#533afd]/30"
@@ -195,10 +199,10 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
 
           {/* The Tri-Band Diurnal Schedule Table - Sentence Case, No Pill Tags */}
           <div className="space-y-3 mb-6">
-            <h3 className="text-xs font-semibold text-[#0d253d] flex items-center gap-1.5">
+            <h2 className="text-xs font-semibold text-[#0d253d] flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-[#533afd]" />
               <span>Campus operating protocol by atmospheric window</span>
-            </h3>
+            </h2>
 
             <div className="space-y-2.5 text-xs">
               {/* Band 1: Morning Inversion Window */}

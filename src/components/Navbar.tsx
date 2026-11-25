@@ -99,6 +99,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <Search className="w-3.5 h-3.5 text-[#64748d]" />
                   <input
                     type="text"
+                    aria-label="Search city or neighborhood"
+                    maxLength={64}
                     value={cityInput}
                     onChange={(e) => setCityInput(e.target.value)}
                     placeholder="Type ANY city name..."

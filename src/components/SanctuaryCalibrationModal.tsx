@@ -231,6 +231,7 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
           <div className="px-2">
             <input
               type="range"
+              aria-label="Room volume in cubic meters"
               min="40"
               max="320"
               step="5"
