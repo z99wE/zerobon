@@ -64,14 +64,14 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 onClick={onSyncLiveAir}
                 disabled={isLiveSyncing}
                 title="Click to sync live atmospheric station & satellite readings"
-                className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border transition-all ${
                   isLiveReading
-                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                    : 'bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] border-[#e3e8ee]'
+                    ? 'bg-[#533afd]/10 text-[#533afd] border-[#533afd]/30 shadow-2xs'
+                    : 'bg-white/80 hover:bg-white text-[#0d253d] border-[#e3e8ee]'
                 }`}
               >
-                <Radio className={`w-3 h-3 ${isLiveSyncing ? 'animate-pulse text-[#533afd]' : isLiveReading ? 'text-emerald-600' : 'text-[#64748d]'}`} />
-                <span>{isLiveReading ? 'Live CAMS Feed' : 'Sync Live Air'}</span>
+                <Radio className={`w-3 h-3 ${isLiveSyncing ? 'animate-pulse text-[#533afd]' : isLiveReading ? 'text-[#533afd]' : 'text-[#64748d]'}`} />
+                <span>{isLiveReading ? 'Live CAMS feed' : 'Sync live air'}</span>
               </button>
             )}
 
@@ -570,7 +570,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         tabIndex={0}
         role="region"
         aria-label="Atmospheric Research & Ground-Truth Verification Data"
-        className="group relative w-full rounded-3xl overflow-hidden border border-[#e3e8ee] hover:border-[#533afd]/50 bg-gradient-to-b from-[#f8fafc] via-white to-[#f1f5f9] hover:from-[#0d253d] hover:via-[#130f30] hover:to-[#071320] p-8 sm:p-12 lg:p-16 transition-all duration-700 ease-out cursor-default shadow-sm hover:shadow-2xl hover:shadow-[#533afd]/20"
+        className="group relative w-full rounded-3xl overflow-hidden border border-white/80 hover:border-[#533afd]/50 bg-white/70 backdrop-blur-2xl hover:bg-[#0d253d] p-8 sm:p-12 lg:p-16 transition-all duration-700 ease-out cursor-default shadow-[0_20px_60px_-15px_rgba(83,58,253,0.08)] hover:shadow-2xl hover:shadow-[#533afd]/20"
       >
         {/* Ambient Glow Gradient Mesh in Background (Warms Up on Hover) */}
         <div 
@@ -580,14 +580,14 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
         <div className="relative z-10 flex flex-col justify-between space-y-8">
           {/* Pre-Hover Hint / Eyebrow (Swaps smoothly on hover) */}
-          <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-bold uppercase tracking-widest">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-semibold">
             <div className="flex items-center gap-2 text-[#533afd] group-hover:text-[#b9b9f9] transition-colors duration-500">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#533afd] group-hover:bg-[#ea2261] animate-pulse" />
-              <span>Empirical Ground-Truth Standard</span>
+              <span className="w-2 h-2 rounded-full bg-[#533afd] group-hover:bg-[#b9b9f9] animate-pulse" />
+              <span>Empirical ground-truth standard</span>
             </div>
-            <div className="text-[#64748d] group-hover:text-white/70 text-[11px] font-medium transition-colors duration-500 flex items-center gap-1.5">
+            <div className="text-[#64748d] group-hover:text-white/70 text-xs font-normal transition-colors duration-500 flex items-center gap-1.5">
               <span className="group-hover:hidden">Hover cursor to reveal atmospheric research data ↗</span>
-              <span className="hidden group-hover:inline text-[#b9b9f9] font-bold">Verified Planetary Inversion Physics ✦</span>
+              <span className="hidden group-hover:inline text-[#b9b9f9] font-medium">Verified planetary inversion physics ✦</span>
             </div>
           </div>
 
@@ -601,58 +601,58 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               in 15 winter smog basins.
             </h2>
             
-            {/* Detailed telemetry insights that brighten on hover */}
+            {/* Detailed telemetry insights in running sentence case */}
             <p className="font-body-lg text-sm sm:text-base text-[#475569] group-hover:text-white/85 max-w-3xl leading-relaxed transition-colors duration-500">
               Nocturnal surface radiation cooling traps heavy exhaust below 140m every winter morning. By 11:30 AM, solar thermal ground heating triggers vertical convective boundary-layer expansion, achieving a 74.4% natural dilution ceiling across global urban airsheds.
             </p>
           </div>
 
-          {/* Telemetry Metric Cards */}
+          {/* Telemetry Metric Cards in Liquid Glass Style - Sentence Case */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-[#e3e8ee] group-hover:border-white/15 transition-colors duration-500">
             <div className="p-4 rounded-2xl bg-white/80 group-hover:bg-white/10 border border-[#e3e8ee] group-hover:border-white/15 backdrop-blur-sm transition-all duration-500">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748d] group-hover:text-white/60 block mb-1">
-                Hourly Soundings
+              <span className="text-xs text-[#64748d] group-hover:text-white/60 block mb-1">
+                Hourly soundings
               </span>
               <span className="font-tabular text-2xl sm:text-3xl font-extrabold text-[#0d253d] group-hover:text-white transition-colors">
                 5,040
               </span>
-              <span className="text-[10px] text-[#533afd] group-hover:text-[#b9b9f9] block mt-1 font-medium">
-                14-Day Winter Basins
+              <span className="text-xs text-[#533afd] group-hover:text-[#b9b9f9] block mt-1 font-medium">
+                14-day winter basins
               </span>
             </div>
 
             <div className="p-4 rounded-2xl bg-white/80 group-hover:bg-white/10 border border-[#e3e8ee] group-hover:border-white/15 backdrop-blur-sm transition-all duration-500">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748d] group-hover:text-white/60 block mb-1">
-                Mean Solar Dilution
+              <span className="text-xs text-[#64748d] group-hover:text-white/60 block mb-1">
+                Mean solar dilution
               </span>
-              <span className="font-tabular text-2xl sm:text-3xl font-extrabold text-[#0d253d] group-hover:text-emerald-400 transition-colors">
+              <span className="font-tabular text-2xl sm:text-3xl font-extrabold text-[#0d253d] group-hover:text-white transition-colors">
                 74.4%
               </span>
-              <span className="text-[10px] text-[#533afd] group-hover:text-[#b9b9f9] block mt-1 font-medium">
-                11:30 AM – 3:30 PM Peak
+              <span className="text-xs text-[#533afd] group-hover:text-[#b9b9f9] block mt-1 font-medium">
+                11:30 AM – 3:30 PM peak
               </span>
             </div>
 
             <div className="p-4 rounded-2xl bg-white/80 group-hover:bg-white/10 border border-[#e3e8ee] group-hover:border-white/15 backdrop-blur-sm transition-all duration-500">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748d] group-hover:text-white/60 block mb-1">
-                Nocturnal Inversion Lid
+              <span className="text-xs text-[#64748d] group-hover:text-white/60 block mb-1">
+                Nocturnal inversion lid
               </span>
               <span className="font-tabular text-2xl sm:text-3xl font-extrabold text-[#0d253d] group-hover:text-white transition-colors">
                 142m
               </span>
-              <span className="text-[10px] text-[#ea2261] group-hover:text-[#ea2261] block mt-1 font-medium">
-                Surface Vehicle Lid
+              <span className="text-xs text-[#0d253d] group-hover:text-[#ea2261] block mt-1 font-medium">
+                Surface vehicle lid
               </span>
             </div>
 
             <div className="p-4 rounded-2xl bg-white/80 group-hover:bg-white/10 border border-[#e3e8ee] group-hover:border-white/15 backdrop-blur-sm transition-all duration-500">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748d] group-hover:text-white/60 block mb-1">
-                Avoided Alveolar Dose
+              <span className="text-xs text-[#64748d] group-hover:text-white/60 block mb-1">
+                Avoided alveolar dose
               </span>
               <span className="font-tabular text-2xl sm:text-3xl font-extrabold text-[#0d253d] group-hover:text-[#b9b9f9] transition-colors">
                 3.9×
               </span>
-              <span className="text-[10px] text-emerald-600 group-hover:text-emerald-400 block mt-1 font-medium">
+              <span className="text-xs text-[#533afd] group-hover:text-[#b9b9f9] block mt-1 font-medium">
                 Midday vs 7:30 AM
               </span>
             </div>

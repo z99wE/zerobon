@@ -173,12 +173,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               title="Fetch live satellite & ground station readings via Open-Meteo API"
               className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full border text-xs font-medium transition-all ${
                 isLiveReading
-                  ? 'bg-emerald-50 border-emerald-200 text-emerald-800 font-semibold'
+                  ? 'bg-[#533afd]/10 border-[#533afd]/30 text-[#533afd] font-semibold shadow-2xs'
                   : 'bg-[#f6f9fc] hover:bg-[#e3e8ee] border-[#e3e8ee] text-[#0d253d]'
               }`}
             >
-              <Radio className={`w-3.5 h-3.5 ${isLiveSyncing ? 'animate-pulse text-[#533afd]' : isLiveReading ? 'text-emerald-600' : 'text-[#64748d]'}`} />
-              <span className="hidden xl:inline">{isLiveReading ? 'Live CAMS' : 'Sync Live'}</span>
+              <Radio className={`w-3.5 h-3.5 ${isLiveSyncing ? 'animate-pulse text-[#533afd]' : isLiveReading ? 'text-[#533afd]' : 'text-[#64748d]'}`} />
+              <span className="hidden xl:inline">{isLiveReading ? 'Live CAMS' : 'Sync live'}</span>
               <span className="font-tabular font-bold">{temperatureC}°C · {Math.round(outdoorPm25)} µg</span>
             </button>
           )}
