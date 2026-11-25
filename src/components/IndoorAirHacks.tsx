@@ -142,6 +142,8 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
 
           <div className="flex items-center gap-2">
             <button
+              type="button"
+              aria-label="Share indoor air sanctuary impact"
               onClick={onTriggerShare}
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#533afd] text-xs font-semibold border border-[#e3e8ee] transition-all"
             >
@@ -149,6 +151,8 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
               <span>Share Sanctuary</span>
             </button>
             <button
+              type="button"
+              aria-label="View breath receipt for DIY box fan purifier"
               onClick={() => handleCreateReceiptForHack(HACK_DETAILS[0]!)}
               className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-medium transition-all shadow-sm focus:ring-2 focus:ring-[#533afd]"
             >
@@ -207,11 +211,11 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
+                          aria-label={`Flip card to view non-technical tips for ${hack.title}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleFlip(hack.id);
                           }}
-                          aria-label={`Flip card to view non-technical tips for ${hack.title}`}
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#f6f9fc] hover:bg-[#533afd] text-[#0d253d] hover:text-white text-xs font-semibold border border-[#e3e8ee] transition-all shadow-sm"
                           title="Click to flip card"
                         >
@@ -271,6 +275,8 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
                   {/* Footer Actions */}
                   <div className="flex items-center justify-between gap-3 pt-3 border-t border-[#e3e8ee]">
                     <button
+                      type="button"
+                      aria-label={`View DIY build blueprint for ${hack.title}`}
                       onClick={() => setSelectedHackModal(hack)}
                       className="flex items-center gap-1.5 text-xs text-[#533afd] font-semibold hover:underline focus:outline-none focus:ring-1 focus:ring-[#533afd] rounded"
                     >
@@ -279,6 +285,8 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
                     </button>
 
                     <button
+                      type="button"
+                      aria-label={`Calculate breath receipt for ${hack.title}`}
                       onClick={() => handleCreateReceiptForHack(hack)}
                       className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] text-xs font-medium border border-[#e3e8ee] transition-all"
                     >
@@ -312,11 +320,11 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
                         </div>
                         <button
                           type="button"
+                          aria-label="Flip back to front face"
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleFlip(hack.id);
                           }}
-                          aria-label="Flip back to front face"
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 hover:bg-white text-white hover:text-[#0d253d] text-xs font-semibold border border-white/30 transition-all backdrop-blur-sm shadow-sm"
                         >
                           <RotateCw className="w-3.5 h-3.5" />
@@ -358,6 +366,7 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
                       </div>
                       <button
                         type="button"
+                        aria-label={`Toggle ${hack.title} and flip back`}
                         onClick={() => {
                           onToggleHack(hack.id);
                           toggleFlip(hack.id);
@@ -430,6 +439,8 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
 
             <div className="flex items-center justify-end gap-2">
               <button
+                type="button"
+                aria-label="Close DIY assembly guide"
                 onClick={() => setSelectedHackModal(null)}
                 className="px-5 py-2.5 rounded-full bg-[#533afd] text-white text-xs font-medium hover:bg-[#432ec9] transition-all"
               >

@@ -1,0 +1,20 @@
+{
+  "flags": {
+    "liveOpenMeteoSync": {
+      "enabled": true,
+      "description": "Automatic real-time Open-Meteo air quality, weather, and geocoding sync"
+    },
+    "sanctuaryCalibration": {
+      "enabled": true,
+      "description": "LocalStorage-persisted building envelope & floor calibration"
+    },
+    "safeRecessPassPdf": {
+      "enabled": true,
+      "description": "Printable 1-page institutional Safe Recess & Outdoor Protocol Pass"
+    },
+    "hardenedCopilot": {
+      "enabled": true,
+      "description": "Firewall-hardened ZeroBon Clean Air Assistant"
+    }
+  }
+}

@@ -61,12 +61,13 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
       aria-modal="true"
       aria-labelledby="recess-pass-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#0d253d]/70 backdrop-blur-xl animate-fadeIn overflow-y-auto"
-      onClick={onClose}
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       {/* Liquid Glassmorphism Container with Subtle Ambient Indigo Reflection */}
       <div
         className="relative w-full max-w-3xl rounded-3xl bg-white/85 backdrop-blur-2xl border border-white/80 shadow-[0_25px_60px_-15px_rgba(83,58,253,0.18)] p-5 sm:p-8 my-auto overflow-hidden text-[#0d253d]"
-        onClick={(e) => e.stopPropagation()}
       >
         {/* Soft Ambient Brand Gradients for Pure Liquid Glass Finish */}
         <div className="absolute -top-32 -right-32 w-80 h-80 rounded-full bg-gradient-to-br from-[#b9b9f9]/25 to-[#533afd]/10 blur-3xl pointer-events-none" />
@@ -83,6 +84,8 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
 
           <div className="flex items-center gap-2">
             <button
+              type="button"
+              aria-label="Share safe recess pass link with parents"
               onClick={handleShare}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 hover:bg-white text-[#0d253d] text-xs font-medium border border-[#e3e8ee] transition-all shadow-2xs"
             >
@@ -91,6 +94,8 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
             </button>
 
             <button
+              type="button"
+              aria-label="Print or save Safe Recess Pass as PDF"
               onClick={handlePrint}
               className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-medium transition-all shadow-sm"
             >
@@ -316,6 +321,8 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
         <div className="relative z-10 flex items-center justify-between pt-4 mt-2 text-xs text-[#64748d] print:hidden">
           <span>Tip: Use Ctrl+P or Cmd+P to export as a clean 1-page PDF document.</span>
           <button
+            type="button"
+            aria-label="Close certificate preview"
             onClick={onClose}
             className="px-5 py-1.5 rounded-full bg-white/80 hover:bg-white text-[#0d253d] font-semibold text-xs border border-[#e3e8ee] transition-all shadow-2xs"
           >

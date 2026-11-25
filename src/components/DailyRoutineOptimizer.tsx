@@ -116,6 +116,8 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
           </div>
 
           <button
+            type="button"
+            aria-label="Share daily routine impact"
             onClick={onTriggerShare}
             className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#533afd] text-xs font-semibold border border-[#e3e8ee] transition-all self-start md:self-auto"
           >
@@ -180,6 +182,8 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
         {filterOptions.map((opt) => (
           <button
             key={opt}
+            type="button"
+            aria-label={`Filter routines by ${opt}`}
             role="tab"
             aria-selected={selectedFilter === opt}
             onClick={() => setSelectedFilter(opt)}
@@ -260,11 +264,11 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                         )}
                         <button
                           type="button"
+                          aria-label={`Flip card to see lifestyle tips for ${swap.title}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleFlip(swap.id);
                           }}
-                          aria-label={`Flip card to see lifestyle tips for ${swap.title}`}
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#f6f9fc] hover:bg-[#533afd] text-[#0d253d] hover:text-white text-xs font-semibold border border-[#e3e8ee] transition-all shadow-sm"
                           title="Click to flip card"
                         >
@@ -316,6 +320,8 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                   {/* Action Buttons */}
                   <div className="flex items-center justify-between gap-3 pt-2">
                     <button
+                      type="button"
+                      aria-label={`Adopt ${swap.title} routine`}
                       onClick={() => handleCommit(swap)}
                       className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-full text-xs font-medium transition-all focus:ring-2 focus:ring-[#533afd] ${
                         isDone
@@ -363,11 +369,11 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                         </div>
                         <button
                           type="button"
+                          aria-label="Flip back to front face"
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleFlip(swap.id);
                           }}
-                          aria-label="Flip back to front face"
                           className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 hover:bg-white text-white hover:text-[#0d253d] text-xs font-semibold border border-white/30 transition-all backdrop-blur-sm shadow-sm"
                         >
                           <RotateCw className="w-3 h-3" />
@@ -406,6 +412,7 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                       </div>
                       <button
                         type="button"
+                        aria-label={`Adopt ${swap.title} routine`}
                         onClick={() => {
                           handleCommit(swap);
                           toggleFlip(swap.id);

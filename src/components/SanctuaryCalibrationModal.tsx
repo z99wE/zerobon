@@ -84,11 +84,12 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
       aria-modal="true"
       aria-labelledby="sanctuary-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d253d]/70 backdrop-blur-md animate-fadeIn"
-      onClick={onClose}
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div
         className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-[#e3e8ee] p-6 sm:p-8 max-h-[92vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-[#e3e8ee] mb-6">
@@ -137,6 +138,7 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
                 <button
                   key={key}
                   type="button"
+                  aria-label={`Select ${def.title} building type`}
                   onClick={() => setBuildingType(key)}
                   className={`p-3.5 rounded-2xl text-left border transition-all ${
                     isSelected
@@ -172,6 +174,7 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
                 <button
                   key={key}
                   type="button"
+                  aria-label={`Select ${def.title} floor elevation`}
                   onClick={() => setFloorLevel(key)}
                   className={`p-3.5 rounded-2xl text-left border transition-all ${
                     isSelected
@@ -215,6 +218,7 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
                 <button
                   key={key}
                   type="button"
+                  aria-label={`Select ${def.title} room zone`}
                   onClick={() => handleSelectZone(key)}
                   className={`py-2 px-3 rounded-xl text-xs font-medium border text-center transition-all ${
                     isSelected
@@ -297,6 +301,7 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
           <div className="flex items-center gap-2">
             <button
               type="button"
+              aria-label="Cancel sanctuary calibration"
               onClick={onClose}
               className="px-4 py-2 rounded-full border border-[#e3e8ee] text-[#475569] text-xs font-semibold hover:bg-[#f6f9fc] transition-all"
             >
@@ -304,6 +309,7 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
             </button>
             <button
               type="button"
+              aria-label="Save sanctuary profile to browser"
               onClick={handleSave}
               className="flex items-center gap-1.5 px-6 py-2 rounded-full bg-[#533afd] hover:bg-[#432dd7] text-white text-xs font-bold transition-all shadow-md shadow-[#533afd]/20"
             >

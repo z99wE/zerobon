@@ -154,6 +154,8 @@ export const HardenedCopilot: React.FC<HardenedCopilotProps> = ({ indoorPm25, ou
             return (
               <button
                 key={opt.id}
+                type="button"
+                aria-label={`Switch assistant profile to ${opt.label}`}
                 onClick={() => handleTenantChange(opt.id)}
                 aria-pressed={isSelected}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#533afd] ${
@@ -249,6 +251,8 @@ export const HardenedCopilot: React.FC<HardenedCopilotProps> = ({ indoorPm25, ou
         {suggestionChips.map((chip, idx) => (
           <button
             key={idx}
+            type="button"
+            aria-label={`Ask suggested question: ${chip}`}
             onClick={() => handleSend(chip)}
             className="whitespace-nowrap px-3.5 py-1.5 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] text-xs border border-[#e3e8ee] transition-all"
           >
@@ -279,9 +283,9 @@ export const HardenedCopilot: React.FC<HardenedCopilotProps> = ({ indoorPm25, ou
         />
         <button
           type="submit"
+          aria-label="Send Query"
           disabled={isLoading || !query.trim()}
           className="px-5 py-3 rounded-2xl bg-[#533afd] hover:bg-[#432ec9] disabled:opacity-50 text-white font-medium text-sm flex items-center gap-1.5 transition-all shadow-sm focus:ring-2 focus:ring-[#533afd]"
-          aria-label="Send Query"
         >
           <span>Send</span>
           <Send className="w-4 h-4" />

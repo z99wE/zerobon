@@ -39,7 +39,7 @@ uniform vec4 uPlace;
 uniform float uVolume;
 
 float hash11(float n) {
-  return fract(sin(n * 91.3458) * 47453.5453);
+  return fract(sin(n * 12.9898) * 43758.54);
 }
 
 vec3 centerLocal(float s) {
@@ -221,7 +221,7 @@ out vec3 vLight;
 out float vTint;
 
 float hash11(float n) {
-  return fract(sin(n * 91.3458) * 47453.5453);
+  return fract(sin(n * 12.9898) * 43758.54);
 }
 
 void main() {

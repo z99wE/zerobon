@@ -35,6 +35,8 @@ export class ErrorBoundary extends Component<Props, State> {
             The 3D WebGL renderer encountered a hardware suspension. Your physics mass-balance and routine telemetry remain fully active.
           </p>
           <button
+            type="button"
+            aria-label="Re-engage atmospheric viewport"
             onClick={() => this.setState({ hasError: false })}
             className="button-primary-pill text-xs px-4 py-1.5"
           >

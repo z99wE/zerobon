@@ -112,6 +112,8 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
 
             <div className="flex items-center gap-2">
               <button
+                type="button"
+                aria-label="Share impact receipt"
                 onClick={() => setShowShareModal(true)}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-medium transition-all shadow-sm focus:ring-2 focus:ring-[#533afd]"
               >
@@ -120,6 +122,8 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
               </button>
 
               <button
+                type="button"
+                aria-label="Close breath receipt"
                 onClick={onClose}
                 className="px-4 py-2 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] text-xs font-medium transition-all border border-[#e3e8ee] focus:ring-2 focus:ring-[#533afd]"
               >

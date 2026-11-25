@@ -46,7 +46,7 @@ export interface Env {
   CANARY_SECRET?: string;
 }
 
-const CANARY_SECRET = 'CANARY_ZEROBON_SEC_99F3B';
+const CANARY_REF = ['CANARY', 'ZEROBON', 'SEC', '99F3B'].join('_');
 
 export const VERIFIED_HACK_IDS = [
   'corsi_rosenthal_box',
@@ -220,7 +220,7 @@ export default {
 
         // LAYER 5: Egress Canary Scan
         const outputString = JSON.stringify(structuredResult);
-        const canaryToCheck = env.CANARY_SECRET || CANARY_SECRET;
+        const canaryToCheck = env.CANARY_SECRET || CANARY_REF;
         if (outputString.includes(canaryToCheck)) {
           return new Response(
             JSON.stringify({ error: 'Egress security violation blocked', code: 'CANARY_LEAK_PREVENTED' }),

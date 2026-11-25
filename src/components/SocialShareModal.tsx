@@ -108,6 +108,8 @@ Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
               Full Share Content (Ready for Posting)
             </label>
             <button
+              type="button"
+              aria-label="Copy full share report to clipboard"
               onClick={() => copyToClipboard('Full report copied to clipboard!')}
               className="text-xs text-[#533afd] font-semibold hover:underline flex items-center gap-1"
             >
@@ -148,6 +150,8 @@ Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
         {/* Primary Action Button: Copy Full Text */}
         <div className="flex items-center gap-2">
           <button
+            type="button"
+            aria-label="Copy full impact report"
             onClick={() => copyToClipboard('Full report copied to clipboard!')}
             className="flex-1 py-3 px-4 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-sm focus:ring-2 focus:ring-[#533afd]"
           >
@@ -156,6 +160,8 @@ Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
           </button>
 
           <button
+            type="button"
+            aria-label="Close social share modal"
             onClick={onClose}
             className="py-3 px-5 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] text-xs font-medium border border-[#e3e8ee] transition-all"
           >

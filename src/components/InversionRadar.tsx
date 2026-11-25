@@ -137,6 +137,8 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
             </div>
 
             <svg
+              role="img"
+              aria-label={`24-hour Planetary Boundary Layer mixing altitude curve for ${selectedCity}`}
               viewBox={`0 0 ${svgWidth} ${svgHeight}`}
               className="w-full h-44 sm:h-52 overflow-visible relative z-10"
               preserveAspectRatio="none"
@@ -235,6 +237,8 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
               {forecast.map((f) => (
                 <button
                   key={f.hour}
+                  type="button"
+                  aria-label={`Select ${f.hour} atmospheric sounding`}
                   onClick={() => setSelectedHour(f)}
                   className={`px-1 py-0.5 rounded transition-colors ${
                     f.hour === selectedHour.hour
@@ -266,9 +270,10 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
               return (
                 <button
                   key={item.hour}
-                  onClick={() => setSelectedHour(item)}
-                  aria-pressed={isSelected}
+                  type="button"
                   aria-label={`Forecast for ${item.hour}`}
+                  aria-pressed={isSelected}
+                  onClick={() => setSelectedHour(item)}
                   className={`p-3 rounded-2xl text-left transition-all flex flex-col justify-between h-32 border focus:outline-none focus:ring-2 focus:ring-[#533afd] ${
                     isSelected
                       ? 'border-[#533afd] bg-gradient-to-b from-[#533afd] to-[#3a22c4] text-white shadow-lg ring-2 ring-[#533afd]/30 scale-[1.02]'

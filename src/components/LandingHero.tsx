@@ -82,6 +82,8 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             {/* Calibrated Sanctuary Badge */}
             {onOpenSanctuaryCalibration && (
               <button
+                type="button"
+                aria-label="Open home sanctuary calibration"
                 onClick={onOpenSanctuaryCalibration}
                 className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 hover:bg-white text-[#0d253d] text-[11px] font-medium border border-[#e3e8ee] transition-all shadow-2xs"
               >
@@ -105,6 +107,8 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             {/* Safe Recess Pass Quick Action */}
             {onOpenRecessPass && (
               <button
+                type="button"
+                aria-label="Open Safe Recess Pass PDF generator"
                 onClick={onOpenRecessPass}
                 className="flex items-center gap-1 px-3 py-1 rounded-full bg-white hover:bg-[#f6f9fc] text-[#0d253d] font-bold text-[11px] border border-[#cbd5e1] shadow-2xs transition-all"
               >
@@ -132,6 +136,8 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           {/* Big Action CTA Buttons */}
           <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
             <button
+              type="button"
+              aria-label="Adopt low-emission daily routines"
               onClick={onExploreRoutines}
               className="px-8 py-4 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-base font-semibold transition-all shadow-md hover:shadow-lg focus:ring-4 focus:ring-[#533afd]/30 focus:outline-none"
             >
@@ -139,6 +145,8 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             </button>
 
             <button
+              type="button"
+              aria-label="Explore $35 indoor air quality hacks"
               onClick={onExploreHacks}
               className="px-7 py-4 rounded-full bg-white hover:bg-[#f6f9fc] text-[#0d253d] text-base font-semibold border border-[#e3e8ee] shadow-sm transition-all focus:ring-4 focus:ring-[#533afd]/20 focus:outline-none"
             >
@@ -147,6 +155,8 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
             {onOpenSanctuaryCalibration && (
               <button
+                type="button"
+                aria-label="Open home sanctuary calibration"
                 onClick={onOpenSanctuaryCalibration}
                 className="px-6 py-4 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] text-sm font-semibold border border-[#e3e8ee] transition-all focus:ring-4 focus:ring-[#533afd]/20 focus:outline-none flex items-center justify-center"
               >
@@ -155,6 +165,8 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             )}
 
             <button
+              type="button"
+              aria-label="Open AI Clean Air Assistant"
               onClick={onOpenAssistant}
               className="px-5 py-4 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] text-sm font-semibold border border-[#e3e8ee] transition-all focus:ring-4 focus:ring-[#533afd]/20 focus:outline-none"
             >
@@ -304,6 +316,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                   <div className="pt-4 border-t border-[#e3e8ee] flex items-center justify-between">
                     <button
                       type="button"
+                      aria-label={`Flip ${card.title} card for blueprint`}
                       onClick={() => toggleCardFlip(card.key)}
                       className="text-xs font-semibold text-[#533afd] hover:underline"
                     >
@@ -311,6 +324,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                     </button>
                     <button
                       type="button"
+                      aria-label={`${card.frontAction} for ${card.title}`}
                       onClick={card.onAction}
                       className="text-xs font-medium text-[#64748d] hover:text-[#0d253d]"
                     >
@@ -345,6 +359,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                     <div className="pt-4 border-t border-white/20 flex items-center justify-between gap-2">
                       <button
                         type="button"
+                        aria-label={`Flip ${card.title} card back`}
                         onClick={() => toggleCardFlip(card.key)}
                         className="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs font-medium transition-all"
                       >
@@ -352,6 +367,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                       </button>
                       <button
                         type="button"
+                        aria-label={card.backAction}
                         onClick={card.onAction}
                         className="px-4 py-1.5 rounded-full bg-white text-[#0d253d] text-xs font-bold hover:bg-white/90 transition-all shadow-sm"
                       >
@@ -380,18 +396,24 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
           <div className="flex items-center gap-2">
             <button
+              type="button"
+              aria-label="Simulate clear air at 35 micrograms per cubic meter"
               onClick={() => onSetOutdoorPm25(35)}
               className="px-3 py-1.5 rounded-full text-xs font-medium bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] border border-[#e3e8ee] transition-all"
             >
               Clear Air (35)
             </button>
             <button
+              type="button"
+              aria-label="Simulate haze at 160 micrograms per cubic meter"
               onClick={() => onSetOutdoorPm25(160)}
               className="px-3 py-1.5 rounded-full text-xs font-medium bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] border border-[#e3e8ee] transition-all"
             >
               Haze (160)
             </button>
             <button
+              type="button"
+              aria-label="Simulate severe winter smog at 280 micrograms per cubic meter"
               onClick={() => onSetOutdoorPm25(280)}
               className="px-3 py-1.5 rounded-full text-xs font-medium bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#533afd] font-semibold border border-[#e3e8ee] transition-all"
             >

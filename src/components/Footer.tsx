@@ -45,6 +45,8 @@ export const Footer: React.FC<FooterProps> = ({
 
           <div className="relative z-10 flex flex-wrap items-center gap-3 w-full md:w-auto">
             <button
+              type="button"
+              aria-label="Adopt your first clean air routine"
               onClick={() => onNavigateTab('routines')}
               className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white text-[#0d253d] text-xs font-bold hover:bg-white/90 transition-all shadow-md focus:ring-2 focus:ring-white"
             >
@@ -53,6 +55,8 @@ export const Footer: React.FC<FooterProps> = ({
             </button>
 
             <button
+              type="button"
+              aria-label="Share your clean air impact"
               onClick={onOpenShare}
               className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white/15 hover:bg-white/25 text-white text-xs font-semibold border border-white/20 transition-all backdrop-blur-sm focus:ring-2 focus:ring-white"
             >
@@ -84,6 +88,8 @@ export const Footer: React.FC<FooterProps> = ({
             {FOOTER_NAV_LINKS.map((item) => (
               <button
                 key={item.tab}
+                type="button"
+                aria-label={`Navigate to ${item.label}`}
                 onClick={() => onNavigateTab(item.tab)}
                 className="text-[#0d253d] hover:text-[#533afd] font-semibold transition-colors"
               >
@@ -91,6 +97,8 @@ export const Footer: React.FC<FooterProps> = ({
               </button>
             ))}
             <button
+              type="button"
+              aria-label="Share impact summary"
               onClick={onOpenShare}
               className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-semibold transition-all shadow-sm"
             >
@@ -127,6 +135,7 @@ export const Footer: React.FC<FooterProps> = ({
       {/* Seamless Ambient Mesh Gradient Mirroring Top Header */}
       <div className="relative w-full h-16 sm:h-20 overflow-hidden pointer-events-none select-none">
         <svg
+          aria-hidden="true"
           className="absolute inset-0 w-full h-full opacity-65 mix-blend-multiply"
           viewBox="0 0 1440 120"
           fill="none"

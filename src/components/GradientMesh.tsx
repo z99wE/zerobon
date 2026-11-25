@@ -8,6 +8,7 @@ export const GradientMesh: React.FC = () => {
 
       {/* Organic SVG mesh curves for high-fidelity Stripe aesthetic */}
       <svg
+        aria-hidden="true"
         className="absolute inset-0 w-full h-full opacity-60 mix-blend-multiply"
         viewBox="0 0 1440 600"
         fill="none"

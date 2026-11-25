@@ -109,6 +109,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   />
                   <button
                     type="submit"
+                    aria-label="Set selected city"
                     className="text-[11px] font-semibold text-[#533afd] px-2 py-0.5"
                   >
                     Set
@@ -122,6 +123,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {TOP_CITIES.map((c) => (
                     <button
                       key={c.name}
+                      type="button"
+                      aria-label={`Select ${c.name}, ${c.country}`}
                       onClick={() => handleCitySubmit(c.name)}
                       className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs transition-colors flex items-center justify-between ${
                         selectedCity === c.name
@@ -151,6 +154,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             return (
               <button
                 key={item.id}
+                type="button"
+                aria-label={`Open ${item.label} tab`}
                 onClick={() => handleNavClick(item.id)}
                 aria-current={isActive ? 'page' : undefined}
                 className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs transition-all duration-200 select-none focus:outline-none focus:ring-2 focus:ring-[#533afd] ${
@@ -216,6 +221,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             return (
               <button
                 key={item.id}
+                type="button"
+                aria-label={`Open ${item.label} tab`}
                 onClick={() => handleNavClick(item.id)}
                 aria-current={isActive ? 'page' : undefined}
                 className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all duration-200 ${
