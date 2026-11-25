@@ -9,6 +9,7 @@ import { LandingHero } from './components/LandingHero';
 import { BreathReceiptModal } from './components/BreathReceiptModal';
 import { SocialShareModal } from './components/SocialShareModal';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import GhostFibers from './components/ui/GhostFibers';
 import { DEFAULT_PHYSICS_PARAMS, stepAnalytical, computeBreathReceipt } from './engine/physics';
 import { getCityProfile } from './engine/city-data';
 import { BreathReceipt, MassBalanceParams } from './types';
@@ -126,7 +127,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-white text-[#0d253d] flex flex-col font-sans selection:bg-[#533afd]/20 selection:text-[#533afd]">
+    <div className="relative min-h-screen bg-white text-[#0d253d] flex flex-col font-sans selection:bg-[#533afd]/20 selection:text-[#533afd] group/skin">
       {/* Skip to Content for Accessibility */}
       <a
         href="#main-content"
@@ -137,6 +138,37 @@ export const App: React.FC = () => {
 
       {/* Atmospheric Gradient Mesh Upper Third */}
       <GradientMesh />
+
+      {/* Ambient Branded Morphism GhostFibers Skin in Negative Space */}
+      <div 
+        aria-hidden="true" 
+        className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-25 group-hover/skin:opacity-60 transition-opacity duration-700 ease-out"
+      >
+        <GhostFibers
+          glowColor="#533afd"
+          lineColor="#b9b9f9"
+          secondaryColor="#ea2261"
+          layers={3}
+          twist={1.2}
+          threads={64}
+          fiberStyle="dots"
+          depthOfField={0.8}
+          hoverEffect="focus"
+          intro={true}
+          mouseInteraction={true}
+          lightMode={true}
+          brightness={0.85}
+          glow={0.6}
+          speed={0.35}
+          className="w-full h-full"
+        />
+      </div>
+
+      {/* Subtle Negative Space Glassmorphism Glow Highlights in Brand Colors */}
+      <div
+        aria-hidden="true"
+        className="fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(ellipse_75%_55%_at_50%_-10%,rgba(83,58,253,0.05),rgba(234,34,97,0.025),transparent_70%)] group-hover/skin:bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(83,58,253,0.08),rgba(234,34,97,0.04),transparent_70%)] transition-all duration-700"
+      />
 
       {/* D2C Top Navigation */}
       <Navbar
