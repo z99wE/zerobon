@@ -9,10 +9,18 @@ import { LandingHero } from './components/LandingHero';
 import { BreathReceiptModal } from './components/BreathReceiptModal';
 import { SocialShareModal } from './components/SocialShareModal';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { SanctuaryCalibrationModal } from './components/SanctuaryCalibrationModal';
+import { SafeRecessPassModal } from './components/SafeRecessPassModal';
 import GhostFibers from './components/ui/GhostFibers';
-import { DEFAULT_PHYSICS_PARAMS, stepAnalytical, computeBreathReceipt } from './engine/physics';
+import { stepAnalytical, computeBreathReceipt } from './engine/physics';
 import { getCityProfile } from './engine/city-data';
-import { BreathReceipt, MassBalanceParams } from './types';
+import { 
+  loadSanctuaryProfile, 
+  SanctuaryProfile, 
+  calculateCalibratedPhysics
+} from './engine/sanctuary-engine';
+import { fetchLiveAirQuality, LiveAirReading } from './engine/live-air-service';
+import { BreathReceipt } from './types';
 import { 
   Share2, 
   ArrowRight
@@ -25,12 +33,22 @@ export const App: React.FC = () => {
   // Dynamic City Weather & Air Profile
   const cityProfile = getCityProfile(selectedCity);
 
+  // Personalized Sanctuary Profile (Stored in localStorage)
+  const [sanctuaryProfile, setSanctuaryProfile] = useState<SanctuaryProfile>(() => loadSanctuaryProfile());
+  const [showSanctuaryModal, setShowSanctuaryModal] = useState<boolean>(false);
+  const [showRecessModal, setShowRecessModal] = useState<boolean>(false);
+
+  // Live Atmospheric Station Sync
+  const [liveReading, setLiveReading] = useState<LiveAirReading | null>(null);
+  const [isLiveSyncing, setIsLiveSyncing] = useState<boolean>(false);
+
   // Ambient & Indoor Physics State
   const [outdoorPm25, setOutdoorPm25] = useState<number>(cityProfile.baselinePm25);
   const [indoorPm25, setIndoorPm25] = useState<number>(Math.round(cityProfile.baselinePm25 * 0.55));
 
   // Sync outdoor PM2.5 when user switches city
   useEffect(() => {
+    setLiveReading(null);
     setOutdoorPm25(cityProfile.baselinePm25);
     setIndoorPm25(Math.round(cityProfile.baselinePm25 * 0.55));
   }, [cityProfile.name, cityProfile.baselinePm25]);
@@ -47,25 +65,37 @@ export const App: React.FC = () => {
   const [activeReceipt, setActiveReceipt] = useState<BreathReceipt | null>(null);
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
 
-  // Real-time Physics Differential Loop (Analytical Mass-Balance)
+  // Real-time Physics Differential Loop (Analytical Mass-Balance modulated by Sanctuary Envelope)
   useEffect(() => {
     const interval = setInterval(() => {
       setIndoorPm25((prevCin) => {
-        const currentParams: MassBalanceParams = {
-          ...DEFAULT_PHYSICS_PARAMS,
-          p_penetration: activeHacks.draftSealing ? 0.38 : 0.82,
-          lambda_ach: activeHacks.windowOpen ? 3.5 : activeHacks.kitchenExhaust ? 1.8 : 0.65,
-          q_cadr: activeHacks.corsiRosenthal ? 360.0 : 0.0,
-        };
+        const { calibratedParams, effectiveOutdoorPm25 } = calculateCalibratedPhysics(
+          sanctuaryProfile,
+          outdoorPm25,
+          activeHacks
+        );
 
-        const step = stepAnalytical(prevCin, outdoorPm25, 0.04, currentParams);
+        const step = stepAnalytical(prevCin, effectiveOutdoorPm25, 0.04, calibratedParams);
         const nextVal = Math.round(step.cin * 10) / 10;
         return nextVal === prevCin ? prevCin : nextVal;
       });
     }, 400);
 
     return () => clearInterval(interval);
-  }, [outdoorPm25, activeHacks]);
+  }, [outdoorPm25, activeHacks, sanctuaryProfile]);
+
+  const handleSyncLiveAir = async () => {
+    setIsLiveSyncing(true);
+    try {
+      const reading = await fetchLiveAirQuality(selectedCity);
+      setLiveReading(reading);
+      if (reading.isLive) {
+        setOutdoorPm25(reading.pm25);
+      }
+    } finally {
+      setIsLiveSyncing(false);
+    }
+  };
 
   const handleToggleHack = (key: 'corsiRosenthal' | 'kitchenExhaust' | 'draftSealing' | 'windowOpen') => {
     setActiveHacks((prev) => {
@@ -179,6 +209,12 @@ export const App: React.FC = () => {
         onOpenShare={() => setShowShareModal(true)}
         selectedCity={selectedCity}
         onSelectCity={setSelectedCity}
+        onOpenSanctuaryCalibration={() => setShowSanctuaryModal(true)}
+        onOpenRecessPass={() => setShowRecessModal(true)}
+        onSyncLiveAir={handleSyncLiveAir}
+        isLiveSyncing={isLiveSyncing}
+        isLiveReading={Boolean(liveReading?.isLive)}
+        sanctuaryZoneName={sanctuaryProfile.isCustomized ? sanctuaryProfile.customZoneName : 'Calibrate Home'}
       />
 
       {/* Main Content Surface - Displays Tab Directly Without Scrolling Friction */}
@@ -199,6 +235,13 @@ export const App: React.FC = () => {
               onExploreHacks={() => handleNavigateTab('hacks')}
               onOpenAssistant={() => handleNavigateTab('copilot')}
               onOpenShare={() => setShowShareModal(true)}
+              onOpenSanctuaryCalibration={() => setShowSanctuaryModal(true)}
+              onOpenRecessPass={() => setShowRecessModal(true)}
+              onSyncLiveAir={handleSyncLiveAir}
+              isLiveSyncing={isLiveSyncing}
+              isLiveReading={Boolean(liveReading?.isLive)}
+              sanctuaryBadgeText={sanctuaryProfile.isCustomized ? sanctuaryProfile.customZoneName : 'Calibrate Home'}
+              indoorPm25={indoorPm25}
             />
           </ErrorBoundary>
         )}
@@ -418,6 +461,25 @@ export const App: React.FC = () => {
         <SocialShareModal
           receipt={defaultShareReceipt}
           onClose={() => setShowShareModal(false)}
+        />
+      )}
+
+      {/* Retention Moat: Personal Home Sanctuary Calibration Modal */}
+      {showSanctuaryModal && (
+        <SanctuaryCalibrationModal
+          currentProfile={sanctuaryProfile}
+          outdoorPm25={outdoorPm25}
+          onSave={(updated) => setSanctuaryProfile(updated)}
+          onClose={() => setShowSanctuaryModal(false)}
+        />
+      )}
+
+      {/* Institutional Moat: Safe Recess Pass Printable Certificate Modal */}
+      {showRecessModal && (
+        <SafeRecessPassModal
+          cityName={selectedCity}
+          outdoorPm25={outdoorPm25}
+          onClose={() => setShowRecessModal(false)}
         />
       )}
     </div>

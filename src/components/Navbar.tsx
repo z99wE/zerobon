@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Share2, MapPin, Search } from 'lucide-react';
+import { Share2, MapPin, Search, Home, Radio, FileText } from 'lucide-react';
 import { TOP_CITIES } from '../engine/city-data';
 
 export type D2CTab = 'overview' | 'routines' | 'hacks' | 'radar' | 'copilot';
@@ -12,6 +12,12 @@ interface NavbarProps {
   onOpenShare: () => void;
   selectedCity: string;
   onSelectCity: (city: string) => void;
+  onOpenSanctuaryCalibration?: () => void;
+  onOpenRecessPass?: () => void;
+  onSyncLiveAir?: () => void;
+  isLiveSyncing?: boolean;
+  isLiveReading?: boolean;
+  sanctuaryZoneName?: string;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -22,6 +28,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenShare,
   selectedCity,
   onSelectCity,
+  onOpenSanctuaryCalibration,
+  onOpenRecessPass,
+  onSyncLiveAir,
+  isLiveSyncing = false,
+  isLiveReading = false,
+  sanctuaryZoneName,
 }) => {
   const [isCitySearchOpen, setIsCitySearchOpen] = useState(false);
   const [cityInput, setCityInput] = useState('');
@@ -145,23 +157,59 @@ export const Navbar: React.FC<NavbarProps> = ({
           ))}
         </nav>
 
-        {/* Right Actions: Refined Weather Badge + Share CTA + Architecture Bulb */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Refined Brand Weather & PM2.5 Box */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee]">
-            <span className="font-tabular text-xs text-[#0d253d] font-medium">
-              {temperatureC}°C · {Math.round(outdoorPm25)} µg/m³
-            </span>
-          </div>
+        {/* Right Actions: Live Sync + Calibrate Sanctuary + Safe Recess Pass + Share CTA */}
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Live Station Sync Button */}
+          {onSyncLiveAir && (
+            <button
+              onClick={onSyncLiveAir}
+              disabled={isLiveSyncing}
+              title="Fetch live satellite & ground station readings via Open-Meteo API"
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${
+                isLiveReading
+                  ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                  : 'bg-[#f6f9fc] hover:bg-[#e3e8ee] border-[#e3e8ee] text-[#0d253d]'
+              }`}
+            >
+              <Radio className={`w-3.5 h-3.5 ${isLiveSyncing ? 'animate-pulse text-[#533afd]' : isLiveReading ? 'text-emerald-600' : 'text-[#64748d]'}`} />
+              <span className="hidden xl:inline">{isLiveReading ? 'Live CAMS Station' : 'Sync Live'}</span>
+              <span className="font-tabular font-bold">{temperatureC}°C · {Math.round(outdoorPm25)} µg</span>
+            </button>
+          )}
+
+          {/* Calibrate Sanctuary Retention Button */}
+          {onOpenSanctuaryCalibration && (
+            <button
+              onClick={onOpenSanctuaryCalibration}
+              title="Calibrate your building type & floor elevation"
+              className="hidden md:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#533afd]/10 hover:bg-[#533afd]/15 border border-[#533afd]/25 text-[#533afd] text-xs font-semibold transition-all"
+            >
+              <Home className="w-3.5 h-3.5" />
+              <span className="hidden xl:inline">{sanctuaryZoneName || 'My Sanctuary'}</span>
+              <span className="xl:hidden">Sanctuary</span>
+            </button>
+          )}
+
+          {/* Safe Recess Pass Institutional Button */}
+          {onOpenRecessPass && (
+            <button
+              onClick={onOpenRecessPass}
+              title="Export 1-Page School / Campus Safe Recess Schedule (PDF)"
+              className="hidden lg:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white hover:bg-[#f6f9fc] border border-[#cbd5e1] text-[#0d253d] text-xs font-semibold transition-all shadow-2xs"
+            >
+              <FileText className="w-3.5 h-3.5 text-[#533afd]" />
+              <span>Safe Recess Pass</span>
+            </button>
+          )}
 
           {/* Social Share Trigger Button */}
           <button
             onClick={onOpenShare}
             aria-label="Share clean air impact on social media"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-medium transition-all shadow-sm focus:ring-2 focus:ring-[#533afd] focus:outline-none"
+            className="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-medium transition-all shadow-sm focus:ring-2 focus:ring-[#533afd] focus:outline-none"
           >
             <Share2 className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Share Impact</span>
+            <span className="hidden sm:inline">Share</span>
           </button>
         </div>
       </div>

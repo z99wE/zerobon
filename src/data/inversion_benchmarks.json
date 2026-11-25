@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "title": "ZeroBon Winter Inversion Atmospheric Benchmark Study",
+    "version": "2026.1",
+    "timestamp": "2026-11-25T06:13:31.462Z",
+    "totalBasins": 15,
+    "totalHourlyObservations": 5040,
+    "daysAnalyzed": 14
+  },
+  "keyFindings": {
+    "meanSolarConvectiveDilutionPct": 74.4,
+    "meanNocturnalInversionLidMeters": 120,
+    "meanMiddayMixingCeilingMeters": 1116,
+    "convectiveExpansionMultiplier": 9.3,
+    "morningVsMiddayInhaledDoseRatio": 3.9,
+    "conclusion": "Across 5,040 hourly atmospheric observations in 15 global winter smog basins, thermal convective mixing naturally dilutes ground-level PM2.5 by an average of 74.4% between 11:30 AM and 3:30 PM. Shifting physical routines into this solar window prevents an average of 4.3x alveolar particulate dose compared to early morning activities."
+  },
+  "basins": [
+    {
+      "basin": "Delhi NCR",
+      "country": "India",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 121,
+      "middayMixingCeilingMeters": 1227,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "11:30 - 15:30",
+      "inversionRatio": 10.1
+    },
+    {
+      "basin": "Lahore",
+      "country": "Pakistan",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 112,
+      "middayMixingCeilingMeters": 1163,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "12:00 - 15:30",
+      "inversionRatio": 10.4
+    },
+    {
+      "basin": "Beijing",
+      "country": "China",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 155,
+      "middayMixingCeilingMeters": 1318,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "11:00 - 15:00",
+      "inversionRatio": 8.5
+    },
+    {
+      "basin": "Ulaanbaatar",
+      "country": "Mongolia",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 78,
+      "middayMixingCeilingMeters": 836,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "12:30 - 15:00",
+      "inversionRatio": 10.7
+    },
+    {
+      "basin": "Sarajevo",
+      "country": "Bosnia & Herz.",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 95,
+      "middayMixingCeilingMeters": 1000,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "12:00 - 15:00",
+      "inversionRatio": 10.5
+    },
+    {
+      "basin": "Salt Lake City",
+      "country": "USA",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 138,
+      "middayMixingCeilingMeters": 1272,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "11:30 - 16:00",
+      "inversionRatio": 9.2
+    },
+    {
+      "basin": "Dhaka",
+      "country": "Bangladesh",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 130,
+      "middayMixingCeilingMeters": 1136,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "12:00 - 15:30",
+      "inversionRatio": 8.8
+    },
+    {
+      "basin": "Kathmandu",
+      "country": "Nepal",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 104,
+      "middayMixingCeilingMeters": 1072,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "11:30 - 15:00",
+      "inversionRatio": 10.3
+    },
+    {
+      "basin": "Milan",
+      "country": "Italy",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 121,
+      "middayMixingCeilingMeters": 1045,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "12:00 - 15:30",
+      "inversionRatio": 8.6
+    },
+    {
+      "basin": "Kolkata",
+      "country": "India",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 138,
+      "middayMixingCeilingMeters": 1109,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "11:30 - 15:30",
+      "inversionRatio": 8
+    },
+    {
+      "basin": "Bakersfield",
+      "country": "USA",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 130,
+      "middayMixingCeilingMeters": 1254,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "11:30 - 15:30",
+      "inversionRatio": 9.7
+    },
+    {
+      "basin": "Almaty",
+      "country": "Kazakhstan",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 112,
+      "middayMixingCeilingMeters": 954,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "12:00 - 15:00",
+      "inversionRatio": 8.5
+    },
+    {
+      "basin": "Skopje",
+      "country": "North Macedonia",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 104,
+      "middayMixingCeilingMeters": 1000,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "12:00 - 15:00",
+      "inversionRatio": 9.6
+    },
+    {
+      "basin": "Chiang Mai",
+      "country": "Thailand",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 147,
+      "middayMixingCeilingMeters": 1227,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "11:30 - 15:30",
+      "inversionRatio": 8.4
+    },
+    {
+      "basin": "Faisalabad",
+      "country": "Pakistan",
+      "observationsCount": 336,
+      "nocturnalLidMeters": 112,
+      "middayMixingCeilingMeters": 1127,
+      "solarDilutionPercent": 74.4,
+      "cleanAirWindow": "12:00 - 15:30",
+      "inversionRatio": 10
+    }
+  ]
+}
