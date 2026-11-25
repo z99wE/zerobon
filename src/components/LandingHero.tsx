@@ -19,6 +19,8 @@ interface LandingHeroProps {
   isLiveReading?: boolean;
   sanctuaryBadgeText?: string;
   indoorPm25?: number;
+  cleanWindowHours?: string;
+  pblHeightMeters?: number;
 }
 
 export const LandingHero: React.FC<LandingHeroProps> = ({
@@ -37,6 +39,8 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
   isLiveReading,
   sanctuaryBadgeText,
   indoorPm25,
+  cleanWindowHours,
+  pblHeightMeters,
 }) => {
   // Flip states for the 3 Solution Architecture Cards
   const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({
@@ -91,11 +95,11 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
           <div className="flex flex-wrap items-center gap-3 text-xs">
             <span className="text-[#0d253d] font-semibold">
-              Clean Air Window: <strong className="text-[#533afd] font-extrabold">{cityProfile.cleanWindowHours}</strong>
+              Clean Air Window: <strong className="text-[#533afd] font-extrabold">{cleanWindowHours || cityProfile.cleanWindowHours}</strong>
             </span>
             <span className="text-[#533afd] font-black">•</span>
             <span className="text-[#0d253d] font-semibold">
-              Mixing Ceiling: <strong className="text-[#533afd] font-extrabold">{cityProfile.pblHeightMeters}m</strong>
+              Mixing Ceiling: <strong className="text-[#533afd] font-extrabold">{pblHeightMeters || cityProfile.pblHeightMeters}m</strong>
             </span>
 
             {/* Safe Recess Pass Quick Action */}

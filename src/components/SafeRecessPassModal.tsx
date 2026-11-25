@@ -14,12 +14,14 @@ import { getCityProfile } from '../engine/city-data';
 interface SafeRecessPassModalProps {
   cityName: string;
   outdoorPm25: number;
+  cleanWindowHours?: string;
   onClose: () => void;
 }
 
 export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
   cityName,
   outdoorPm25,
+  cleanWindowHours,
   onClose,
 }) => {
   const [institutionName, setInstitutionName] = useState<string>('Delhi Public School / Junior Campus');
@@ -28,6 +30,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
   const printRef = useRef<HTMLDivElement>(null);
 
   const city = getCityProfile(cityName);
+  const activeCleanWindow = cleanWindowHours || city.cleanWindowHours;
   const certificateId = `ZB-RECESS-${Math.abs(cityName.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) * 179).toString().substring(0, 6)}`;
   const issueDate = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
@@ -46,7 +49,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
 
   const handleShare = () => {
     navigator.clipboard.writeText(
-      `ZeroBon safe recess pass for ${institutionName} (${cityName}): Outdoor recess permitted strictly during solar mixing window (${city.cleanWindowHours}). Verified by ZeroBon atmospheric physics: https://zerobon.pages.dev`
+      `ZeroBon safe recess pass for ${institutionName} (${cityName}): Outdoor recess permitted strictly during solar mixing window (${activeCleanWindow}). Verified by ZeroBon atmospheric physics: https://zerobon.pages.dev`
     );
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2000);
@@ -227,7 +230,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-extrabold text-[#0d253d] text-sm">
-                        {city.cleanWindowHours}
+                        {activeCleanWindow}
                       </span>
                       <span className="text-xs text-[#533afd] font-bold">
                         · Approved safe recess window

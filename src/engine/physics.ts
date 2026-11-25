@@ -97,30 +97,48 @@ export function computeBreathReceipt(
 
 /**
  * 24-Hour Synthetic Inversion Curve generator based on real winter atmospheric physics
+ * Dynamically modulated by base PM2.5, regional terrain morphology, and local ground temperature:
  * (Cold morning inversion with shallow PBL -> midday thermal solar expansion -> evening inversion capping)
  */
-export function generate24HourAtmosphericForecast() {
+export function generate24HourAtmosphericForecast(
+  basePm25: number = 245,
+  terrainType: string = 'Plains / Basin',
+  pblMaxMeters: number = 1350,
+  temperatureC: number = 22
+) {
+  const isCoastal = terrainType.includes('Coastal');
+
+  // Diurnal multipliers: Morning radiational trap -> midday solar convective peak
   const hours = [
-    { hour: '00:00', time24: 0, cout: 260, pbl: 180, temp: 12, inv: 'Strong Inversion' },
-    { hour: '03:00', time24: 3, cout: 285, pbl: 150, temp: 10, inv: 'Strong Inversion' },
-    { hour: '06:00', time24: 6, cout: 310, pbl: 140, temp: 9, inv: 'Strong Inversion' },
-    { hour: '09:00', time24: 9, cout: 240, pbl: 320, temp: 16, inv: 'Moderate Trap' },
-    { hour: '11:30', time24: 11.5, cout: 85, pbl: 950, temp: 22, inv: 'Clean Air Window' },
-    { hour: '13:00', time24: 13, cout: 48, pbl: 1350, temp: 25, inv: 'Clean Air Window' },
-    { hour: '15:00', time24: 15, cout: 62, pbl: 1100, temp: 24, inv: 'Clean Air Window' },
-    { hour: '17:30', time24: 17.5, cout: 165, pbl: 480, temp: 19, inv: 'Moderate Trap' },
-    { hour: '20:00', time24: 20, cout: 245, pbl: 210, temp: 15, inv: 'Strong Inversion' },
-    { hour: '22:00', time24: 22, cout: 275, pbl: 190, temp: 13, inv: 'Strong Inversion' },
+    { hour: '00:00', time24: 0, pmMult: 1.05, pblMult: 0.15, tempDelta: -6, inv: 'Strong Inversion' },
+    { hour: '03:00', time24: 3, pmMult: 1.15, pblMult: 0.12, tempDelta: -8, inv: 'Strong Inversion' },
+    { hour: '06:00', time24: 6, pmMult: 1.25, pblMult: 0.11, tempDelta: -9, inv: 'Strong Inversion' },
+    { hour: '09:00', time24: 9, pmMult: 0.95, pblMult: 0.28, tempDelta: -2, inv: 'Moderate Trap' },
+    { hour: '11:30', time24: 11.5, pmMult: isCoastal ? 0.65 : 0.38, pblMult: isCoastal ? 0.55 : 0.72, tempDelta: +3, inv: isCoastal ? 'Moderate Trap' : 'Clean Air Window' },
+    { hour: '13:00', time24: 13, pmMult: 0.26, pblMult: 1.0, tempDelta: +6, inv: 'Clean Air Window' },
+    { hour: '15:00', time24: 15, pmMult: 0.32, pblMult: 0.85, tempDelta: +5, inv: 'Clean Air Window' },
+    { hour: '17:30', time24: 17.5, pmMult: isCoastal ? 0.45 : 0.68, pblMult: 0.40, tempDelta: +1, inv: isCoastal ? 'Clean Air Window' : 'Moderate Trap' },
+    { hour: '20:00', time24: 20, pmMult: 1.0, pblMult: 0.18, tempDelta: -3, inv: 'Strong Inversion' },
+    { hour: '22:00', time24: 22, pmMult: 1.1, pblMult: 0.14, tempDelta: -5, inv: 'Strong Inversion' },
   ];
 
-  return hours.map((h) => ({
-    hour: h.hour,
-    time24: h.time24,
-    outdoorPm25: h.cout,
-    pblHeightMeters: h.pbl,
-    groundTempC: h.temp,
-    inversionStrength: h.inv as HourlyAtmosphericForecast['inversionStrength'],
-    isMiddayCleanWindow: h.inv === 'Clean Air Window',
-    windSpeedKmh: h.inv === 'Clean Air Window' ? 14 : 3,
-  }));
+  const pblCeiling = Math.max(700, pblMaxMeters);
+
+  return hours.map((h) => {
+    const isClean = h.inv === 'Clean Air Window';
+    const computedPm = Math.max(10, Math.round(basePm25 * h.pmMult));
+    const computedPbl = Math.max(130, Math.round(pblCeiling * h.pblMult));
+    const computedTemp = Math.round(temperatureC + h.tempDelta);
+
+    return {
+      hour: h.hour,
+      time24: h.time24,
+      outdoorPm25: computedPm,
+      pblHeightMeters: computedPbl,
+      groundTempC: computedTemp,
+      inversionStrength: h.inv as HourlyAtmosphericForecast['inversionStrength'],
+      isMiddayCleanWindow: isClean,
+      windSpeedKmh: isClean ? (isCoastal ? 18 : 12) : 4,
+    };
+  });
 }

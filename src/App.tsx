@@ -46,12 +46,36 @@ export const App: React.FC = () => {
   const [outdoorPm25, setOutdoorPm25] = useState<number>(cityProfile.baselinePm25);
   const [indoorPm25, setIndoorPm25] = useState<number>(Math.round(cityProfile.baselinePm25 * 0.55));
 
-  // Sync outdoor PM2.5 when user switches city
+  // Auto-fetch real-time Open-Meteo station & satellite readings whenever user switches city (or on initial load)
   useEffect(() => {
-    setLiveReading(null);
+    let isCancelled = false;
+    setIsLiveSyncing(true);
+
+    // Initial fallback baseline while live atmospheric request is in-flight
     setOutdoorPm25(cityProfile.baselinePm25);
     setIndoorPm25(Math.round(cityProfile.baselinePm25 * 0.55));
-  }, [cityProfile.name, cityProfile.baselinePm25]);
+
+    fetchLiveAirQuality(selectedCity)
+      .then((reading) => {
+        if (isCancelled) return;
+        setLiveReading(reading);
+        if (reading.isLive) {
+          setOutdoorPm25(reading.pm25);
+        }
+      })
+      .catch((err) => {
+        console.warn('Real-time atmospheric fetch fallback:', err);
+      })
+      .finally(() => {
+        if (!isCancelled) {
+          setIsLiveSyncing(false);
+        }
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [selectedCity, cityProfile.baselinePm25]);
 
   // Active IAQ Hacks
   const [activeHacks, setActiveHacks] = useState({
@@ -153,6 +177,10 @@ export const App: React.FC = () => {
     neighborhoodMultiplier: 3.2,
   };
 
+  const activeCleanWindow = liveReading?.cleanWindowHours || cityProfile.cleanWindowHours;
+  const activePblHeight = liveReading?.pblHeightMeters || cityProfile.pblHeightMeters;
+  const activeTemperature = liveReading?.temperatureC ?? cityProfile.temperatureC;
+
   const handleNavigateTab = (tab: D2CTab) => {
     setActiveTab(tab);
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -207,7 +235,7 @@ export const App: React.FC = () => {
         activeTab={activeTab}
         onSelectTab={handleNavigateTab}
         outdoorPm25={outdoorPm25}
-        temperatureC={cityProfile.temperatureC}
+        temperatureC={activeTemperature}
         onOpenShare={() => setShowShareModal(true)}
         selectedCity={selectedCity}
         onSelectCity={setSelectedCity}
@@ -254,6 +282,8 @@ export const App: React.FC = () => {
               isLiveReading={Boolean(liveReading?.isLive)}
               sanctuaryBadgeText={sanctuaryProfile.isCustomized ? sanctuaryProfile.customZoneName : 'Home'}
               indoorPm25={indoorPm25}
+              cleanWindowHours={activeCleanWindow}
+              pblHeightMeters={activePblHeight}
             />
           </ErrorBoundary>
         )}
@@ -264,7 +294,7 @@ export const App: React.FC = () => {
             <DailyRoutineOptimizer
               outdoorPm25={outdoorPm25}
               selectedCity={selectedCity}
-              cleanWindowHours={cityProfile.cleanWindowHours}
+              cleanWindowHours={activeCleanWindow}
               onCommitReceipt={(receipt) => setActiveReceipt(receipt)}
               onTriggerShare={() => setShowShareModal(true)}
             />
@@ -289,7 +319,13 @@ export const App: React.FC = () => {
         {/* Tab 3: Smog & Inversion Radar */}
         {activeTab === 'radar' && (
           <ErrorBoundary>
-            <InversionRadar />
+            <InversionRadar
+              selectedCity={selectedCity}
+              outdoorPm25={outdoorPm25}
+              cityProfile={cityProfile}
+              cleanWindowHours={activeCleanWindow}
+              isLiveReading={Boolean(liveReading?.isLive)}
+            />
           </ErrorBoundary>
         )}
 
@@ -408,7 +444,13 @@ export const App: React.FC = () => {
               <span>Active City Microclimate:</span>
               <span className="font-semibold text-[#0d253d]">{selectedCity}</span>
               <span className="text-[#a8c3de]">•</span>
-              <span>Clean Window: {cityProfile.cleanWindowHours}</span>
+              <span>Clean Window: {activeCleanWindow}</span>
+              {liveReading?.isLive && (
+                <>
+                  <span className="text-[#a8c3de]">•</span>
+                  <span className="text-[#533afd] font-medium">Real-time Station Active</span>
+                </>
+              )}
             </div>
 
             <div className="flex items-center gap-4">
@@ -491,6 +533,7 @@ export const App: React.FC = () => {
         <SafeRecessPassModal
           cityName={selectedCity}
           outdoorPm25={outdoorPm25}
+          cleanWindowHours={activeCleanWindow}
           onClose={() => setShowRecessModal(false)}
         />
       )}
