@@ -39,6 +39,7 @@ export async function executeHardenedCopilotPipeline(
   const lengthUnder400 = rawInput.length <= 400;
   const sanitized = rawInput
     .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replace(/<[^>]*>/g, '') // Strip HTML/script tags to prevent XSS and tag-injection breakouts
     .split('')
     .filter((char) => {
       const code = char.charCodeAt(0);

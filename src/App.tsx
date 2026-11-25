@@ -66,8 +66,10 @@ export const App: React.FC = () => {
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
 
   // Real-time Physics Differential Loop (Analytical Mass-Balance modulated by Sanctuary Envelope)
+  // High Efficiency: Throttled/paused when tab is hidden to conserve device CPU & battery
   useEffect(() => {
     const interval = setInterval(() => {
+      if (typeof document !== 'undefined' && document.hidden) return;
       setIndoorPm25((prevCin) => {
         const { calibratedParams, effectiveOutdoorPm25 } = calculateCalibratedPhysics(
           sanctuaryProfile,
@@ -216,6 +218,16 @@ export const App: React.FC = () => {
         isLiveReading={Boolean(liveReading?.isLive)}
         sanctuaryZoneName={sanctuaryProfile.isCustomized ? sanctuaryProfile.customZoneName : 'Home'}
       />
+
+      {/* Accessibility Status Announcer for Screen Readers (WCAG 4.1.3 Status Messages) */}
+      <div 
+        role="status" 
+        aria-live="polite" 
+        aria-atomic="true" 
+        className="sr-only"
+      >
+        {`ZeroBon platform active. Current city is ${selectedCity}. Outdoor PM2.5 is ${outdoorPm25} micrograms. Estimated indoor air is ${Math.round(indoorPm25)} micrograms.`}
+      </div>
 
       {/* Main Content Surface - Displays Tab Directly Without Scrolling Friction */}
       <main 
