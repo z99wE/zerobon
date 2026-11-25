@@ -699,18 +699,22 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
         </div>
       </div>
 
-      {/* Lifestyle Filter Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Lifestyle Filters">
+      {/* Lifestyle Filter Tabs - High-Fidelity Capsule (Never Squished) */}
+      <div 
+        className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1.5 px-1 bg-[#f6f9fc] rounded-full border border-[#e3e8ee] w-fit max-w-full" 
+        role="tablist" 
+        aria-label="Lifestyle Filters"
+      >
         {filterOptions.map((opt) => (
           <button
             key={opt}
             role="tab"
             aria-selected={selectedFilter === opt}
             onClick={() => setSelectedFilter(opt)}
-            className={`whitespace-nowrap px-4 py-2 rounded-full text-xs transition-all focus:outline-none focus:ring-2 focus:ring-[#533afd] ${
+            className={`whitespace-nowrap px-4 py-2 rounded-full text-xs transition-all duration-200 select-none focus:outline-none focus:ring-2 focus:ring-[#533afd] ${
               selectedFilter === opt
-                ? 'bg-[#533afd] text-white font-medium shadow-sm'
-                : 'bg-white text-[#273951] hover:bg-[#f6f9fc] border border-[#e3e8ee]'
+                ? 'bg-[#533afd] text-white font-bold shadow-sm'
+                : 'text-[#475569] hover:text-[#0d253d] hover:bg-white/60 font-medium'
             }`}
           >
             {opt}

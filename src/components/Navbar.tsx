@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Share2, MapPin, Search, Home, Radio, FileText } from 'lucide-react';
+import { Share2, MapPin, Search, Radio } from 'lucide-react';
 import { TOP_CITIES } from '../engine/city-data';
 
 export type D2CTab = 'overview' | 'routines' | 'hacks' | 'radar' | 'copilot';
@@ -29,7 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   selectedCity,
   onSelectCity,
   onOpenSanctuaryCalibration,
-  onOpenRecessPass,
+  onOpenRecessPass: _onOpenRecessPass,
   onSyncLiveAir,
   isLiveSyncing = false,
   isLiveReading = false,
@@ -139,25 +139,31 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Center Primary D2C Navigation */}
-        <nav className="hidden lg:flex items-center gap-6" aria-label="Main Navigation">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleNavClick(item.id)}
-              aria-current={activeTab === item.id ? 'page' : undefined}
-              className={`text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#533afd] rounded-md px-2 py-1 ${
-                activeTab === item.id
-                  ? 'text-[#533afd] font-semibold border-b-2 border-[#533afd]'
-                  : 'text-[#273951] hover:text-[#0d253d] font-normal'
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
+        {/* Center Primary D2C Navigation - High-Fidelity Segmented Brand Capsule (Never Squished) */}
+        <nav 
+          className="hidden md:flex items-center bg-[#f6f9fc] p-1.5 rounded-full border border-[#e3e8ee] shadow-2xs gap-1" 
+          aria-label="Main Navigation"
+        >
+          {navItems.map((item) => {
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleNavClick(item.id)}
+                aria-current={isActive ? 'page' : undefined}
+                className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs transition-all duration-200 select-none focus:outline-none focus:ring-2 focus:ring-[#533afd] ${
+                  isActive
+                    ? 'bg-white text-[#533afd] shadow-sm font-bold border border-black/[0.04]'
+                    : 'text-[#475569] hover:text-[#0d253d] hover:bg-white/50 font-medium'
+                }`}
+              >
+                {item.label}
+              </button>
+            );
+          })}
         </nav>
 
-        {/* Right Actions: Live Sync + Calibrate Sanctuary + Safe Recess Pass + Share CTA */}
+        {/* Right Actions: Live Sync + Calibrate Sanctuary + Share CTA */}
         <div className="flex items-center gap-1.5 sm:gap-2">
           {/* Live Station Sync Button */}
           {onSyncLiveAir && (
@@ -165,40 +171,26 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={onSyncLiveAir}
               disabled={isLiveSyncing}
               title="Fetch live satellite & ground station readings via Open-Meteo API"
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full border text-xs font-medium transition-all ${
                 isLiveReading
-                  ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                  ? 'bg-emerald-50 border-emerald-200 text-emerald-800 font-semibold'
                   : 'bg-[#f6f9fc] hover:bg-[#e3e8ee] border-[#e3e8ee] text-[#0d253d]'
               }`}
             >
               <Radio className={`w-3.5 h-3.5 ${isLiveSyncing ? 'animate-pulse text-[#533afd]' : isLiveReading ? 'text-emerald-600' : 'text-[#64748d]'}`} />
-              <span className="hidden xl:inline">{isLiveReading ? 'Live CAMS Station' : 'Sync Live'}</span>
+              <span className="hidden xl:inline">{isLiveReading ? 'Live CAMS' : 'Sync Live'}</span>
               <span className="font-tabular font-bold">{temperatureC}°C · {Math.round(outdoorPm25)} µg</span>
             </button>
           )}
 
-          {/* Calibrate Sanctuary Retention Button */}
+          {/* Calibrate Sanctuary Retention Button (No Icon) */}
           {onOpenSanctuaryCalibration && (
             <button
               onClick={onOpenSanctuaryCalibration}
               title="Calibrate your building type & floor elevation"
-              className="hidden md:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#533afd]/10 hover:bg-[#533afd]/15 border border-[#533afd]/25 text-[#533afd] text-xs font-semibold transition-all"
+              className="hidden lg:flex items-center px-3.5 py-1.5 rounded-full bg-[#533afd]/10 hover:bg-[#533afd]/20 border border-[#533afd]/25 text-[#533afd] text-xs font-bold transition-all"
             >
-              <Home className="w-3.5 h-3.5" />
-              <span className="hidden xl:inline">{sanctuaryZoneName || 'My Sanctuary'}</span>
-              <span className="xl:hidden">Sanctuary</span>
-            </button>
-          )}
-
-          {/* Safe Recess Pass Institutional Button */}
-          {onOpenRecessPass && (
-            <button
-              onClick={onOpenRecessPass}
-              title="Export 1-Page School / Campus Safe Recess Schedule (PDF)"
-              className="hidden lg:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-white hover:bg-[#f6f9fc] border border-[#cbd5e1] text-[#0d253d] text-xs font-semibold transition-all shadow-2xs"
-            >
-              <FileText className="w-3.5 h-3.5 text-[#533afd]" />
-              <span>Safe Recess Pass</span>
+              <span>{sanctuaryZoneName || 'Calibrate Home'}</span>
             </button>
           )}
 
@@ -206,7 +198,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onOpenShare}
             aria-label="Share clean air impact on social media"
-            className="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-medium transition-all shadow-sm focus:ring-2 focus:ring-[#533afd] focus:outline-none"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-bold transition-all shadow-sm focus:ring-2 focus:ring-[#533afd] focus:outline-none"
           >
             <Share2 className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Share</span>
@@ -214,21 +206,27 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Mobile Horizontal Subnav */}
-      <div className="lg:hidden flex items-center overflow-x-auto px-4 py-2 border-t border-[#e3e8ee] bg-[#f6f9fc] gap-2">
-        {navItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => handleNavClick(item.id)}
-            className={`whitespace-nowrap px-3 py-1 rounded-full text-xs transition-all ${
-              activeTab === item.id
-                ? 'bg-[#533afd] text-white font-medium shadow-sm'
-                : 'text-[#273951] bg-white border border-[#e3e8ee]'
-            }`}
-          >
-            {item.label}
-          </button>
-        ))}
+      {/* Mobile Horizontal Subnav - Fluid Centered Segmented Capsule */}
+      <div className="md:hidden flex items-center justify-start sm:justify-center overflow-x-auto no-scrollbar px-4 py-2.5 border-t border-[#e3e8ee] bg-white/95 backdrop-blur-md">
+        <div className="flex items-center p-1 bg-[#f6f9fc] rounded-full border border-[#e3e8ee] gap-1 shrink-0">
+          {navItems.map((item) => {
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleNavClick(item.id)}
+                aria-current={isActive ? 'page' : undefined}
+                className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all duration-200 ${
+                  isActive
+                    ? 'bg-white text-[#533afd] shadow-sm font-bold border border-black/[0.04]'
+                    : 'text-[#475569] hover:text-[#0d253d] font-medium'
+                }`}
+              >
+                {item.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </header>
   );
