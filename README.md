@@ -16,6 +16,30 @@
 
 ---
 
+## 🎯 0. Chosen Vertical, Approach & Assumptions
+
+### Chosen Vertical
+**Urban Climate & Public Health — GenAI Assistant for Severe Winter Smog & Urban Air Pollution**
+Designed for **families, households, commuters, fitness enthusiasts, students, and schools** navigating acute winter particulate episodes.
+
+### Approach & Logic
+1. **Location & Atmospheric Context**: Resolves any city globally via Open-Meteo Geocoding + live Air Quality & Weather APIs (zero API keys, client-side) to compute the real-time Planetary Boundary Layer Height (PBLH) and dynamic solar clean-air window.
+2. **Building & Lifestyle Personalization**: Models each user's home envelope (building typology, floor elevation, room volume) in `localStorage` and filters 20+ low-emission daily routines by household lifestyle.
+3. **Direct Impact Transparency**: Every routine swap and $35 indoor air hack computes a deterministic **Breath Receipt** showing exact inhaled $PM_{2.5}$ dose avoided ($\mu\text{g}$), cigarette equivalents spared, and avoided $CO_2e$ / $NO_x$ emissions.
+
+### How the Solution Works
+1. **Live Telemetry Ingestion**: Switching cities triggers [`useLiveAirSync`](src/hooks/useLiveAirSync.ts) to fetch live $PM_{2.5}$, $PM_{10}$, $NO_2$, temperature, humidity, and wind speed, dynamically calculating the day's clean-air window.
+2. **Routine & Indoor Optimization**: Users shift outdoor commutes, workouts, and school recess into midday solar convection windows (`DailyRoutineOptimizer`) and toggle DIY interventions like a $35 Corsi-Rosenthal box fan (`IndoorAirHacks`).
+3. **Hardened GenAI Copilot**: Queries pass through a 5-layer prompt-injection firewall and Zod schema lock (`CopilotResponseSchema`) to return grounded, location- and lifestyle-tailored advice.
+
+### Assumptions Made
+- **Single-Zone Well-Mixed Indoor Box Model**: Assumes uniform indoor particulate concentration per calibrated room volume ($40\text{–}320\ \text{m}^3$) with empirical infiltration ($P$) and air-change-per-hour ($\lambda_{ach}$) parameters.
+- **Minute Ventilation Baselines**: Uses standard resting/light-activity inhalation rate ($0.012\ \text{m}^3/\text{min}$) for adults and elevated PE rate ($0.045\ \text{m}^3/\text{min}$) for pediatric recess exposure.
+- **Cigarette Equivalence Conversion**: Uses the standard epidemiological equivalence of $22\ \mu\text{g/m}^3$ 24-hour $PM_{2.5}$ exposure $\approx 1$ cigarette/day.
+- **Offline / Rate-Limit Resilience**: When external Open-Meteo sensors are unreachable or return out-of-bounds readings, ZeroBon deterministically falls back to verified regional atmospheric basin baselines.
+
+---
+
 ## 🏛️ 1. High-Level System Architecture
 
 ZeroBon orchestrates satellite ground-truth observations, differential mass-balance indoor physics, zero-trust AI prompt firewalling, and institutional health compliance protocols:

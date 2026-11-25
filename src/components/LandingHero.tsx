@@ -123,15 +123,15 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         {/* Central Hero Headline & Value Proposition */}
         <div className="max-w-4xl space-y-6 text-left">
           <h1 className="font-display-xxl text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight text-[#0d253d] leading-[1.12]">
-            Navigate severe winter smog with{' '}
+            Navigate severe winter smog and{' '}
             <span className="font-semibold text-[#533afd] underline decoration-[#533afd]/30 decoration-4 underline-offset-8">
-              physics-verified
-            </span>{' '}
-            routines & hacks.
+              urban air pollution
+            </span>
+            .
           </h1>
 
           <p className="font-body-lg text-base sm:text-xl text-[#475569] leading-relaxed max-w-3xl font-normal">
-            A GenAI-powered assistant designed for households and communities. Shift high-emission routines into solar mixing windows, deploy $35 DIY clean sanctuaries, and calculate the exact breath-dose you protect for your loved ones.
+            A GenAI-powered assistant helping families and communities in {selectedCity} adopt low-emission daily routines, $35 indoor air quality hacks, and sustainable alternatives tailored to your location and lifestyle—clearly explaining the direct health and carbon impact of every choice.
           </p>
 
           {/* Big Action CTA Buttons */}
