@@ -5,7 +5,6 @@ import {
   Printer, 
   Share2, 
   X, 
-  AlertTriangle, 
   ShieldCheck, 
   Clock, 
   Check
@@ -58,7 +57,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="recess-pass-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#0d253d]/75 backdrop-blur-md animate-fadeIn overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#0d253d]/80 backdrop-blur-md animate-fadeIn overflow-y-auto"
       onClick={onClose}
     >
       <div
@@ -68,7 +67,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
         {/* Top Control Bar (Hidden during printing) */}
         <div className="flex items-center justify-between pb-4 border-b border-[#e3e8ee] mb-4 print:hidden">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-emerald-200" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#533afd] ring-2 ring-[#b9b9f9]" />
             <span className="text-xs font-bold uppercase tracking-wider text-[#533afd]">
               Institutional Health Compliance • 1-Page Printable Audit
             </span>
@@ -79,13 +78,13 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
               onClick={handleShare}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] text-xs font-semibold border border-[#e3e8ee] transition-all"
             >
-              {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Share2 className="w-3.5 h-3.5 text-[#533afd]" />}
+              {copiedLink ? <Check className="w-3.5 h-3.5 text-[#533afd]" /> : <Share2 className="w-3.5 h-3.5 text-[#533afd]" />}
               <span>{copiedLink ? 'Copied Link!' : 'Share with Parents'}</span>
             </button>
 
             <button
               onClick={handlePrint}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#533afd] hover:bg-[#432dd7] text-white text-xs font-bold transition-all shadow-sm"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#533afd] hover:bg-[#432ec9] text-white text-xs font-bold transition-all shadow-sm"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Print / Save PDF</span>
@@ -102,7 +101,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
         </div>
 
         {/* Institution Name Customizer Bar (Hidden during printing) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 p-3 rounded-2xl bg-[#f8fafc] border border-[#e2e8f0] print:hidden">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 p-3 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] print:hidden">
           <div>
             <label className="text-[10px] font-bold text-[#64748d] uppercase tracking-wider block mb-1">
               School / Organization Name:
@@ -111,7 +110,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
               type="text"
               value={institutionName}
               onChange={(e) => setInstitutionName(e.target.value)}
-              className="w-full px-3 py-1.5 text-xs rounded-xl bg-white border border-[#cbd5e1] text-[#0d253d] font-semibold focus:outline-none focus:ring-1 focus:ring-[#533afd]"
+              className="w-full px-3 py-1.5 text-xs rounded-xl bg-white border border-[#e3e8ee] text-[#0d253d] font-semibold focus:outline-none focus:ring-1 focus:ring-[#533afd]"
               placeholder="e.g. Modern School Barakhamba"
             />
           </div>
@@ -123,7 +122,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
               type="text"
               value={gradeGroup}
               onChange={(e) => setGradeGroup(e.target.value)}
-              className="w-full px-3 py-1.5 text-xs rounded-xl bg-white border border-[#cbd5e1] text-[#0d253d] font-semibold focus:outline-none focus:ring-1 focus:ring-[#533afd]"
+              className="w-full px-3 py-1.5 text-xs rounded-xl bg-white border border-[#e3e8ee] text-[#0d253d] font-semibold focus:outline-none focus:ring-1 focus:ring-[#533afd]"
               placeholder="e.g. Primary School Recess"
             />
           </div>
@@ -166,7 +165,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
           </div>
 
           {/* Institution & Recipient Metadata */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 rounded-xl bg-[#f8fafc] border border-[#e2e8f0] mb-6 text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee] mb-6 text-xs">
             <div>
               <span className="text-[10px] text-[#64748d] uppercase block">Institution</span>
               <span className="font-bold text-[#0d253d]">{institutionName}</span>
@@ -181,7 +180,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
             </div>
             <div>
               <span className="text-[10px] text-[#64748d] uppercase block">Ambient Ref. PM₂.₅</span>
-              <span className="font-bold text-[#ea2261]">{outdoorPm25} µg/m³</span>
+              <span className="font-bold text-[#0d253d]">{outdoorPm25} µg/m³</span>
             </div>
           </div>
 
@@ -192,63 +191,63 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
               <span>Campus Operating Protocol by Atmospheric Window</span>
             </h3>
 
-            <div className="space-y-2 text-xs">
-              {/* Band 1: Morning Inversion Danger */}
-              <div className="p-3.5 rounded-xl border border-red-200 bg-red-50/70 flex items-start justify-between gap-3">
-                <div className="flex items-start gap-2.5">
-                  <div className="mt-0.5 p-1 rounded-full bg-red-600 text-white flex-shrink-0">
-                    <X className="w-3 h-3 stroke-[3]" />
+            <div className="space-y-2.5 text-xs">
+              {/* Band 1: Morning Inversion Danger (Styled strictly in brand navy & soft slate) */}
+              <div className="p-4 rounded-xl border border-[#e3e8ee] bg-[#f6f9fc] flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 p-1 rounded-full bg-[#0d253d] text-white flex-shrink-0">
+                    <X className="w-3 h-3 stroke-[2.5]" />
                   </div>
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-red-900">07:00 AM – 10:30 AM</span>
-                      <span className="px-2 py-0.5 rounded bg-red-200 text-red-900 text-[10px] font-black uppercase">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-bold text-[#0d253d] text-sm">07:00 AM – 10:30 AM</span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-[#0d253d] text-white text-[10px] font-bold uppercase tracking-wide">
                         Outdoor Sports Prohibited
                       </span>
                     </div>
-                    <p className="text-red-800 text-[11px] leading-relaxed mt-1">
+                    <p className="text-[#475569] text-xs leading-relaxed mt-1.5">
                       Surface radiation inversion locks vehicle exhaust within 140m of ground level. Elevated breathing rates (0.045 m³/min) during physical education force over 280 µg PM₂.₅ straight into pediatric lower airways. <strong>All assemblies and sports must remain indoors.</strong>
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Band 2: Midday Solar Mixing Golden Window */}
-              <div className="p-3.5 rounded-xl border-2 border-emerald-400 bg-emerald-50/90 flex items-start justify-between gap-3 shadow-sm">
-                <div className="flex items-start gap-2.5">
-                  <div className="mt-0.5 p-1 rounded-full bg-emerald-600 text-white flex-shrink-0">
-                    <Check className="w-3 h-3 stroke-[3]" />
+              {/* Band 2: Midday Solar Mixing Golden Window (Hero Band styled in signature Electric Purple & Lavender) */}
+              <div className="p-4 rounded-xl border-2 border-[#533afd]/40 bg-[#f0efff] flex items-start justify-between gap-3 shadow-xs">
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 p-1 rounded-full bg-[#533afd] text-white flex-shrink-0">
+                    <Check className="w-3 h-3 stroke-[2.5]" />
                   </div>
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-extrabold text-emerald-950 text-sm">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-extrabold text-[#0d253d] text-sm">
                         {city.cleanWindowHours}
                       </span>
-                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider">
+                      <span className="px-2.5 py-0.5 rounded-full bg-[#533afd] text-white text-[10px] font-black uppercase tracking-wider shadow-2xs">
                         Approved Safe Recess Window
                       </span>
                     </div>
-                    <p className="text-emerald-900 text-[11px] leading-relaxed mt-1 font-medium">
+                    <p className="text-[#0d253d] text-xs leading-relaxed mt-1.5 font-medium">
                       Solar ground heating triggers vertical thermal convection, expanding the mixing ceiling to over 1,300m and diluting particulate concentration by up to <strong>74%</strong>. <strong>Outdoor recess, lunch breaks, and light games are strictly scheduled in this slot.</strong> Open classroom sashes for 15 minutes to purge stagnant CO₂.
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Band 3: Evening Sunset Cooling Return */}
-              <div className="p-3.5 rounded-xl border border-amber-200 bg-amber-50/70 flex items-start justify-between gap-3">
-                <div className="flex items-start gap-2.5">
-                  <div className="mt-0.5 p-1 rounded-full bg-amber-600 text-white flex-shrink-0">
-                    <AlertTriangle className="w-3 h-3 text-white" />
+              {/* Band 3: Evening Sunset Cooling Return (Styled in brand navy & soft border) */}
+              <div className="p-4 rounded-xl border border-[#e3e8ee] bg-[#f6f9fc] flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 p-1 rounded-full bg-[#64748d] text-white flex-shrink-0">
+                    <Clock className="w-3 h-3" />
                   </div>
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-amber-900">04:30 PM – Sunset & Night</span>
-                      <span className="px-2 py-0.5 rounded bg-amber-200 text-amber-900 text-[10px] font-black uppercase">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-bold text-[#0d253d] text-sm">04:30 PM – Sunset & Night</span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-[#e3e8ee] text-[#0d253d] text-[10px] font-bold uppercase tracking-wide">
                         Transition Indoors & Latch Sashes
                       </span>
                     </div>
-                    <p className="text-amber-800 text-[11px] leading-relaxed mt-1">
+                    <p className="text-[#475569] text-xs leading-relaxed mt-1.5">
                       Solar radiation ceases. Ground cooling collapses the boundary lid back below 200m, trapping evening rush-hour traffic soot. Seal all window sashes tightly before school buses depart.
                     </p>
                   </div>
@@ -257,13 +256,13 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
             </div>
           </div>
 
-          {/* Health & Pediatric Protection Metrics */}
-          <div className="grid grid-cols-3 gap-3 p-3 rounded-xl bg-gradient-to-r from-[#f1f5f9] to-[#e2e8f0] border border-[#cbd5e1] mb-6 text-center text-xs">
+          {/* Health & Pediatric Protection Metrics (Styled strictly in ZeroBon brand palette) */}
+          <div className="grid grid-cols-3 gap-3 p-3.5 rounded-xl bg-[#f6f9fc] border border-[#e3e8ee] mb-6 text-center text-xs">
             <div>
               <span className="text-[10px] font-bold text-[#64748d] uppercase block">
                 Prevented Soot / Student
               </span>
-              <span className="text-base font-extrabold text-emerald-700">~85 µg/day</span>
+              <span className="text-base font-extrabold text-[#533afd]">~85 µg/day</span>
             </div>
             <div>
               <span className="text-[10px] font-bold text-[#64748d] uppercase block">
@@ -282,8 +281,8 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
           {/* Signature & Verification Seal Line */}
           <div className="flex items-end justify-between pt-6 border-t border-[#0d253d]/20 text-xs">
             <div className="space-y-1">
-              <div className="flex items-center gap-1.5 text-emerald-800 font-bold">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <div className="flex items-center gap-1.5 text-[#533afd] font-bold">
+                <ShieldCheck className="w-4 h-4 text-[#533afd]" />
                 <span>ZeroBon Atmospheric Verification Engine</span>
               </div>
               <p className="text-[10px] text-[#64748d]">
