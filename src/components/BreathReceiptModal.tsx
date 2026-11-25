@@ -3,6 +3,7 @@ import confetti from 'canvas-confetti';
 import { Share2, CheckCircle2, ShieldCheck, X } from 'lucide-react';
 import { BreathReceipt } from '../types';
 import { SocialShareModal } from './SocialShareModal';
+import { useAccessibleModal } from '../hooks/useAccessibleModal';
 
 interface BreathReceiptModalProps {
   receipt: BreathReceipt;
@@ -11,6 +12,7 @@ interface BreathReceiptModalProps {
 
 export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt, onClose }) => {
   const [showShareModal, setShowShareModal] = useState(false);
+  const modalRef = useAccessibleModal(!showShareModal, onClose);
 
   useEffect(() => {
     confetti({
@@ -25,9 +27,13 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
   return (
     <>
       <div 
+        ref={modalRef}
         role="dialog" 
         aria-modal="true" 
         aria-labelledby="receipt-title"
+        onMouseDown={(e) => {
+          if (e.target === e.currentTarget) onClose();
+        }}
         className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d253d]/60 backdrop-blur-sm animate-fadeIn"
       >
         {/* Modern D2C Impact Receipt Card */}

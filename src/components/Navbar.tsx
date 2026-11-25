@@ -79,6 +79,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* City Selector Button & Search Popover */}
           <div className="relative">
             <button
+              type="button"
+              aria-expanded={isCitySearchOpen}
+              aria-haspopup="dialog"
               onClick={() => setIsCitySearchOpen(!isCitySearchOpen)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#f6f9fc] hover:bg-[#e3e8ee] border border-[#e3e8ee] text-xs font-medium text-[#0d253d] transition-all focus:ring-2 focus:ring-[#533afd]"
               aria-label={`Current city ${selectedCity}. Click to change city.`}
@@ -88,7 +91,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {isCitySearchOpen && (
-              <div className="absolute top-10 left-0 w-72 bg-white rounded-2xl shadow-xl border border-[#e3e8ee] p-3 z-50 animate-fadeIn">
+              <div
+                role="dialog"
+                aria-label="Select city or neighborhood"
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') setIsCitySearchOpen(false);
+                }}
+                className="absolute top-10 left-0 w-72 bg-white rounded-2xl shadow-xl border border-[#e3e8ee] p-3 z-50 animate-fadeIn"
+              >
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();

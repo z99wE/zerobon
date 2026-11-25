@@ -280,4 +280,38 @@ describe('Real Component Accessibility (axe-core WCAG 2.1 AA) & Security Tests',
       expect(result.current.isLiveSyncing).toBe(false);
     });
   });
+
+  describe('Modal Escape Dismissal & Focus Restoration (WCAG 2.4.3)', () => {
+    it('closes BreathReceiptModal and SocialShareModal on Escape key press', () => {
+      const onCloseReceipt = vi.fn();
+      const onCloseShare = vi.fn();
+      const receipt = {
+        receiptId: 'ZB-ESC-1',
+        timestamp: '12:30 PM',
+        tenantName: 'Delhi NCR',
+        actionTitle: 'Test Action',
+        inhaledDoseUg: 20,
+        counterfactualDoseUg: 100,
+        doseSavedUg: 80,
+        cigaretteEquivalentsSaved: 3.6,
+        co2eAvoidedGrams: 1200,
+        noxAvoidedGrams: 8.1,
+        primaryPm25AvoidedGrams: 1.0,
+        neighborhoodMultiplier: 2.5,
+      };
+
+      const { unmount } = render(<BreathReceiptModal receipt={receipt} onClose={onCloseReceipt} />);
+      act(() => {
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      });
+      expect(onCloseReceipt).toHaveBeenCalledTimes(1);
+      unmount();
+
+      render(<SocialShareModal receipt={receipt} onClose={onCloseShare} />);
+      act(() => {
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      });
+      expect(onCloseShare).toHaveBeenCalledTimes(1);
+    });
+  });
 });

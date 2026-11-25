@@ -1,5 +1,6 @@
 // src/components/SafeRecessPassModal.tsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
+import { useAccessibleModal } from '../hooks/useAccessibleModal';
 import { 
   Award, 
   Printer, 
@@ -28,20 +29,12 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
   const [gradeGroup, setGradeGroup] = useState<string>('Grades K – 8 • Recess & physical education');
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
   const printRef = useRef<HTMLDivElement>(null);
+  const modalRef = useAccessibleModal(true, onClose);
 
   const city = getCityProfile(cityName);
   const activeCleanWindow = cleanWindowHours || city.cleanWindowHours;
   const certificateId = `ZB-RECESS-${Math.abs(cityName.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) * 179).toString().substring(0, 6)}`;
   const issueDate = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
-  // Escape listener
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
 
   const handlePrint = () => {
     window.print();
@@ -57,6 +50,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
 
   return (
     <div
+      ref={modalRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="recess-pass-title"

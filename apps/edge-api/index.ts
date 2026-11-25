@@ -137,7 +137,10 @@ export default {
     } else if (host.includes('apex-campus')) {
       tenantId = 'tenant-apex-campus';
     } else if (headerTenant) {
-      tenantId = headerTenant;
+      const cleanTenant = headerTenant.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 48);
+      if (cleanTenant) {
+        tenantId = cleanTenant;
+      }
     }
 
     // Route: GET /api/v4/tenant/config
@@ -191,8 +194,8 @@ export default {
           );
         }
 
-        // LAYER 2: Randomized Tag Delimiters
-        const randId = Math.random().toString(36).substring(2, 8);
+        // LAYER 2: Cryptographically Random Tag Delimiters
+        const randId = crypto.randomUUID().slice(0, 8);
         const delimited = `<untrusted_query_${randId}>${sanitized}</untrusted_query_${randId}>`;
 
         // LAYER 3 & 4: Model Execution in Strict JSON Mode
@@ -230,11 +233,11 @@ export default {
 
         return new Response(outputString, { headers: secureHeaders });
       } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : 'Unknown server error';
-        return new Response(JSON.stringify({ error: message }), {
-          status: 500,
-          headers: secureHeaders,
-        });
+        console.error('Edge copilot processing error:', err);
+        return new Response(
+          JSON.stringify({ error: 'Unable to process query safely', code: 'INTERNAL_ERROR' }),
+          { status: 500, headers: secureHeaders }
+        );
       }
     }
 

@@ -97,6 +97,10 @@ export const SmogSimulatorSection: React.FC<SmogSimulatorSectionProps> = ({
               min={25}
               max={380}
               aria-label="Simulate Ambient Smog PM2.5 Level"
+              aria-valuemin={25}
+              aria-valuemax={380}
+              aria-valuenow={outdoorPm25}
+              aria-valuetext={`${outdoorPm25} micrograms per cubic meter, ${dispersionLabel}`}
               value={outdoorPm25}
               onChange={(e) => onSetOutdoorPm25(Number(e.target.value))}
               className="w-full accent-[#533afd] cursor-pointer"

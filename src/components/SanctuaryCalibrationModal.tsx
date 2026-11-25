@@ -1,5 +1,6 @@
 // src/components/SanctuaryCalibrationModal.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useAccessibleModal } from '../hooks/useAccessibleModal';
 import {
   SanctuaryProfile,
   BUILDING_DEFINITIONS,
@@ -29,14 +30,7 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
   const [roomZone, setRoomZone] = useState<RoomZone>(currentProfile.roomZone);
   const [roomVolumeM3, setRoomVolumeM3] = useState<number>(currentProfile.roomVolumeM3);
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  const modalRef = useAccessibleModal(true, onClose);
 
   const handleSelectZone = (zone: RoomZone) => {
     setRoomZone(zone);
@@ -68,6 +62,7 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
 
   return (
     <div
+      ref={modalRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="sanctuary-modal-title"
@@ -217,6 +212,10 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
             <input
               type="range"
               aria-label="Room volume in cubic meters"
+              aria-valuemin={40}
+              aria-valuemax={320}
+              aria-valuenow={roomVolumeM3}
+              aria-valuetext={`${roomVolumeM3} cubic meters, approximately ${Math.round(roomVolumeM3 / 2.7)} square meters`}
               min="40"
               max="320"
               step="5"

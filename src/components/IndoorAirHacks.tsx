@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useAccessibleModal } from '../hooks/useAccessibleModal';
 import { 
   Share2, 
   Wrench, 
@@ -39,19 +40,7 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
 }) => {
   const [selectedHackModal, setSelectedHackModal] = useState<DIYHackDetail | null>(null);
   const [flippedHacks, setFlippedHacks] = useState<Record<string, boolean>>({});
-
-  // Close modal with Escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setSelectedHackModal(null);
-      }
-    };
-    if (selectedHackModal) {
-      window.addEventListener('keydown', handleKeyDown);
-      return () => window.removeEventListener('keydown', handleKeyDown);
-    }
-  }, [selectedHackModal]);
+  const modalRef = useAccessibleModal(Boolean(selectedHackModal), () => setSelectedHackModal(null));
 
   const toggleFlip = (id: string) => {
     setFlippedHacks((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -387,9 +376,13 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
       {/* DIY Build Instructions Modal */}
       {selectedHackModal && (
         <div
+          ref={modalRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="diy-modal-title"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) setSelectedHackModal(null);
+          }}
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d253d]/60 backdrop-blur-sm animate-fadeIn"
         >
           <div className="relative w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 border border-[#e3e8ee] shadow-2xl max-h-[90vh] overflow-y-auto">
