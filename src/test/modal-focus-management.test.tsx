@@ -14,7 +14,24 @@ const FocusHarness: React.FC<{ open: boolean; onClose: () => void }> = ({ open, 
   );
 };
 
+const AutoFocusHarness: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const dialogRef = useAccessibleModal(true, onClose);
+  return (
+    <div ref={dialogRef} role="dialog" aria-label="Auto-focus dialog">
+      <button type="button" autoFocus>First action</button>
+      <button type="button">Second action</button>
+      <button type="button" style={{ display: 'none' }}>Hidden action</button>
+    </div>
+  );
+};
+
 describe('Modal Focus Management (WCAG 2.4.3)', () => {
+  it('does not steal focus that is already inside the dialog', () => {
+    render(<AutoFocusHarness onClose={() => undefined} />);
+    const first = screen.getByRole('button', { name: 'First action' });
+    expect(document.activeElement).toBe(first);
+  });
+
   it('moves keyboard focus into the dialog as soon as it opens', () => {
     const onClose = vi.fn();
     const { rerender } = render(

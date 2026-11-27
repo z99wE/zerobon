@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.6.3 (2026-11-28)
+- **Testing**: Added coverage-gap suites for tenant rules, telemetry fallbacks, profile validation, optical thresholds, feature-flag-off behavior, and focus edge cases (suite: 171 tests across 24 files). Coverage is ~95% statements and ~87% branches.
+- **Verification**: Lighthouse on the deployed site reports Accessibility, Best Practices, and SEO at 100.
+
+
 ## v4.6.2 (2026-11-28)
 - **Security**: Replaced predictable `Math.random()` prompt delimiters with shared `crypto.randomUUID()`-based delimiters in both the client firewall and edge worker; added a regression test for delimiter uniqueness and shape.
 - **Efficiency**: Deduplicated concurrent `fetchLiveAirQuality` calls for the same city and removed the unused `three` dependency, its unreferenced builder module, and its build config entry.
