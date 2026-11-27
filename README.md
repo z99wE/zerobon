@@ -1,8 +1,8 @@
 # ZeroBon
 
-**GenAI-powered atmospheric intelligence, diurnal inversion modeling, and indoor exposure assistant for families and communities navigating severe winter smog.**
+**ZeroBon is a GenAI-powered winter smog and urban air quality assistant that helps families, commuters, and schools reduce PM2.5 lung exposure using live atmospheric telemetry, diurnal boundary-layer clean-air windows, DIY Corsi-Rosenthal indoor filtration physics, and verifiable Breath Receipts.**
 
-- **Live App**: [https://zerobon.pages.dev](https://zerobon.pages.dev)
+- **Live App**: [https://zerobon.pages.dev/](https://zerobon.pages.dev/)
 - **Repository**: [https://github.com/z99wE/zerobon](https://github.com/z99wE/zerobon)
 - **Brand System**: Deep Navy (`#0d253d`), Electric Indigo (`#533afd`), Soft Lavender (`#b9b9f9`), Slate (`#475569`)
 
@@ -105,7 +105,7 @@ Generates a 1-page printable school protocol ([`SafeRecessPassModal.tsx`](src/co
 | :--- | :--- | :--- |
 | **Google Gemini API (`gemini-2.5-flash`)** | [`src/engine/copilot-firewall.ts`](src/engine/copilot-firewall.ts) | Structured JSON copilot responses locked to Zod schemas with deterministic fallback playbooks. |
 | **Google Earth Engine / Copernicus Calibration** | [`src/engine/city-data.ts`](src/engine/city-data.ts) | Regional winter inversion curves and basin baseline parameters. |
-| **Google Chrome Canvas / Optical Haze** | [`src/engine/optical-haze.ts`](src/engine/optical-haze.ts) | Client-side Rayleigh vs. Mie scattering luminance ($B/R$ ratio) calculation. |
+| **Google Chrome Canvas & WebGL2** | [`src/components/ui/GhostFibers.tsx`](src/components/ui/GhostFibers.tsx), [`noisy-gradient-backgrounds.tsx`](src/components/ui/noisy-gradient-backgrounds.tsx) | GPU-accelerated ambient fiber shaders and visibility/reduced-motion-aware 2D noise grain. |
 | **Chrome Accessibility & `axe-core`** | [`src/test/component-a11y-and-security.test.tsx`](src/test/component-a11y-and-security.test.tsx) | Automated WCAG 2.1 AA/AAA verification across mounted components and modals. |
 
 ---
@@ -125,8 +125,8 @@ Generates a 1-page printable school protocol ([`SafeRecessPassModal.tsx`](src/co
 
 ### Efficiency & Performance
 - **Code Splitting**: Secondary views and modals load via `React.lazy` and `Suspense`, keeping the initial entry bundle compact (~108 kB raw / ~33 kB gzipped) with split vendor chunks.
-- **Memoization & Deduplication**: `useLiveAirSync` deduplicates concurrent city telemetry requests with cancellation guards; `InversionRadar` and `DailyRoutineOptimizer` memoize forecast curves and impact totals.
-- **Visibility Throttling**: Continuous physics stepping pauses automatically when `document.hidden` is true.
+- **Memoization & O(1) Lookups**: `useLiveAirSync` deduplicates concurrent city telemetry requests with cancellation guards; `App.tsx` memoizes calibrated sanctuary physics parameters; `city-data.ts` and `live-air-service.ts` use `Map` indexes for O(1) city and coordinate resolution; `InversionRadar` and `DailyRoutineOptimizer` memoize forecast curves and impact totals.
+- **Visibility & Motion Throttling**: Continuous physics stepping and 2D noise canvas animation pause automatically when `document.hidden` is true, and canvas grain respects `prefers-reduced-motion: reduce`.
 
 ---
 
