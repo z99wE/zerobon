@@ -26,7 +26,7 @@ export const Footer: React.FC<FooterProps> = ({
   onOpenShare,
 }) => {
   return (
-    <footer className="w-full bg-[#f6f9fc] border-t-2 border-[#533afd]/20 pt-16 text-[#64748d] text-xs">
+    <footer className="w-full bg-[#f6f9fc] border-t-2 border-[#533afd]/20 pt-16 text-[#475569] text-xs">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 space-y-12 pb-14">
         {/* Prominent Footer Hero Call-to-Action (CTA) Entity */}
         <div className="w-full rounded-3xl p-8 sm:p-10 bg-gradient-to-br from-[#0d253d] via-[#1a123f] to-[#533afd] text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
@@ -35,9 +35,9 @@ export const Footer: React.FC<FooterProps> = ({
               <span className="w-2 h-2 rounded-full bg-[#533afd] ring-2 ring-white/60 animate-pulse" />
               <span>ZeroBon Community Clean Air Initiative</span>
             </div>
-            <h3 className="font-heading-lg text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            <h2 className="font-heading-lg text-2xl sm:text-3xl font-bold tracking-tight text-white">
               Ready to protect your home and neighborhood?
-            </h3>
+            </h2>
             <p className="font-body-md text-sm text-white/80 leading-relaxed">
               Join thousands of families shifting routines into clean air windows, building $35 DIY cleansers, and sharing verifiable breath receipts. Make clean air accessible to all.
             </p>
@@ -109,7 +109,7 @@ export const Footer: React.FC<FooterProps> = ({
         </div>
 
         {/* Lower Footer: Microclimate City Status & Attribution */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 text-[11px] text-[#64748d]">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 text-[11px] text-[#475569]">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#533afd] animate-pulse" />
             <span>Active City Microclimate:</span>

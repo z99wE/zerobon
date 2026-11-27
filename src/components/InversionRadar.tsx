@@ -87,8 +87,8 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
               <span className="text-xs font-bold text-[#533afd] uppercase tracking-wider">
                 {selectedCity} Microclimate
               </span>
-              <span className="text-xs text-[#64748d]">·</span>
-              <span className="text-xs text-[#64748d]">
+              <span className="text-xs text-[#475569]">·</span>
+              <span className="text-xs text-[#475569]">
                 {isLiveReading ? 'Live CAMS Satellite & Station Feed' : 'Verified Atmospheric Baseline'}
               </span>
             </div>
@@ -106,7 +106,7 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
                 <Sun className="w-5 h-5 text-[#ffd166]" />
               </div>
               <div>
-                <span className="text-[11px] text-[#64748d] block font-semibold uppercase tracking-wider">
+                <span className="text-[11px] text-[#475569] block font-semibold uppercase tracking-wider">
                   Golden Mixing Window
                 </span>
                 <span className="text-sm font-bold text-[#0d253d]">
@@ -119,7 +119,7 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
 
         {/* 2. Interactive SVG Atmospheric Mixing Ceiling Chart */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs text-[#64748d]">
+          <div className="flex items-center justify-between text-xs text-[#475569]">
             <span className="font-semibold text-[#0d253d]">
               Boundary Layer Mixing Height vs. Ground Stagnation (24-Hour Profile)
             </span>
@@ -150,10 +150,10 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
                   <stop offset="100%" stopColor="#533afd" stopOpacity="0.0" />
                 </linearGradient>
                 <linearGradient id="pbl-stroke" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#64748d" />
+                  <stop offset="0%" stopColor="#475569" />
                   <stop offset="45%" stopColor="#533afd" />
                   <stop offset="70%" stopColor="#533afd" />
-                  <stop offset="100%" stopColor="#64748d" />
+                  <stop offset="100%" stopColor="#475569" />
                 </linearGradient>
               </defs>
 
@@ -212,7 +212,7 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
                       cx={p.x}
                       cy={p.y}
                       r={isSelected ? 6 : isClean ? 4.5 : 3.5}
-                      fill={isSelected ? '#ffffff' : isClean ? '#533afd' : '#64748d'}
+                      fill={isSelected ? '#ffffff' : isClean ? '#533afd' : '#475569'}
                       stroke={isSelected ? '#533afd' : '#ffffff'}
                       strokeWidth={isSelected ? 3 : 1.5}
                     />
@@ -233,7 +233,7 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
             </svg>
 
             {/* Time labels below chart */}
-            <div className="flex justify-between items-center text-[10px] text-[#64748d] font-tabular pt-1 px-2 border-t border-[#e3e8ee]/80">
+            <div className="flex justify-between items-center text-[10px] text-[#475569] font-tabular pt-1 px-2 border-t border-[#e3e8ee]/80">
               {forecast.map((f) => (
                 <button
                   key={f.hour}
@@ -245,7 +245,7 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
                       ? 'text-[#533afd] font-bold bg-[#533afd]/10'
                       : f.isMiddayCleanWindow
                       ? 'text-[#0d253d] font-semibold'
-                      : 'text-[#64748d] hover:text-[#0d253d]'
+                      : 'text-[#475569] hover:text-[#0d253d]'
                   }`}
                 >
                   {f.hour}
@@ -257,7 +257,7 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
 
         {/* 3. Hourly Clean Air Forecast Strip (Interactive Selector Cards) */}
         <div>
-          <div className="flex items-center justify-between mb-2.5 text-xs text-[#64748d]">
+          <div className="flex items-center justify-between mb-2.5 text-xs text-[#475569]">
             <span className="font-semibold text-[#0d253d]">24-Hour Diurnal Timeline</span>
             <span>Tap any hour block below</span>
           </div>
@@ -295,14 +295,14 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
                     <span className={`font-tabular text-xl font-extrabold block leading-none ${isSelected ? 'text-white' : 'text-[#0d253d]'}`}>
                       {Math.round(item.outdoorPm25)}
                     </span>
-                    <span className={`text-[10px] block mt-0.5 ${isSelected ? 'text-white/80' : 'text-[#64748d]'}`}>
+                    <span className={`text-[10px] block mt-0.5 ${isSelected ? 'text-white/80' : 'text-[#475569]'}`}>
                       µg/m³ PM₂.₅
                     </span>
                   </div>
 
                   <div className="pt-1 border-t border-black/10 dark:border-white/10">
                     <span className={`text-[10px] font-semibold block truncate ${
-                      isSelected ? 'text-white/95' : isClean ? 'text-[#533afd]' : 'text-[#64748d]'
+                      isSelected ? 'text-white/95' : isClean ? 'text-[#533afd]' : 'text-[#475569]'
                     }`}>
                       {isClean ? 'Clean Window' : 'Inversion'}
                     </span>
@@ -332,9 +332,9 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
 
             <div className="flex items-center gap-3">
               <div className="text-right">
-                <span className="text-[11px] text-white/70 block">Estimated Ambient PM₂.₅</span>
+                <span className="text-[11px] text-white/90 block">Estimated Ambient PM₂.₅</span>
                 <span className="font-tabular text-3xl font-extrabold text-white">
-                  {selectedHour.outdoorPm25} <span className="text-sm font-normal text-white/70">µg/m³</span>
+                  {selectedHour.outdoorPm25} <span className="text-sm font-normal text-white/90">µg/m³</span>
                 </span>
               </div>
             </div>
@@ -343,7 +343,7 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
           {/* 3 Telemetry Data Columns */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm space-y-2">
-              <div className="flex items-center justify-between text-xs text-white/70">
+              <div className="flex items-center justify-between text-xs text-white/90">
                 <span>Vertical Mixing Ceiling</span>
                 <span className="font-tabular font-semibold text-white">{selectedHour.pblHeightMeters}m</span>
               </div>
@@ -361,7 +361,7 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
             </div>
 
             <div className="p-4 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm space-y-2">
-              <div className="flex items-center justify-between text-xs text-white/70">
+              <div className="flex items-center justify-between text-xs text-white/90">
                 <span>Ground Temp & Humidity</span>
                 <span className="font-tabular font-semibold text-white flex items-center gap-1">
                   <Thermometer className="w-3.5 h-3.5 text-[#a5b4fc]" />
@@ -371,7 +371,7 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
               <div className="flex items-center gap-2 pt-1 text-xs text-white/90">
                 <Wind className="w-4 h-4 text-[#a5b4fc]" />
                 <span>Wind speed: {selectedHour.windSpeedKmh} km/h</span>
-                <span className="text-white/40">•</span>
+                <span className="text-white/75">•</span>
                 <span>{selectedHour.windSpeedKmh > 8 ? 'Active Advection' : 'Stagnant Airflow'}</span>
               </div>
               <p className="text-[11px] text-white/80 leading-relaxed">
@@ -382,7 +382,7 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
             </div>
 
             <div className="p-4 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm space-y-2">
-              <div className="flex items-center justify-between text-xs text-white/70">
+              <div className="flex items-center justify-between text-xs text-white/90">
                 <span>Action Protocol at {selectedHour.hour}</span>
                 <ShieldCheck className="w-4 h-4 text-[#a5b4fc]" />
               </div>

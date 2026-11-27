@@ -196,10 +196,10 @@ export const HardenedCopilot: React.FC<HardenedCopilotProps> = ({ indoorPm25, ou
               }`}
             >
               <div className="flex items-center justify-between gap-2 mb-1">
-                <span className={`text-[10px] font-semibold ${m.sender === 'user' ? 'text-white/80' : 'text-[#64748d]'}`}>
+                <span className={`text-[10px] font-semibold ${m.sender === 'user' ? 'text-white/80' : 'text-[#475569]'}`}>
                   {m.sender === 'user' ? 'You' : 'ZeroBon Assistant'}
                 </span>
-                <span className={`text-[10px] ${m.sender === 'user' ? 'text-white/70' : 'text-[#64748d]'}`}>
+                <span className={`text-[10px] ${m.sender === 'user' ? 'text-white/90' : 'text-[#475569]'}`}>
                   {m.timestamp}
                 </span>
               </div>
@@ -216,7 +216,7 @@ export const HardenedCopilot: React.FC<HardenedCopilotProps> = ({ indoorPm25, ou
               </div>
 
               {m.response?.safety_note && (
-                <div className="mt-3 pt-2.5 border-t border-[#e3e8ee] flex items-center gap-1.5 text-xs text-[#64748d]">
+                <div className="mt-3 pt-2.5 border-t border-[#e3e8ee] flex items-center gap-1.5 text-xs text-[#475569]">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#533afd]" />
                   <span>{m.response.safety_note}</span>
                 </div>
@@ -236,7 +236,7 @@ export const HardenedCopilot: React.FC<HardenedCopilotProps> = ({ indoorPm25, ou
             <div className="w-8 h-8 rounded-full bg-[#533afd] text-white flex items-center justify-center flex-shrink-0 text-xs font-bold font-sans">
               ZB
             </div>
-            <div className="p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] text-xs text-[#64748d]">
+            <div className="p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] text-xs text-[#475569]">
               Evaluating city boundary layer and local habit recommendations...
             </div>
           </div>

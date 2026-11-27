@@ -77,18 +77,18 @@ export const SmogSimulatorSection: React.FC<SmogSimulatorSectionProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           <div className="space-y-1">
-            <span className="text-xs text-[#64748d] font-semibold block">Simulated Ambient Pollution:</span>
+            <span className="text-xs text-[#475569] font-semibold block">Simulated Ambient Pollution:</span>
             <div className="flex items-baseline gap-2">
               <span className="font-tabular text-4xl font-extrabold text-[#533afd]">
                 {outdoorPm25}
               </span>
               <span className="text-xs text-[#475569]">µg/m³ PM₂.₅</span>
             </div>
-            <span className="text-[11px] text-[#64748d]">{dispersionLabel}</span>
+            <span className="text-[11px] text-[#475569]">{dispersionLabel}</span>
           </div>
 
           <div className="md:col-span-2 space-y-2">
-            <div className="flex items-center justify-between text-xs text-[#64748d]">
+            <div className="flex items-center justify-between text-xs text-[#475569]">
               <span>Slide to simulate severe pollution conditions</span>
               <span className="font-tabular font-bold text-[#0d253d]">{outdoorPm25} µg/m³</span>
             </div>
@@ -105,7 +105,7 @@ export const SmogSimulatorSection: React.FC<SmogSimulatorSectionProps> = ({
               onChange={(e) => onSetOutdoorPm25(Number(e.target.value))}
               className="w-full accent-[#533afd] cursor-pointer"
             />
-            <div className="flex justify-between text-[11px] text-[#64748d]">
+            <div className="flex justify-between text-[11px] text-[#475569]">
               <span>Clean Day (25 µg/m³)</span>
               <span>Moderate (100 µg/m³)</span>
               <span>Emergency Peak (380 µg/m³)</span>
@@ -147,7 +147,7 @@ export const SmogSimulatorSection: React.FC<SmogSimulatorSectionProps> = ({
                 key={metric.label}
                 className="p-4 rounded-2xl bg-white/80 group-hover:bg-white/10 border border-[#e3e8ee] group-hover:border-white/15 backdrop-blur-sm transition-all duration-500"
               >
-                <span className="text-xs text-[#64748d] group-hover:text-white/60 block mb-1">
+                <span className="text-xs text-[#475569] group-hover:text-white/85 block mb-1">
                   {metric.label}
                 </span>
                 <span

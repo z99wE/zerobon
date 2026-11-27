@@ -106,7 +106,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }}
                   className="flex items-center gap-1.5 p-2 bg-[#f6f9fc] rounded-xl border border-[#e3e8ee] mb-2"
                 >
-                  <Search className="w-3.5 h-3.5 text-[#64748d]" />
+                  <Search className="w-3.5 h-3.5 text-[#475569]" />
                   <input
                     type="text"
                     aria-label="Search city or neighborhood"
@@ -126,7 +126,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </button>
                 </form>
 
-                <span className="text-[10px] text-[#64748d] font-semibold uppercase tracking-wider block mb-1.5 px-1">
+                <span className="text-[10px] text-[#475569] font-semibold uppercase tracking-wider block mb-1.5 px-1">
                   Popular Metros
                 </span>
                 <div className="max-h-48 overflow-y-auto space-y-1">
@@ -143,7 +143,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }`}
                     >
                       <span>{c.name}</span>
-                      <span className={`text-[10px] ${selectedCity === c.name ? 'text-white/80' : 'text-[#64748d]'}`}>
+                      <span className={`text-[10px] ${selectedCity === c.name ? 'text-white/80' : 'text-[#475569]'}`}>
                         {c.country}
                       </span>
                     </button>
@@ -194,7 +194,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : 'bg-[#f6f9fc] hover:bg-[#e3e8ee] border-[#e3e8ee] text-[#0d253d]'
               }`}
             >
-              <Radio className={`w-3.5 h-3.5 ${isLiveSyncing ? 'animate-pulse text-[#533afd]' : isLiveReading ? 'text-[#533afd]' : 'text-[#64748d]'}`} />
+              <Radio className={`w-3.5 h-3.5 ${isLiveSyncing ? 'animate-pulse text-[#533afd]' : isLiveReading ? 'text-[#533afd]' : 'text-[#475569]'}`} />
               <span className="hidden xl:inline">{isLiveReading ? 'Live CAMS' : 'Sync live'}</span>
               <span className="font-tabular font-bold">{temperatureC}°C · {Math.round(outdoorPm25)} µg</span>
             </button>

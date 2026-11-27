@@ -140,7 +140,7 @@ Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
             className="flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] font-medium text-xs transition-all border border-[#e3e8ee] focus:ring-2 focus:ring-[#533afd]"
           >
             <span className="font-semibold text-[#533afd] text-sm">WhatsApp</span>
-            <span className="text-[11px] text-[#64748d]">• Direct Message</span>
+            <span className="text-[11px] text-[#475569]">• Direct Message</span>
           </button>
 
           <button
@@ -149,7 +149,7 @@ Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
             className="flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] font-medium text-xs transition-all border border-[#e3e8ee] focus:ring-2 focus:ring-[#533afd]"
           >
             <span className="font-semibold text-[#533afd] text-sm">X (Twitter)</span>
-            <span className="text-[11px] text-[#64748d]">• Full Post</span>
+            <span className="text-[11px] text-[#475569]">• Full Post</span>
           </button>
         </div>
 

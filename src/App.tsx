@@ -268,7 +268,7 @@ export const App: React.FC = () => {
 
         <Suspense
           fallback={
-            <div role="status" className="w-full py-16 text-center text-xs font-medium text-[#64748d]">
+            <div role="status" className="w-full py-16 text-center text-xs font-medium text-[#475569]">
               Loading ZeroBon module...
             </div>
           }

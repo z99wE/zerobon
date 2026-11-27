@@ -90,13 +90,13 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
           {/* Clean Brand Comparative Gauge */}
           <div className="flex items-center gap-5 p-5 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
             <div className="text-center">
-              <span className="text-xs text-[#64748d] font-medium block">
+              <span className="text-xs text-[#475569] font-medium block">
                 Outdoor Smog
               </span>
               <span className="font-tabular text-2xl font-bold text-[#0d253d]">
                 {Math.round(outdoorPm25)}
               </span>
-              <span className="text-[10px] text-[#64748d] block">µg/m³</span>
+              <span className="text-[10px] text-[#475569] block">µg/m³</span>
             </div>
 
             <div className="flex flex-col items-center">
@@ -109,13 +109,13 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
             </div>
 
             <div className="text-center">
-              <span className="text-xs text-[#64748d] font-medium block">
+              <span className="text-xs text-[#475569] font-medium block">
                 Your Indoor Air
               </span>
               <span className="font-tabular text-2xl font-bold text-[#533afd]">
                 {Math.round(indoorPm25)}
               </span>
-              <span className="text-[10px] text-[#64748d] block">µg/m³</span>
+              <span className="text-[10px] text-[#475569] block">µg/m³</span>
             </div>
           </div>
         </div>
@@ -241,7 +241,7 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
                         {hack.effectLabel}
                       </span>
                       <span className="text-[#a8c3de]">•</span>
-                      <span className="text-[#64748d]">{hack.costEst}</span>
+                      <span className="text-[#475569]">{hack.costEst}</span>
                     </div>
 
                     <p className="font-body-md text-xs text-[#475569] leading-relaxed mb-4">
@@ -349,7 +349,7 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
 
                     {/* Back Bottom Button */}
                     <div className="pt-3 border-t border-white/15 flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-1 text-[11px] text-white/70">
+                      <div className="flex items-center gap-1 text-[11px] text-white/90">
                         <Info className="w-3.5 h-3.5 text-white/90" />
                         <span>Actionable home sanctuary hack</span>
                       </div>
@@ -400,7 +400,7 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
             <h3 id="diy-modal-title" className="font-heading-lg text-xl text-[#0d253d] mb-1">
               {selectedHackModal.title}
             </h3>
-            <p className="text-xs text-[#64748d] mb-4">
+            <p className="text-xs text-[#475569] mb-4">
               Estimated Cost: {selectedHackModal.costEst} • Performance: {selectedHackModal.effectLabel}
             </p>
 

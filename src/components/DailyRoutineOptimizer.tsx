@@ -129,41 +129,41 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
         {/* Live Impact Tally Bar - Brand Monochromatic Palette */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6">
           <div className="p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
-            <span className="text-xs font-medium text-[#64748d] block mb-1">
+            <span className="text-xs font-medium text-[#475569] block mb-1">
               Active Habits
             </span>
             <div className="flex items-baseline gap-1">
               <span className="font-tabular text-2xl font-bold text-[#0d253d]">{totalCommitted}</span>
-              <span className="text-xs text-[#64748d]">/ {ROUTINE_SWAPS.length} completed</span>
+              <span className="text-xs text-[#475569]">/ {ROUTINE_SWAPS.length} completed</span>
             </div>
           </div>
 
           <div className="p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
-            <span className="text-xs font-medium text-[#64748d] block mb-1">
+            <span className="text-xs font-medium text-[#475569] block mb-1">
               Lung Dose Prevented
             </span>
             <div className="flex items-baseline gap-1">
               <span className="font-tabular text-2xl font-bold text-[#533afd]">
                 {cumulativeDose}
               </span>
-              <span className="text-xs text-[#64748d]">µg PM₂.₅</span>
+              <span className="text-xs text-[#475569]">µg PM₂.₅</span>
             </div>
           </div>
 
           <div className="p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
-            <span className="text-xs font-medium text-[#64748d] block mb-1">
+            <span className="text-xs font-medium text-[#475569] block mb-1">
               Cigarettes Saved
             </span>
             <div className="flex items-baseline gap-1">
               <span className="font-tabular text-2xl font-bold text-[#0d253d]">
                 {cumulativeCigarettes.toFixed(1)}
               </span>
-              <span className="text-xs text-[#64748d]">cigs avoided</span>
+              <span className="text-xs text-[#475569]">cigs avoided</span>
             </div>
           </div>
 
           <div className="p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
-            <span className="text-xs font-medium text-[#64748d] block mb-1">
+            <span className="text-xs font-medium text-[#475569] block mb-1">
               Emissions Avoided
             </span>
             <span className="font-tabular text-2xl font-bold text-[#0d253d]">
@@ -249,7 +249,7 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                           <span className="text-xs font-semibold text-[#0d253d] block">
                             {swap.category}
                           </span>
-                          <span className="text-[11px] text-[#64748d]">
+                          <span className="text-[11px] text-[#475569]">
                             {swap.lifestyleMatch.join(' • ')}
                           </span>
                         </div>
@@ -297,19 +297,19 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
                     {/* Impact Metrics Row - Brand Styled */}
                     <div className="grid grid-cols-3 gap-2 py-2.5 border-t border-b border-[#e3e8ee] mb-3">
                       <div className="text-left">
-                        <span className="text-[10px] text-[#64748d] block">Dose Protected</span>
+                        <span className="text-[10px] text-[#475569] block">Dose Protected</span>
                         <span className="font-tabular text-sm font-semibold text-[#533afd]">
                           +{swap.doseSavedUg} µg
                         </span>
                       </div>
                       <div className="text-left">
-                        <span className="text-[10px] text-[#64748d] block">Cigarettes Saved</span>
+                        <span className="text-[10px] text-[#475569] block">Cigarettes Saved</span>
                         <span className="font-tabular text-sm font-semibold text-[#0d253d]">
                           {swap.cigarettesSaved} cigs
                         </span>
                       </div>
                       <div className="text-left">
-                        <span className="text-[10px] text-[#64748d] block">Carbon Cut</span>
+                        <span className="text-[10px] text-[#475569] block">Carbon Cut</span>
                         <span className="font-tabular text-sm font-semibold text-[#0d253d]">
                           {swap.co2eAvoidedGrams > 0 ? `${(swap.co2eAvoidedGrams / 1000).toFixed(1)}kg CO₂` : 'Zero Fuel'}
                         </span>
@@ -406,7 +406,7 @@ export const DailyRoutineOptimizer: React.FC<DailyRoutineOptimizerProps> = ({
 
                     {/* Back Bottom Button - Elevated & Never Clipped */}
                     <div className="pt-3 border-t border-white/15 flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-1.5 text-[11px] text-white/70">
+                      <div className="flex items-center gap-1.5 text-[11px] text-white/90">
                         <Info className="w-3.5 h-3.5 text-white/90" />
                         <span>Actionable daily routine wisdom</span>
                       </div>

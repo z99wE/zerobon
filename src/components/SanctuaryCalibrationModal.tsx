@@ -244,7 +244,7 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="p-3.5 rounded-xl bg-white border border-[#e3e8ee]">
-              <span className="text-[11px] text-[#64748d] block mb-1">
+              <span className="text-[11px] text-[#475569] block mb-1">
                 Floor exposure
               </span>
               <span className="text-base font-bold font-tabular text-[#0d253d]">
@@ -253,7 +253,7 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
             </div>
 
             <div className="p-3.5 rounded-xl bg-white border border-[#e3e8ee]">
-              <span className="text-[11px] text-[#64748d] block mb-1">
+              <span className="text-[11px] text-[#475569] block mb-1">
                 Unfiltered indoor air
               </span>
               <span className="text-base font-bold font-tabular text-[#0d253d]">
@@ -274,7 +274,7 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
 
         {/* Actions */}
         <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#e3e8ee]">
-          <span className="text-xs text-[#64748d]">
+          <span className="text-xs text-[#475569]">
             Saved locally on this device
           </span>
 

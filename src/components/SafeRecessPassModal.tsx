@@ -100,7 +100,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
             <button
               onClick={onClose}
               aria-label="Close modal"
-              className="p-1.5 rounded-full hover:bg-white/60 text-[#64748d] hover:text-[#0d253d] transition-colors"
+              className="p-1.5 rounded-full hover:bg-white/60 text-[#475569] hover:text-[#0d253d] transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -110,7 +110,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
         {/* Institution Name Customizer Bar (Hidden during printing) */}
         <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 p-3.5 rounded-2xl bg-white/60 backdrop-blur-md border border-[#e3e8ee]/80 print:hidden">
           <div>
-            <label htmlFor="recess-institution-input" className="text-[11px] font-medium text-[#64748d] block mb-1">
+            <label htmlFor="recess-institution-input" className="text-[11px] font-medium text-[#475569] block mb-1">
               School or organization name
             </label>
             <input
@@ -124,7 +124,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
             />
           </div>
           <div>
-            <label htmlFor="recess-scope-input" className="text-[11px] font-medium text-[#64748d] block mb-1">
+            <label htmlFor="recess-scope-input" className="text-[11px] font-medium text-[#475569] block mb-1">
               Student or division scope
             </label>
             <input
@@ -156,21 +156,21 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
                 <span className="font-semibold text-[#533afd]">
                   ZeroBon standard
                 </span>
-                <span className="text-[#64748d]">·</span>
-                <span className="font-tabular text-[#64748d]">
+                <span className="text-[#475569]">·</span>
+                <span className="font-tabular text-[#475569]">
                   Certificate #{certificateId}
                 </span>
               </div>
-              <h1 id="recess-pass-title" className="font-heading-md text-2xl sm:text-3xl font-extrabold text-[#0d253d] tracking-tight">
+              <h2 id="recess-pass-title" className="font-heading-md text-2xl sm:text-3xl font-extrabold text-[#0d253d] tracking-tight">
                 Safe Recess & Outdoor Protocol Pass
-              </h1>
-              <p className="text-xs text-[#64748d] leading-relaxed">
+              </h2>
+              <p className="text-xs text-[#475569] leading-relaxed">
                 Verified planetary boundary layer (PBLH) atmospheric dilution protocol • Winter smog season
               </p>
             </div>
 
             <div className="text-right">
-              <span className="text-[11px] text-[#64748d] block">Target city</span>
+              <span className="text-[11px] text-[#475569] block">Target city</span>
               <span className="font-bold text-lg text-[#0d253d] block">{cityName}</span>
               <span className="text-xs text-[#533afd] font-medium">{city.terrainType}</span>
             </div>
@@ -179,29 +179,29 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
           {/* Institution & Recipient Metadata in Liquid Glass Container */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 rounded-2xl bg-white/60 backdrop-blur-md border border-[#e3e8ee]/80 mb-6 text-xs print:bg-white print:border-[#e3e8ee]">
             <div>
-              <span className="text-[11px] text-[#64748d] block mb-0.5">Institution</span>
+              <span className="text-[11px] text-[#475569] block mb-0.5">Institution</span>
               <span className="font-semibold text-[#0d253d]">{institutionName}</span>
             </div>
             <div>
-              <span className="text-[11px] text-[#64748d] block mb-0.5">Campus scope</span>
+              <span className="text-[11px] text-[#475569] block mb-0.5">Campus scope</span>
               <span className="font-semibold text-[#0d253d]">{gradeGroup}</span>
             </div>
             <div>
-              <span className="text-[11px] text-[#64748d] block mb-0.5">Issue date</span>
+              <span className="text-[11px] text-[#475569] block mb-0.5">Issue date</span>
               <span className="font-semibold text-[#0d253d]">{issueDate}</span>
             </div>
             <div>
-              <span className="text-[11px] text-[#64748d] block mb-0.5">Ambient ref. PM₂.₅</span>
+              <span className="text-[11px] text-[#475569] block mb-0.5">Ambient ref. PM₂.₅</span>
               <span className="font-semibold text-[#0d253d]">{outdoorPm25} µg/m³</span>
             </div>
           </div>
 
           {/* The Tri-Band Diurnal Schedule Table - Sentence Case, No Pill Tags */}
           <div className="space-y-3 mb-6">
-            <h2 className="text-xs font-semibold text-[#0d253d] flex items-center gap-1.5">
+            <h3 className="text-xs font-semibold text-[#0d253d] flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-[#533afd]" />
               <span>Campus operating protocol by atmospheric window</span>
-            </h2>
+            </h3>
 
             <div className="space-y-2.5 text-xs">
               {/* Band 1: Morning Inversion Window */}
@@ -249,13 +249,13 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
               {/* Band 3: Evening Sunset Cooling Return */}
               <div className="p-4 rounded-2xl border border-[#e3e8ee]/80 bg-white/60 backdrop-blur-md flex items-start justify-between gap-3 print:bg-white">
                 <div className="flex items-start gap-3">
-                  <div className="mt-0.5 p-1 rounded-full bg-[#64748d] text-white flex-shrink-0">
+                  <div className="mt-0.5 p-1 rounded-full bg-[#475569] text-white flex-shrink-0">
                     <Clock className="w-3 h-3" />
                   </div>
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-bold text-[#0d253d] text-sm">04:30 PM – Sunset & night</span>
-                      <span className="text-xs text-[#64748d] font-semibold">
+                      <span className="text-xs text-[#475569] font-semibold">
                         · Transition indoors & latch sashes
                       </span>
                     </div>
@@ -271,19 +271,19 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
           {/* Health & Pediatric Protection Metrics - Running Sentence Case */}
           <div className="grid grid-cols-3 gap-3 p-3.5 rounded-2xl bg-white/60 backdrop-blur-md border border-[#e3e8ee]/80 mb-6 text-center text-xs print:bg-white">
             <div>
-              <span className="text-[11px] text-[#64748d] block mb-1">
+              <span className="text-[11px] text-[#475569] block mb-1">
                 Prevented soot / student
               </span>
               <span className="text-base font-bold text-[#533afd]">~85 µg/day</span>
             </div>
             <div>
-              <span className="text-[11px] text-[#64748d] block mb-1">
+              <span className="text-[11px] text-[#475569] block mb-1">
                 Cigarette eq. spared
               </span>
               <span className="text-base font-bold text-[#0d253d]">3.8 / week</span>
             </div>
             <div>
-              <span className="text-[11px] text-[#64748d] block mb-1">
+              <span className="text-[11px] text-[#475569] block mb-1">
                 Pediatric airway relief
               </span>
               <span className="text-base font-bold text-[#533afd]">-68% acute risk</span>
@@ -297,14 +297,14 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
                 <ShieldCheck className="w-4 h-4 text-[#533afd]" />
                 <span>ZeroBon atmospheric verification engine</span>
               </div>
-              <p className="text-[11px] text-[#64748d]">
+              <p className="text-[11px] text-[#475569]">
                 Validated against OpenAQ & Copernicus ERA5 boundary layer reanalysis
               </p>
             </div>
 
             <div className="text-right">
               <div className="w-44 border-b border-[#0d253d] pb-1 mb-1"></div>
-              <span className="text-[11px] text-[#64748d] block">
+              <span className="text-[11px] text-[#475569] block">
                 Principal / campus health coordinator
               </span>
             </div>
@@ -312,7 +312,7 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
         </div>
 
         {/* Footer Note (Hidden in print) */}
-        <div className="relative z-10 flex items-center justify-between pt-4 mt-2 text-xs text-[#64748d] print:hidden">
+        <div className="relative z-10 flex items-center justify-between pt-4 mt-2 text-xs text-[#475569] print:hidden">
           <span>Tip: Use Ctrl+P or Cmd+P to export as a clean 1-page PDF document.</span>
           <button
             type="button"

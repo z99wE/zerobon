@@ -75,7 +75,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                     : 'bg-white/80 hover:bg-white text-[#0d253d] border-[#e3e8ee]'
                 }`}
               >
-                <Radio className={`w-3 h-3 ${isLiveSyncing ? 'animate-pulse text-[#533afd]' : isLiveReading ? 'text-[#533afd]' : 'text-[#64748d]'}`} />
+                <Radio className={`w-3 h-3 ${isLiveSyncing ? 'animate-pulse text-[#533afd]' : isLiveReading ? 'text-[#533afd]' : 'text-[#475569]'}`} />
                 <span>{isLiveReading ? 'Live CAMS feed' : 'Sync live air'}</span>
               </button>
             )}
@@ -90,7 +90,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               >
                 <span>{sanctuaryBadgeText || 'Home'}</span>
                 {indoorPm25 !== undefined && (
-                  <span className="text-[10px] text-[#64748d]">· Est. {Math.round(indoorPm25)} µg</span>
+                  <span className="text-[10px] text-[#475569]">· Est. {Math.round(indoorPm25)} µg</span>
                 )}
               </button>
             )}
@@ -179,43 +179,43 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         {/* Live Microclimate Telemetry Row (Seamless Flowing Divs) */}
         <div className="pt-6 border-t border-[#e3e8ee] grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
           <div className="p-4 rounded-2xl bg-white border border-[#e3e8ee] shadow-sm">
-            <span className="text-[11px] text-[#64748d] block font-semibold uppercase tracking-wider">
+            <span className="text-[11px] text-[#475569] block font-semibold uppercase tracking-wider">
               Ambient Air Quality
             </span>
             <div className="flex items-baseline gap-1 mt-1">
               <span className="font-tabular text-2xl font-bold text-[#0d253d]">
                 {Math.round(outdoorPm25)}
               </span>
-              <span className="text-xs text-[#64748d]">µg/m³ PM₂.₅</span>
+              <span className="text-xs text-[#475569]">µg/m³ PM₂.₅</span>
             </div>
           </div>
 
           <div className="p-4 rounded-2xl bg-white border border-[#e3e8ee] shadow-sm">
-            <span className="text-[11px] text-[#64748d] block font-semibold uppercase tracking-wider">
+            <span className="text-[11px] text-[#475569] block font-semibold uppercase tracking-wider">
               Surface Temp & Humidity
             </span>
             <div className="flex items-baseline gap-1 mt-1">
               <span className="font-tabular text-2xl font-bold text-[#0d253d]">
                 {cityProfile.temperatureC}°C
               </span>
-              <span className="text-xs text-[#64748d]">· {cityProfile.humidityPct}% RH</span>
+              <span className="text-xs text-[#475569]">· {cityProfile.humidityPct}% RH</span>
             </div>
           </div>
 
           <div className="p-4 rounded-2xl bg-white border border-[#e3e8ee] shadow-sm">
-            <span className="text-[11px] text-[#64748d] block font-semibold uppercase tracking-wider">
+            <span className="text-[11px] text-[#475569] block font-semibold uppercase tracking-wider">
               Wind Dispersion
             </span>
             <div className="flex items-baseline gap-1 mt-1">
               <span className="font-tabular text-2xl font-bold text-[#0d253d]">
                 {cityProfile.windSpeedKmh}
               </span>
-              <span className="text-xs text-[#64748d]">km/h {cityProfile.windDirection}</span>
+              <span className="text-xs text-[#475569]">km/h {cityProfile.windDirection}</span>
             </div>
           </div>
 
           <div className="p-4 rounded-2xl bg-white border border-[#e3e8ee] shadow-sm">
-            <span className="text-[11px] text-[#64748d] block font-semibold uppercase tracking-wider">
+            <span className="text-[11px] text-[#475569] block font-semibold uppercase tracking-wider">
               Atmospheric State
             </span>
             <div className="flex items-baseline gap-1 mt-1">
@@ -327,7 +327,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                       type="button"
                       aria-label={`${card.frontAction} for ${card.title}`}
                       onClick={card.onAction}
-                      className="text-xs font-medium text-[#64748d] hover:text-[#0d253d]"
+                      className="text-xs font-medium text-[#475569] hover:text-[#0d253d]"
                     >
                       {card.frontAction}
                     </button>

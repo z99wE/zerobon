@@ -52,7 +52,7 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
             <h2 id="receipt-title" className="font-heading-lg text-xl sm:text-2xl text-[#0d253d]">
               Deterministic Breath Receipt
             </h2>
-            <div className="flex items-center justify-between text-xs text-[#64748d] mt-1.5 font-tabular">
+            <div className="flex items-center justify-between text-xs text-[#475569] mt-1.5 font-tabular">
               <span>Ref: {receipt.receiptId}</span>
               <span>{receipt.timestamp}</span>
             </div>
@@ -60,7 +60,7 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
 
           {/* Primary Inhaled Dose Hero Box */}
           <div className="my-5 text-center py-5 px-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee]">
-            <span className="text-xs text-[#64748d] block mb-1">
+            <span className="text-xs text-[#475569] block mb-1">
               Personal Lung Dose Prevented
             </span>
             <div className="flex items-baseline justify-center gap-2">
@@ -78,31 +78,31 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
           {/* Detailed Impact Ledger */}
           <div className="space-y-2.5 border-t border-b border-[#e3e8ee] py-4">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[#64748d]">City / Location</span>
+              <span className="text-[#475569]">City / Location</span>
               <span className="text-[#0d253d] font-medium">{receipt.tenantName}</span>
             </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[#64748d]">Adopted Action</span>
+              <span className="text-[#475569]">Adopted Action</span>
               <span className="text-[#533afd] font-semibold">{receipt.actionTitle}</span>
             </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[#64748d]">Direct Avoided Emissions</span>
+              <span className="text-[#475569]">Direct Avoided Emissions</span>
               <span className="font-tabular text-[#0d253d] font-medium">
                 {receipt.co2eAvoidedGrams}g CO₂e • {receipt.noxAvoidedGrams}g NOₓ
               </span>
             </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[#64748d]">Avoided Exhaust Particulates</span>
+              <span className="text-[#475569]">Avoided Exhaust Particulates</span>
               <span className="font-tabular text-[#0d253d] font-medium">
                 {receipt.primaryPm25AvoidedGrams}g PM₂.₅
               </span>
             </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[#64748d]">Community Impact Multiplier</span>
+              <span className="text-[#475569]">Community Impact Multiplier</span>
               <span className="font-tabular text-[#533afd] font-semibold">
                 {receipt.neighborhoodMultiplier}x Collective Impact
               </span>
@@ -111,7 +111,7 @@ export const BreathReceiptModal: React.FC<BreathReceiptModalProps> = ({ receipt,
 
           {/* Action CTAs: Share Impact (WhatsApp, LinkedIn, Facebook, X) + Done */}
           <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-1.5 text-[11px] text-[#64748d]">
+            <div className="flex items-center gap-1.5 text-[11px] text-[#475569]">
               <ShieldCheck className="w-3.5 h-3.5 text-[#533afd]" />
               <span>Physics Inhaled Dose Model</span>
             </div>
