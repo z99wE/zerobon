@@ -20,6 +20,16 @@
 **Urban Climate & Public Health — GenAI Assistant for Severe Winter Smog & Urban Air Pollution**  
 Built for **families, households, commuters, fitness enthusiasts, students, and schools** navigating acute winter particulate episodes.
 
+### Problem Statement Alignment Matrix
+
+| Requirement | ZeroBon Implementation | Key Modules & Proof |
+| :--- | :--- | :--- |
+| **GenAI-powered assistant for families & communities** | Conversational clean-air assistant with 4 community/tenant profiles (*Household Family*, *Solo Commuter*, *School Campus*, *Residential RWA*) protected by a 5-layer prompt-injection firewall & Zod schema lock, plus printable **Safe Recess Passes** for schools. | [`HardenedCopilot.tsx`](src/components/HardenedCopilot.tsx), [`copilot-firewall.ts`](src/engine/copilot-firewall.ts), [`SafeRecessPassModal.tsx`](src/components/SafeRecessPassModal.tsx), [`apps/edge-api/index.ts`](apps/edge-api/index.ts) |
+| **Low-emission daily routines & sustainable alternatives** | **27** actionable routine swaps (metro/EV carpool, midday workout shifts, induction/exhaust cooking, remote smog-day workflows) timed to each city's midday Planetary Boundary Layer (PBL) clean-air window. | [`DailyRoutineOptimizer.tsx`](src/components/DailyRoutineOptimizer.tsx), [`routine-swaps.ts`](src/data/routine-swaps.ts), [`InversionRadar.tsx`](src/components/InversionRadar.tsx) |
+| **Indoor air quality hacks** | Interactive toggles and build guides for **$35 DIY Corsi-Rosenthal** MERV-13 box-fan cleansers, kitchen range hood flushes, magnetic sash draft sealing, and midday cross-ventilation, driven by a live indoor mass-balance ODE solver. | [`IndoorAirHacks.tsx`](src/components/IndoorAirHacks.tsx), [`indoor-hacks.ts`](src/data/indoor-hacks.ts), [`physics.ts`](src/engine/physics.ts) |
+| **Tailored to location & lifestyle** | Global city resolution (Open-Meteo Geocoding + Air Quality + Weather APIs + 55+ calibrated basin baselines), home sanctuary calibration (building envelope, floor elevation, room volume), and 5 lifestyle filter tabs. | [`live-air-service.ts`](src/engine/live-air-service.ts), [`city-data.ts`](src/engine/city-data.ts), [`SanctuaryCalibrationModal.tsx`](src/components/SanctuaryCalibrationModal.tsx), [`sanctuary-engine.ts`](src/engine/sanctuary-engine.ts) |
+| **Clearly explaining direct impact of choices** | Every swap or hack issues a deterministic **Breath Receipt** comparing intervention vs. counterfactual exposure: $\mu\text{g}\ PM_{2.5}$ lung dose prevented, cigarette equivalents saved, $\text{CO}_2\text{e}$ & $\text{NO}_x$ avoided, and neighborhood multiplier, shareable via WhatsApp/X. | [`BreathReceiptModal.tsx`](src/components/BreathReceiptModal.tsx), [`SocialShareModal.tsx`](src/components/SocialShareModal.tsx), [`physics.ts`](src/engine/physics.ts) |
+
 ### Approach & Logic
 1. **Location & Atmospheric Context**: Resolves any city globally via Open-Meteo Geocoding and Air Quality/Weather APIs (client-side, zero API key required) to compute real-time Planetary Boundary Layer Height (PBLH) and the daily solar clean-air window.
 2. **Building & Lifestyle Personalization**: Models each household's indoor envelope (building typology, floor elevation, and room volume) in validated `localStorage` and filters 20+ low-emission daily routines by lifestyle profile.
