@@ -213,178 +213,141 @@ function extractCityFromQuery(query: string): string | null {
   return null;
 }
 
+type CityProfile = ReturnType<typeof getCityProfile>;
+type HackId = (typeof VERIFIED_HACK_IDS)[number];
+
+interface TopicRule {
+  keywords: readonly string[];
+  hackIds: readonly HackId[];
+  buildAdvice: (city: CityProfile) => string[];
+}
+
+function matchesAnyKeyword(text: string, keywords: readonly string[]): boolean {
+  return keywords.some((kw) => text.includes(kw));
+}
+
+const TOPIC_RULES: readonly TopicRule[] = [
+  {
+    keywords: [
+      'waste', 'burn', 'fire', 'leaf', 'leaves', 'stubble', 'bonfire',
+      'policy', 'deterren', 'rwa', 'society', 'neighborhood', 'community',
+      'generator', 'dg',
+    ],
+    hackIds: ['magnetic_draft_stopper', 'corsi_rosenthal_box'],
+    buildAdvice: (city) => [
+      `Community & Neighborhood Waste Deterrence for ${city.name}: Open waste and horticulture leaf burning produces intense plumes of black carbon and volatile organic compounds trapped close to ground level by winter thermal inversions.`,
+      'Establish a community leaf-composting pit and coordinate with Resident Welfare Associations (RWAs) or municipal marshals to enforce zero-tolerance open burning deterrence policies.',
+      'To protect your family during nearby burning episodes, seal perimeter window gaps with silicone draft tape and run a Corsi-Rosenthal unit on High to scrub infiltrations before particles settle.',
+    ],
+  },
+  {
+    keywords: ['purifier', 'diy', 'box', 'corsi', 'filter'],
+    hackIds: ['corsi_rosenthal_box', 'magnetic_draft_stopper'],
+    buildAdvice: (city) => [
+      'Build a Corsi-Rosenthal box using four 20x20x2" MERV-13 filters and a standard 20" box fan ($35–$45 total). It achieves ~350 m³/h clean air delivery, matching $400 commercial HEPA units with far lower motor strain.',
+      'Seal all seams with heavy duct or gaffer tape to eliminate particulate bypass. Position the fan blowing vertically toward the ceiling to generate a whole-room scrub vortex without creating uncomfortable drafts.',
+      city.baselinePm25 > 150
+        ? `For ${city.name}'s current severe pollution (~${city.baselinePm25} µg/m³), run the unit on Medium continuously. In a typical 45 m² room, it reduces particulate concentration by over 80% within 35 minutes.`
+        : `In ${city.name} (${city.baselinePm25} µg/m³), running the unit on Low overnight will keep your bedroom under 15 µg/m³ while consuming less than 40W of electricity.`,
+    ],
+  },
+  {
+    keywords: ['commute', 'travel', 'drive', 'metro', 'traffic', 'bus', 'cycle', 'bike'],
+    hackIds: ['n95_active_commute'],
+    buildAdvice: (city) => [
+      `Avoid open-air two-wheelers and auto-rickshaws between 7:30 AM – 9:30 AM in ${city.name}. Roadside vehicle exhaust is trapped close to breathing height during morning temperature inversions.`,
+      'Switch to electric underground metro or rail transit wherever possible. Metro cabins feature high-grade ducted filtration that maintains particulate exposure below 35 µg/m³.',
+      'If driving, keep windows sealed and set climate control to Internal Air Recirculation with an activated carbon cabin filter. Always wear a well-fitted, certified N95 or FFP2 respirator when walking along arterials.',
+    ],
+  },
+  {
+    keywords: ['jog', 'run', 'walk', 'gym', 'exercise', 'outside'],
+    hackIds: ['midday_window_airing'],
+    buildAdvice: (city) => [
+      `Do not exercise outdoors before 10:00 AM in ${city.name}. During cardio, minute ventilation surges from 6 L/min to over 55 L/min, multiplying your inhaled alveolar PM2.5 dose by nearly tenfold.`,
+      `Shift outdoor runs or brisk walks to the midday thermal mixing window (${city.cleanWindowHours}). Solar surface heating expands the boundary layer up to ${city.pblHeightMeters * 2}m, naturally dispersing surface smog.`,
+      'For morning workouts, substitute indoor yoga, strength training, or stationary cycling in a sealed, air-filtered room.',
+    ],
+  },
+  {
+    keywords: ['cook', 'kitchen', 'fry', 'stove', 'gas', 'food'],
+    hackIds: ['kitchen_exhaust_purge', 'induction_cook_swap'],
+    buildAdvice: () => [
+      'Switch to an electric induction cooktop with sealed lids. Gas combustion produces hazardous nitrogen dioxide (NOx) and fine particulates that stay trapped for hours inside closed winter homes.',
+      'Turn on your kitchen range hood on high 2 minutes before cooking begins to create outward negative pressure, and keep kitchen doors closed to prevent smoke from spreading to bedrooms.',
+      'Avoid high-heat oil searing and open-flame frying during severe smog days. Simmering, steaming, and electric pressure cooking produce virtually zero particulate emissions.',
+    ],
+  },
+  {
+    keywords: ['kid', 'child', 'baby', 'infant', 'elderly', 'asthma', 'pet'],
+    hackIds: ['corsi_rosenthal_box', 'magnetic_draft_stopper'],
+    buildAdvice: () => [
+      'Children breathe 50% more air per pound of body weight than adults, and elderly lungs are vulnerable to micro-vascular inflammation from PM2.5. Designate one bedroom as a Clean Air Sanctuary.',
+      'Apply magnetic foam weatherstripping along window sashes to reduce outdoor infiltration (cutting envelope leakage factor from 0.82 to 0.38). Keep an air purifier running continuously in this sanctuary.',
+      'Never use incense, scented candles, or dry brooms inside the home. Use damp microfiber mopping to pick up settled fine dust without re-suspending particles into breathing zones.',
+    ],
+  },
+  {
+    keywords: ['window', 'ventilate', 'airing', 'fresh air', 'co2'],
+    hackIds: ['midday_window_airing', 'magnetic_draft_stopper'],
+    buildAdvice: (city) => [
+      `In ${city.name}, cross-ventilate windows exclusively during the midday convective window (${city.cleanWindowHours}). This allows fresh oxygen in and flushes carbon dioxide without flooding the home with morning smog.`,
+      'Keep window openings brief (15 to 20 minutes with interior doors open). Re-seal and latch all sashes before 4:00 PM as the ground begins cooling and the evening inversion cap forms.',
+    ],
+  },
+];
+
 /**
  * Intelligent, context-aware generator producing rich, non-repetitive advice tailored to city and lifestyle
  */
 function generateDynamicAirAdvice(
   query: string,
-  city: ReturnType<typeof getCityProfile>,
+  city: CityProfile,
   context: CopilotExecutionContext
-): { advice: string[]; hackIds: (typeof VERIFIED_HACK_IDS)[number][]; microclimateNote: string } {
+): { advice: string[]; hackIds: HackId[]; microclimateNote: string } {
   const q = query.toLowerCase();
-  const advice: string[] = [];
-  const hackIds: (typeof VERIFIED_HACK_IDS)[number][] = [];
-
   const tenant = context.tenantProfile ?? 'family';
 
-  // Specific Tenant Profile Context Injection
-  if (tenant === 'school') {
-    if (q.includes('recess') || q.includes('outside') || q.includes('play') || q.includes('sport')) {
-      hackIds.push('midday_window_airing');
-      advice.push(
-        `For school campuses in ${city.name}: Cancel outdoor sports before 10:30 AM during morning inversion peaks. Reschedule recess to the midday thermal mixing window (${city.cleanWindowHours}) when surface pollutants dilute.`
-      );
-      advice.push(
-        `Enforce classroom door buffers to prevent diesel exhaust from drop-off idling zones from drafting into academic hallways.`
-      );
-      return { advice, hackIds, microclimateNote: `School Campus Protocol: Midday recess window active for ${city.name}.` };
-    }
-  } else if (tenant === 'community') {
-    if (q.includes('dg') || q.includes('generator') || q.includes('society') || q.includes('rwa') || q.includes('waste')) {
-      hackIds.push('magnetic_draft_stopper');
-      advice.push(
-        `Residential Community Protocol for ${city.name}: Coordinate with estate management to enforce zero-tolerance for open leaf/waste burning, which spikes localized PM2.5 by over 300 µg/m³.`
-      );
-      advice.push(
-        `Shift communal diesel generator testing to midday convective mixing hours (12:00 PM – 2:00 PM) rather than morning stillness.`
-      );
-      return { advice, hackIds, microclimateNote: `Community RWA Protocol: Verified boundary mixing hours for ${city.name}.` };
-    }
+  if (tenant === 'school' && matchesAnyKeyword(q, ['recess', 'outside', 'play', 'sport'])) {
+    return {
+      hackIds: ['midday_window_airing'],
+      advice: [
+        `For school campuses in ${city.name}: Cancel outdoor sports before 10:30 AM during morning inversion peaks. Reschedule recess to the midday thermal mixing window (${city.cleanWindowHours}) when surface pollutants dilute.`,
+        'Enforce classroom door buffers to prevent diesel exhaust from drop-off idling zones from drafting into academic hallways.',
+      ],
+      microclimateNote: `School Campus Protocol: Midday recess window active for ${city.name}.`,
+    };
   }
 
-  const isWasteBurning =
-    q.includes('waste') ||
-    q.includes('burn') ||
-    q.includes('fire') ||
-    q.includes('leaf') ||
-    q.includes('leaves') ||
-    q.includes('stubble') ||
-    q.includes('bonfire') ||
-    q.includes('policy') ||
-    q.includes('deterren') ||
-    q.includes('rwa') ||
-    q.includes('society') ||
-    q.includes('neighborhood') ||
-    q.includes('community') ||
-    q.includes('generator') ||
-    q.includes('dg');
-
-  const isDiyPurifier = q.includes('purifier') || q.includes('diy') || q.includes('box') || q.includes('corsi') || q.includes('filter');
-  const isCommute = q.includes('commute') || q.includes('travel') || q.includes('drive') || q.includes('metro') || q.includes('traffic') || q.includes('bus') || q.includes('cycle') || q.includes('bike');
-  const isExercise = q.includes('jog') || q.includes('run') || q.includes('walk') || q.includes('gym') || q.includes('exercise') || q.includes('outside');
-  const isCooking = q.includes('cook') || q.includes('kitchen') || q.includes('fry') || q.includes('stove') || q.includes('gas') || q.includes('food');
-  const isFamily = q.includes('kid') || q.includes('child') || q.includes('baby') || q.includes('infant') || q.includes('elderly') || q.includes('asthma') || q.includes('pet');
-  const isVentilation = q.includes('window') || q.includes('ventilate') || q.includes('airing') || q.includes('fresh air') || q.includes('co2');
-
-  // Topic 0: Neighborhood & Community Waste Burning Deterrence
-  if (isWasteBurning) {
-    hackIds.push('magnetic_draft_stopper', 'corsi_rosenthal_box');
-    advice.push(
-      `Community & Neighborhood Waste Deterrence for ${city.name}: Open waste and horticulture leaf burning produces intense plumes of black carbon and volatile organic compounds trapped close to ground level by winter thermal inversions.`
-    );
-    advice.push(
-      `Establish a community leaf-composting pit and coordinate with Resident Welfare Associations (RWAs) or municipal marshals to enforce zero-tolerance open burning deterrence policies.`
-    );
-    advice.push(
-      `To protect your family during nearby burning episodes, seal perimeter window gaps with silicone draft tape and run a Corsi-Rosenthal unit on High to scrub infiltrations before particles settle.`
-    );
-  }
-  // Topic 1: DIY Corsi-Rosenthal Purifier & Filters
-  else if (isDiyPurifier) {
-    hackIds.push('corsi_rosenthal_box', 'magnetic_draft_stopper');
-    advice.push(
-      `Build a Corsi-Rosenthal box using four 20x20x2" MERV-13 filters and a standard 20" box fan ($35–$45 total). It achieves ~350 m³/h clean air delivery, matching $400 commercial HEPA units with far lower motor strain.`
-    );
-    advice.push(
-      `Seal all seams with heavy duct or gaffer tape to eliminate particulate bypass. Position the fan blowing vertically toward the ceiling to generate a whole-room scrub vortex without creating uncomfortable drafts.`
-    );
-    if (city.baselinePm25 > 150) {
-      advice.push(
-        `For ${city.name}'s current severe pollution (~${city.baselinePm25} µg/m³), run the unit on Medium continuously. In a typical 45 m² room, it reduces particulate concentration by over 80% within 35 minutes.`
-      );
-    } else {
-      advice.push(
-        `In ${city.name} (${city.baselinePm25} µg/m³), running the unit on Low overnight will keep your bedroom under 15 µg/m³ while consuming less than 40W of electricity.`
-      );
-    }
-  }
-  // Topic 2: Commuting & Transit
-  else if (isCommute) {
-    hackIds.push('n95_active_commute');
-    advice.push(
-      `Avoid open-air two-wheelers and auto-rickshaws between 7:30 AM – 9:30 AM in ${city.name}. Roadside vehicle exhaust is trapped close to breathing height during morning temperature inversions.`
-    );
-    advice.push(
-      `Switch to electric underground metro or rail transit wherever possible. Metro cabins feature high-grade ducted filtration that maintains particulate exposure below 35 µg/m³.`
-    );
-    advice.push(
-      `If driving, keep windows sealed and set climate control to Internal Air Recirculation with an activated carbon cabin filter. Always wear a well-fitted, certified N95 or FFP2 respirator when walking along arterials.`
-    );
-  }
-  // Topic 3: Outdoor Exercise & Sports
-  else if (isExercise) {
-    hackIds.push('midday_window_airing');
-    advice.push(
-      `Do not exercise outdoors before 10:00 AM in ${city.name}. During cardio, minute ventilation surges from 6 L/min to over 55 L/min, multiplying your inhaled alveolar PM2.5 dose by nearly tenfold.`
-    );
-    advice.push(
-      `Shift outdoor runs or brisk walks to the midday thermal mixing window (${city.cleanWindowHours}). Solar surface heating expands the boundary layer up to ${city.pblHeightMeters * 2}m, naturally dispersing surface smog.`
-    );
-    advice.push(
-      `For morning workouts, substitute indoor yoga, strength training, or stationary cycling in a sealed, air-filtered room.`
-    );
-  }
-  // Topic 4: Kitchen Cooking & Indoor Sources
-  else if (isCooking) {
-    hackIds.push('kitchen_exhaust_purge', 'induction_cook_swap');
-    advice.push(
-      `Switch to an electric induction cooktop with sealed lids. Gas combustion produces hazardous nitrogen dioxide (NOx) and fine particulates that stay trapped for hours inside closed winter homes.`
-    );
-    advice.push(
-      `Turn on your kitchen range hood on high 2 minutes before cooking begins to create outward negative pressure, and keep kitchen doors closed to prevent smoke from spreading to bedrooms.`
-    );
-    advice.push(
-      `Avoid high-heat oil searing and open-flame frying during severe smog days. Simmering, steaming, and electric pressure cooking produce virtually zero particulate emissions.`
-    );
-  }
-  // Topic 5: Vulnerable Family Members (Kids, Asthmatics, Elderly)
-  else if (isFamily) {
-    hackIds.push('corsi_rosenthal_box', 'magnetic_draft_stopper');
-    advice.push(
-      `Children breathe 50% more air per pound of body weight than adults, and elderly lungs are vulnerable to micro-vascular inflammation from PM2.5. Designate one bedroom as a Clean Air Sanctuary.`
-    );
-    advice.push(
-      `Apply magnetic foam weatherstripping along window sashes to reduce outdoor infiltration (cutting envelope leakage factor from 0.82 to 0.38). Keep an air purifier running continuously in this sanctuary.`
-    );
-    advice.push(
-      `Never use incense, scented candles, or dry brooms inside the home. Use damp microfiber mopping to pick up settled fine dust without re-suspending particles into breathing zones.`
-    );
-  }
-  // Topic 6: Midday Window & Airing
-  else if (isVentilation) {
-    hackIds.push('midday_window_airing', 'magnetic_draft_stopper');
-    advice.push(
-      `In ${city.name}, cross-ventilate windows exclusively during the midday convective window (${city.cleanWindowHours}). This allows fresh oxygen in and flushes carbon dioxide without flooding the home with morning smog.`
-    );
-    advice.push(
-      `Keep window openings brief (15 to 20 minutes with interior doors open). Re-seal and latch all sashes before 4:00 PM as the ground begins cooling and the evening inversion cap forms.`
-    );
-  }
-  // Default: Comprehensive City Air Strategy
-  else {
-    hackIds.push('corsi_rosenthal_box', 'midday_window_airing', 'n95_active_commute');
-    advice.push(
-      `In ${city.name} (${city.terrainType}), ambient PM2.5 typically averages ~${city.baselinePm25} µg/m³. ${city.smogSeasonContext}`
-    );
-    advice.push(
-      `Keep living areas sealed during morning and evening stagnation hours. Shift outdoor activities to the clean mixing window (${city.cleanWindowHours}) when vertical atmospheric dispersion is highest.`
-    );
-    advice.push(
-      `Deploy a DIY Corsi-Rosenthal box air purifier in your primary living space and seal window drafts with silicone weatherstrip tape to maintain indoor PM2.5 under 25 µg/m³.`
-    );
+  if (tenant === 'community' && matchesAnyKeyword(q, ['dg', 'generator', 'society', 'rwa', 'waste'])) {
+    return {
+      hackIds: ['magnetic_draft_stopper'],
+      advice: [
+        `Residential Community Protocol for ${city.name}: Coordinate with estate management to enforce zero-tolerance for open leaf/waste burning, which spikes localized PM2.5 by over 300 µg/m³.`,
+        'Shift communal diesel generator testing to midday convective mixing hours (12:00 PM – 2:00 PM) rather than morning stillness.',
+      ],
+      microclimateNote: `Community RWA Protocol: Verified boundary mixing hours for ${city.name}.`,
+    };
   }
 
+  const matchedRule = TOPIC_RULES.find((rule) => matchesAnyKeyword(q, rule.keywords));
   const microclimateNote = `Boundary layer: ${city.pblHeightMeters}m. Clean air ventilation window: ${city.cleanWindowHours}.`;
 
-  return { advice, hackIds, microclimateNote };
+  if (matchedRule) {
+    return {
+      advice: matchedRule.buildAdvice(city),
+      hackIds: [...matchedRule.hackIds],
+      microclimateNote,
+    };
+  }
+
+  return {
+    hackIds: ['corsi_rosenthal_box', 'midday_window_airing', 'n95_active_commute'],
+    advice: [
+      `In ${city.name} (${city.terrainType}), ambient PM2.5 typically averages ~${city.baselinePm25} µg/m³. ${city.smogSeasonContext}`,
+      `Keep living areas sealed during morning and evening stagnation hours. Shift outdoor activities to the clean mixing window (${city.cleanWindowHours}) when vertical atmospheric dispersion is highest.`,
+      'Deploy a DIY Corsi-Rosenthal box air purifier in your primary living space and seal window drafts with silicone weatherstrip tape to maintain indoor PM2.5 under 25 µg/m³.',
+    ],
+    microclimateNote,
+  };
 }
