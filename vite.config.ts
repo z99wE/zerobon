@@ -40,5 +40,18 @@ export default defineConfig({
     environment: 'jsdom',
     pool: 'vmThreads',
     setupFiles: ['./src/test/setup.ts'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json-summary', 'html'],
+      reportsDirectory: './coverage',
+      include: [
+        'src/engine/**/*.ts',
+        'src/shared/**/*.ts',
+        'src/hooks/**/*.ts',
+        'src/data/**/*.ts',
+        'apps/edge-api/**/*.ts',
+      ],
+      exclude: ['src/**/__tests__/**', 'src/**/*.d.ts'],
+    },
   },
 });

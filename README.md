@@ -21,6 +21,12 @@ Quality is enforced by tooling rather than asserted in prose. Every change must 
 ```bash
 pnpm verify
 # lint → strict typecheck → full test suite → production build
+
+pnpm test:coverage
+# writes text / json-summary / html coverage reports
+
+pnpm build && pnpm check:browsers
+# Chromium + WebKit at desktop and mobile widths
 ```
 
 - **Strict TypeScript across the whole codebase** — [`tsconfig.json`](tsconfig.json) type-checks the React client **and** the Cloudflare edge worker under `strict`, `noUnusedLocals`, and `noUnusedParameters`.
@@ -28,7 +34,10 @@ pnpm verify
 - **One source of truth for safety-critical constants** — [`verified-hack-ids.ts`](src/shared/verified-hack-ids.ts) drives both the client Zod schema and the edge egress filter, so they cannot silently drift apart.
 - **Defense in depth at the edge** — invented or injected hack IDs are stripped from model output before it reaches the user, covered by a dedicated regression test in [`edge-api-and-interactions.test.tsx`](src/test/edge-api-and-interactions.test.tsx).
 - **Keyboard-accessible dialogs** — [`useAccessibleModal.ts`](src/hooks/useAccessibleModal.ts) moves focus into a dialog on open, traps Tab within it, and restores focus to the trigger on close.
-- **Focused rendering module** — the procedural WebGL shaders and matrix math in [`ghost-fibers/shaders.ts`](src/components/ui/ghost-fibers/shaders.ts) are separated from the [`GhostFibers`](src/components/ui/GhostFibers.tsx) component so rendering logic stays reviewable.
+- **Layered rendering architecture** — [`GhostFibers`](src/components/ui/GhostFibers.tsx) is now a thin settings/JSX component; WebGL shaders live in [`shaders.ts`](src/components/ui/ghost-fibers/shaders.ts) and the renderer lifecycle (shader compilation, render targets, animation loop, observers, cleanup) lives in [`useGhostFibersRenderer.ts`](src/components/ui/ghost-fibers/useGhostFibersRenderer.ts).
+- **Single physics implementation** — the TypeScript engine in [`physics.ts`](src/engine/physics.ts) is the only source of truth; the unused duplicate Rust WASM crate has been removed.
+- **Coverage reporting** — `pnpm test:coverage` produces text, JSON summary, and HTML reports so untested branches are visible instead of guessed at.
+- **Real-browser verification** — `pnpm check:browsers` builds nothing itself but drives the preview build through Chromium and WebKit at desktop and mobile widths, checking headings, canvas sizing, horizontal overflow, document language, and console/page errors; screenshots are written to `browser-check/`.
 - **Automated audits on every commit** — [`pnpm verify`](package.json) runs lint, typecheck, the full test suite (including mounted-component `axe-core` accessibility audits and edge API security tests), and a clean production build in [CI](.github/workflows/ci.yml).
 
 ---

@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.6.0 (2026-11-28)
+- **Code Quality**: Split `GhostFibers` into a settings/JSX component, a dedicated WebGL renderer hook, shader module, and explicit settings types; removed the unused duplicate Rust WASM physics crate so the TypeScript engine is the only implementation.
+- **Security**: Removed the invalid `X-Frame-Options` `<meta>` tag from `index.html` that both Chromium and WebKit rejected; the restriction is enforced by the real HTTP header in `public/_headers`.
+- **Testing**: Added V8 coverage reporting (`pnpm test:coverage`) with text, JSON summary, and HTML output.
+- **Browser Verification**: Added `pnpm check:browsers`, driving Chromium and WebKit at desktop and mobile widths with console/page-error, overflow, heading, language, and canvas checks plus screenshots.
+- **Dependencies**: Added `@vitest/coverage-v8` and `@playwright/test` as dev dependencies.
+
+
 ## v4.5.1 (2026-11-27)
 - **Code Quality**: Extended strict TypeScript checking to the Cloudflare Worker (`tsconfig.json` now includes `apps/`); added `pnpm typecheck` and a single `pnpm verify` gate used by CI.
 - **Security**: Centralized `VERIFIED_HACK_IDS` in a shared module and added a Layer-5 egress allow-list that strips unverified Gemini `iaq_hack_ids` before they reach the client.
