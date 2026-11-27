@@ -1,5 +1,5 @@
 // src/components/SanctuaryCalibrationModal.tsx
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAccessibleModal } from '../hooks/useAccessibleModal';
 import {
   SanctuaryProfile,
@@ -30,7 +30,14 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
   const [roomZone, setRoomZone] = useState<RoomZone>(currentProfile.roomZone);
   const [roomVolumeM3, setRoomVolumeM3] = useState<number>(currentProfile.roomVolumeM3);
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const modalRef = useAccessibleModal(true, onClose);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
+  }, []);
 
   const handleSelectZone = (zone: RoomZone) => {
     setRoomZone(zone);
@@ -49,7 +56,8 @@ export const SanctuaryCalibrationModal: React.FC<SanctuaryCalibrationModalProps>
     saveSanctuaryProfile(updated);
     onSave(updated);
     setSavedSuccess(true);
-    setTimeout(() => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = setTimeout(() => {
       onClose();
     }, 600);
   };

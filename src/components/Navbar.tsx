@@ -20,6 +20,14 @@ interface NavbarProps {
   sanctuaryZoneName?: string;
 }
 
+const NAV_ITEMS: ReadonlyArray<{ id: D2CTab; label: string }> = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'routines', label: 'Daily Routines' },
+  { id: 'hacks', label: 'Indoor Hacks' },
+  { id: 'radar', label: 'Air Forecast' },
+  { id: 'copilot', label: 'AI Assistant' },
+];
+
 export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   onSelectTab,
@@ -46,18 +54,30 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
-  const navItems = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'routines', label: 'Daily Routines' },
-    { id: 'hacks', label: 'Indoor Hacks' },
-    { id: 'radar', label: 'Air Forecast' },
-    { id: 'copilot', label: 'AI Assistant' },
-  ] as const;
+  const renderNavButtons = (variant: 'desktop' | 'mobile') =>
+    NAV_ITEMS.map((item) => {
+      const isActive = activeTab === item.id;
+      const paddingClass = variant === 'desktop' ? 'px-4 py-1.5' : 'px-3.5 py-1.5';
+      const stateClass = isActive
+        ? 'bg-white text-[#533afd] shadow-sm font-bold border border-black/[0.04]'
+        : variant === 'desktop'
+          ? 'text-[#475569] hover:text-[#0d253d] hover:bg-white/50 font-medium'
+          : 'text-[#475569] hover:text-[#0d253d] font-medium';
+      const focusClass = variant === 'desktop' ? 'select-none focus:outline-none focus:ring-2 focus:ring-[#533afd]' : '';
 
-  const handleNavClick = (tabId: D2CTab) => {
-    onSelectTab(tabId);
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  };
+      return (
+        <button
+          key={item.id}
+          type="button"
+          aria-label={`Open ${item.label} tab`}
+          onClick={() => onSelectTab(item.id)}
+          aria-current={isActive ? 'page' : undefined}
+          className={`whitespace-nowrap ${paddingClass} rounded-full text-xs transition-all duration-200 ${focusClass} ${stateClass}`}
+        >
+          {item.label}
+        </button>
+      );
+    });
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-[#e3e8ee] transition-all">
@@ -65,7 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Brand Name & City Picker */}
         <div className="flex items-center gap-3">
           <button
-            onClick={() => handleNavClick('overview')}
+            onClick={() => onSelectTab('overview')}
             className="flex items-center gap-2 text-left focus:outline-none focus:ring-2 focus:ring-[#533afd] rounded-lg p-1"
             aria-label="ZeroBon Home"
           >
@@ -159,25 +179,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           className="hidden md:flex items-center bg-[#f6f9fc] p-1.5 rounded-full border border-[#e3e8ee] shadow-2xs gap-1" 
           aria-label="Main Navigation"
         >
-          {navItems.map((item) => {
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                aria-label={`Open ${item.label} tab`}
-                onClick={() => handleNavClick(item.id)}
-                aria-current={isActive ? 'page' : undefined}
-                className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs transition-all duration-200 select-none focus:outline-none focus:ring-2 focus:ring-[#533afd] ${
-                  isActive
-                    ? 'bg-white text-[#533afd] shadow-sm font-bold border border-black/[0.04]'
-                    : 'text-[#475569] hover:text-[#0d253d] hover:bg-white/50 font-medium'
-                }`}
-              >
-                {item.label}
-              </button>
-            );
-          })}
+          {renderNavButtons('desktop')}
         </nav>
 
         {/* Right Actions: Live Sync + Calibrate Sanctuary + Share CTA */}
@@ -226,25 +228,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Horizontal Subnav - Fluid Centered Segmented Capsule */}
       <div className="md:hidden flex items-center justify-start sm:justify-center overflow-x-auto no-scrollbar px-4 py-2.5 border-t border-[#e3e8ee] bg-white/95 backdrop-blur-md">
         <div className="flex items-center p-1 bg-[#f6f9fc] rounded-full border border-[#e3e8ee] gap-1 shrink-0">
-          {navItems.map((item) => {
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                aria-label={`Open ${item.label} tab`}
-                onClick={() => handleNavClick(item.id)}
-                aria-current={isActive ? 'page' : undefined}
-                className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs transition-all duration-200 ${
-                  isActive
-                    ? 'bg-white text-[#533afd] shadow-sm font-bold border border-black/[0.04]'
-                    : 'text-[#475569] hover:text-[#0d253d] font-medium'
-                }`}
-              >
-                {item.label}
-              </button>
-            );
-          })}
+          {renderNavButtons('mobile')}
         </div>
       </div>
     </header>

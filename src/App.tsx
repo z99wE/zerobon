@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useMemo, useCallback } from 'react';
 import { Navbar, D2CTab } from './components/Navbar';
 import { GradientMesh } from './components/GradientMesh';
 import { LandingHero } from './components/LandingHero';
@@ -80,18 +80,18 @@ export const App: React.FC = () => {
   const [activeReceipt, setActiveReceipt] = useState<BreathReceipt | null>(null);
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
 
+  // Memoized Sanctuary Physics parameters (recomputed only when profile, outdoor PM2.5, or hacks change)
+  const { calibratedParams, effectiveOutdoorPm25 } = useMemo(
+    () => calculateCalibratedPhysics(sanctuaryProfile, outdoorPm25, activeHacks),
+    [sanctuaryProfile, outdoorPm25, activeHacks]
+  );
+
   // Real-time Physics Differential Loop (Analytical Mass-Balance modulated by Sanctuary Envelope)
   // High Efficiency: Throttled/paused when tab is hidden to conserve device CPU & battery
   useEffect(() => {
     const interval = setInterval(() => {
       if (typeof document !== 'undefined' && document.hidden) return;
       setIndoorPm25((prevCin) => {
-        const { calibratedParams, effectiveOutdoorPm25 } = calculateCalibratedPhysics(
-          sanctuaryProfile,
-          outdoorPm25,
-          activeHacks
-        );
-
         const step = stepAnalytical(prevCin, effectiveOutdoorPm25, 0.04, calibratedParams);
         const nextVal = Math.round(step.cin * 10) / 10;
         return nextVal === prevCin ? prevCin : nextVal;
@@ -99,12 +99,12 @@ export const App: React.FC = () => {
     }, 400);
 
     return () => clearInterval(interval);
-  }, [outdoorPm25, activeHacks, sanctuaryProfile]);
+  }, [calibratedParams, effectiveOutdoorPm25]);
 
-  const handleToggleHack = (key: 'corsiRosenthal' | 'kitchenExhaust' | 'draftSealing' | 'windowOpen') => {
-    setActiveHacks((prev) => {
-      const nextVal = !prev[key];
-      const nextHacks = { ...prev, [key]: nextVal };
+  const handleToggleHack = useCallback(
+    (key: 'corsiRosenthal' | 'kitchenExhaust' | 'draftSealing' | 'windowOpen') => {
+      const nextVal = !activeHacks[key];
+      setActiveHacks((prev) => ({ ...prev, [key]: nextVal }));
 
       if (nextVal) {
         const titleMap = {
@@ -112,7 +112,7 @@ export const App: React.FC = () => {
           kitchenExhaust: 'High-Velocity Kitchen Range Hood Flush',
           draftSealing: 'Magnetic Window Sash & Sill Draft Sealing',
           windowOpen: 'Midday Inversion Window Clean Air Flush',
-        };
+        } as const;
 
         const receipt = computeBreathReceipt(
           selectedCity,
@@ -134,35 +134,40 @@ export const App: React.FC = () => {
 
         setActiveReceipt(receipt);
       }
-
-      return nextHacks;
-    });
-  };
+    },
+    [activeHacks, selectedCity, indoorPm25, outdoorPm25]
+  );
 
   // Generic receipt for sharing from top CTA if no receipt currently open
-  const defaultShareReceipt: BreathReceipt = activeReceipt ?? {
-    receiptId: 'ZB-COMMUNITY-LIVE',
-    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    tenantName: selectedCity,
-    actionTitle: 'Clean Air Routine & Sanctuary Swaps',
-    inhaledDoseUg: 24,
-    counterfactualDoseUg: 112,
-    doseSavedUg: 88,
-    cigaretteEquivalentsSaved: 4.0,
-    co2eAvoidedGrams: 2850,
-    noxAvoidedGrams: 18.2,
-    primaryPm25AvoidedGrams: 1.4,
-    neighborhoodMultiplier: 3.2,
-  };
+  const defaultShareReceipt: BreathReceipt = useMemo(
+    () =>
+      activeReceipt ?? {
+        receiptId: 'ZB-COMMUNITY-LIVE',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        tenantName: selectedCity,
+        actionTitle: 'Clean Air Routine & Sanctuary Swaps',
+        inhaledDoseUg: 24,
+        counterfactualDoseUg: 112,
+        doseSavedUg: 88,
+        cigaretteEquivalentsSaved: 4.0,
+        co2eAvoidedGrams: 2850,
+        noxAvoidedGrams: 18.2,
+        primaryPm25AvoidedGrams: 1.4,
+        neighborhoodMultiplier: 3.2,
+      },
+    [activeReceipt, selectedCity]
+  );
 
   const activeCleanWindow = liveReading?.cleanWindowHours || cityProfile.cleanWindowHours;
   const activePblHeight = liveReading?.pblHeightMeters || cityProfile.pblHeightMeters;
   const activeTemperature = liveReading?.temperatureC ?? cityProfile.temperatureC;
+  const isLiveReading = Boolean(liveReading?.isLive);
+  const sanctuaryZoneName = sanctuaryProfile.isCustomized ? sanctuaryProfile.customZoneName : 'Home';
 
-  const handleNavigateTab = (tab: D2CTab) => {
+  const handleNavigateTab = useCallback((tab: D2CTab) => {
     setActiveTab(tab);
     window.scrollTo({ top: 0, behavior: 'instant' });
-  };
+  }, []);
 
   return (
     <div className="relative min-h-screen bg-white text-[#0d253d] flex flex-col font-sans selection:bg-[#533afd]/20 selection:text-[#533afd] group/skin">
@@ -221,8 +226,8 @@ export const App: React.FC = () => {
         onOpenRecessPass={() => setShowRecessModal(true)}
         onSyncLiveAir={handleSyncLiveAir}
         isLiveSyncing={isLiveSyncing}
-        isLiveReading={Boolean(liveReading?.isLive)}
-        sanctuaryZoneName={sanctuaryProfile.isCustomized ? sanctuaryProfile.customZoneName : 'Home'}
+        isLiveReading={isLiveReading}
+        sanctuaryZoneName={sanctuaryZoneName}
       />
 
       {/* Accessibility Status Announcer for Screen Readers (WCAG 4.1.3 Status Messages) */}
@@ -257,8 +262,8 @@ export const App: React.FC = () => {
               onOpenRecessPass={() => setShowRecessModal(true)}
               onSyncLiveAir={handleSyncLiveAir}
               isLiveSyncing={isLiveSyncing}
-              isLiveReading={Boolean(liveReading?.isLive)}
-              sanctuaryBadgeText={sanctuaryProfile.isCustomized ? sanctuaryProfile.customZoneName : 'Home'}
+              isLiveReading={isLiveReading}
+              sanctuaryBadgeText={sanctuaryZoneName}
               indoorPm25={indoorPm25}
               cleanWindowHours={activeCleanWindow}
               pblHeightMeters={activePblHeight}
@@ -309,7 +314,7 @@ export const App: React.FC = () => {
                 outdoorPm25={outdoorPm25}
                 cityProfile={cityProfile}
                 cleanWindowHours={activeCleanWindow}
-                isLiveReading={Boolean(liveReading?.isLive)}
+                isLiveReading={isLiveReading}
               />
             </ErrorBoundary>
           )}
@@ -330,7 +335,7 @@ export const App: React.FC = () => {
       <Footer
         selectedCity={selectedCity}
         activeCleanWindow={activeCleanWindow}
-        isLiveReading={Boolean(liveReading?.isLive)}
+        isLiveReading={isLiveReading}
         onNavigateTab={handleNavigateTab}
         onOpenShare={() => setShowShareModal(true)}
       />

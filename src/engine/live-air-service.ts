@@ -139,6 +139,11 @@ const CITY_COORDINATES: Record<string, { lat: number; lon: number; country?: str
   'Wuhan': { lat: 30.5928, lon: 114.3055, country: 'China' },
 };
 
+// Precomputed lowercase lookup index for O(1) coordinate resolution
+const CITY_COORDINATES_INDEX = new Map<string, { lat: number; lon: number; country?: string }>(
+  Object.entries(CITY_COORDINATES).map(([name, coords]) => [name.toLowerCase(), coords])
+);
+
 // In-memory client cache with 3-minute TTL
 interface CachedReading {
   data: LiveAirReading;
@@ -207,16 +212,11 @@ export async function resolveCityCoordinates(cityName: string): Promise<{ lat: n
   if (!normalized) {
     return { lat: 28.6139, lon: 77.2090, country: 'India' };
   }
-  if (CITY_COORDINATES[normalized]) {
-    return CITY_COORDINATES[normalized];
-  }
 
-  // Case-insensitive match in preconfigured table
-  const matchKey = Object.keys(CITY_COORDINATES).find(
-    (k) => k.toLowerCase() === normalized.toLowerCase()
-  );
-  if (matchKey) {
-    return CITY_COORDINATES[matchKey];
+  const lowerKey = normalized.toLowerCase();
+  const indexed = CITY_COORDINATES_INDEX.get(lowerKey);
+  if (indexed) {
+    return indexed;
   }
 
   // Dynamic Geocoding lookup via Open-Meteo (fast, zero key required)
@@ -232,7 +232,7 @@ export async function resolveCityCoordinates(cityName: string): Promise<{ lat: n
           lon: item.longitude,
           country: item.country || 'Global',
         };
-        CITY_COORDINATES[normalized] = resolved;
+        CITY_COORDINATES_INDEX.set(lowerKey, resolved);
         return resolved;
       }
     }

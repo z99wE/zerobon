@@ -810,18 +810,28 @@ export const TOP_CITIES: CityAirProfile[] = [
   },
 ];
 
+const CITY_PROFILE_BY_LOWER_NAME = new Map<string, CityAirProfile>(
+  TOP_CITIES.map((c) => [c.name.toLowerCase(), c])
+);
+
 /**
  * Resolves a city profile for any user query, falling back to a scientifically realistic synthetic profile.
  */
 export function getCityProfile(cityName: string): CityAirProfile {
   const normalized = cityName.trim().toLowerCase();
-  
-  // Direct match
+
+  // O(1) exact city name match
+  const exact = CITY_PROFILE_BY_LOWER_NAME.get(normalized);
+  if (exact) {
+    return exact;
+  }
+
+  // Substring / country fallback match
   const found = TOP_CITIES.find(
-    (c) => c.name.toLowerCase() === normalized || 
-           normalized.includes(c.name.toLowerCase()) || 
-           c.name.toLowerCase().includes(normalized) ||
-           c.country.toLowerCase() === normalized
+    (c) =>
+      normalized.includes(c.name.toLowerCase()) ||
+      c.name.toLowerCase().includes(normalized) ||
+      c.country.toLowerCase() === normalized
   );
 
   if (found) {

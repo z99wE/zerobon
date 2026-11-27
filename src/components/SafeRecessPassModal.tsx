@@ -1,5 +1,5 @@
 // src/components/SafeRecessPassModal.tsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAccessibleModal } from '../hooks/useAccessibleModal';
 import { 
   Award, 
@@ -29,7 +29,14 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
   const [gradeGroup, setGradeGroup] = useState<string>('Grades K – 8 • Recess & physical education');
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
   const printRef = useRef<HTMLDivElement>(null);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const modalRef = useAccessibleModal(true, onClose);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
 
   const city = getCityProfile(cityName);
   const activeCleanWindow = cleanWindowHours || city.cleanWindowHours;
@@ -45,7 +52,8 @@ export const SafeRecessPassModal: React.FC<SafeRecessPassModalProps> = ({
       `ZeroBon safe recess pass for ${institutionName} (${cityName}): Outdoor recess permitted strictly during solar mixing window (${activeCleanWindow}). Verified by ZeroBon atmospheric physics: https://zerobon.pages.dev`
     );
     setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2000);
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = setTimeout(() => setCopiedLink(false), 2000);
   };
 
   return (

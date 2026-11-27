@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Share2, Check, Copy, X } from 'lucide-react';
 import { BreathReceipt } from '../types';
 import { useAccessibleModal } from '../hooks/useAccessibleModal';
@@ -11,7 +11,14 @@ interface SocialShareModalProps {
 export const SocialShareModal: React.FC<SocialShareModalProps> = ({ receipt, onClose }) => {
   const [copied, setCopied] = useState(false);
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
+  const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const modalRef = useAccessibleModal(true, onClose);
+
+  useEffect(() => {
+    return () => {
+      if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
+    };
+  }, []);
 
   // Full rich text message formulated for viral social awareness and D2C impact
   const shareText = `ZeroBon Clean Air Impact Report:
@@ -38,7 +45,8 @@ Join the clean air movement with ZeroBon: https://zerobon.pages.dev`;
       }
       setCopied(true);
       setActionFeedback(customFeedback ?? 'Full report text copied to your clipboard!');
-      setTimeout(() => {
+      if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
+      feedbackTimerRef.current = setTimeout(() => {
         setCopied(false);
         setActionFeedback(null);
       }, 4000);

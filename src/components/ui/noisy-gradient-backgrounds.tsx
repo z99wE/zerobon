@@ -84,53 +84,53 @@ function Noise({
       patternCtx.putImageData(patternData, 0, 0);
     };
 
+    const cachedPattern = ctx.createPattern(patternCanvas, 'repeat');
+
     const drawGrain = () => {
       const { width: cssWidth, height: cssHeight } = canvasCssSizeRef.current;
-      if (cssWidth === 0 || cssHeight === 0) return; // Don't draw if canvas has no dimensions
+      if (cssWidth === 0 || cssHeight === 0 || !cachedPattern) return;
 
       // Clear using CSS pixel dimensions (context is already scaled by DPR)
       ctx.clearRect(0, 0, cssWidth, cssHeight);
 
       ctx.save();
-      
-      // Scale the context for tiling the pattern.
-      // This affects how the pattern is repeated.
-      // Using Math.max to prevent division by zero if scale is 0.
       const safePatternScaleX = Math.max(0.001, patternScaleX);
       const safePatternScaleY = Math.max(0.001, patternScaleY);
       ctx.scale(safePatternScaleX, safePatternScaleY);
 
-      const fillPattern = ctx.createPattern(patternCanvas, 'repeat');
-      if (fillPattern) {
-        ctx.fillStyle = fillPattern;
-        // Fill a rectangle that, in the *scaled* coordinate system,
-        // corresponds to the original cssWidth/cssHeight.
-        ctx.fillRect(0, 0, cssWidth / safePatternScaleX, cssHeight / safePatternScaleY);
-      }
-      
+      ctx.fillStyle = cachedPattern;
+      ctx.fillRect(0, 0, cssWidth / safePatternScaleX, cssHeight / safePatternScaleY);
       ctx.restore();
     };
 
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     let animationFrameId: number;
     const loop = () => {
-      // Only update and draw if dimensions are valid
-      if (canvasCssSizeRef.current.width > 0 && canvasCssSizeRef.current.height > 0) {
+      if (
+        !document.hidden &&
+        canvasCssSizeRef.current.width > 0 &&
+        canvasCssSizeRef.current.height > 0
+      ) {
         if (frame % patternRefreshInterval === 0) {
           updatePattern();
           drawGrain();
         }
+        frame++;
       }
-      frame++;
       animationFrameId = window.requestAnimationFrame(loop);
     };
 
     window.addEventListener('resize', resize);
     resize(); // Initial setup: size canvas and draw first frame if needed
-    if (patternRefreshInterval > 0) { // Start loop only if refresh is meaningful
-        loop();
-    } else { // if refresh interval is 0 or less, draw once
-        updatePattern();
-        drawGrain();
+    if (patternRefreshInterval > 0 && !prefersReducedMotion) {
+      loop();
+    } else {
+      updatePattern();
+      drawGrain();
     }
 
     return () => {
