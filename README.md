@@ -49,52 +49,90 @@ Built for **families, households, commuters, fitness enthusiasts, students, and 
 
 ---
 
-## 2. System Architecture
+## 2. System Architecture & Data Flow
+
+### End-to-End System Topology
 
 ```mermaid
 flowchart TD
-    subgraph DATA ["Telemetry & Calibration"]
+    subgraph DATA ["Live Telemetry & Basin Baselines"]
         METEO["Open-Meteo Geocoding, Weather & Air Quality APIs"]
-        BASE["Regional Basin Baselines (city-data.ts)"]
+        BASE["55+ Metro Profiles & Synthetic Hash Fallback (city-data.ts)"]
+        SYNC["useLiveAirSync Hook + Retry & 3m Cache (live-air-service.ts)"]
     end
 
-    subgraph ENGINE ["Core Physics & Security Engine"]
-        INVERSION["Diurnal PBLH Dilution Model"]
-        MASS["Single-Zone Mass-Balance Solver (physics.ts)"]
-        SANCTUARY["Home Sanctuary Envelope (sanctuary-engine.ts)"]
+    subgraph ENGINE ["Client Physics, Calibration & Security Engine"]
+        INVERSION["Diurnal PBLH Dilution Model (physics.ts)"]
+        MASS["Single-Zone Mass-Balance ODE Solver (physics.ts)"]
+        SANCTUARY["Home Sanctuary Envelope & localStorage (sanctuary-engine.ts)"]
         FIREWALL["5-Layer Prompt Firewall & Zod Lock (copilot-firewall.ts)"]
     end
 
-    subgraph EDGE ["Cloudflare Edge Worker (apps/edge-api)"]
+    subgraph UI ["React 19 + TypeScript Client (App.tsx)"]
+        HERO["LandingHero & SmogSimulatorSection"]
+        RADAR["InversionRadar (24h Mixing Curve)"]
+        ROUTINES["DailyRoutineOptimizer (27 Swaps)"]
+        HACKS["IndoorAirHacks ($35 DIY Controls)"]
+        COPILOT["HardenedCopilot (4 Tenant Profiles)"]
+        MODALS["BreathReceiptModal, SanctuaryCalibrationModal, SafeRecessPassModal, SocialShareModal"]
+    end
+
+    subgraph EDGE ["Cloudflare Edge Worker (apps/edge-api/index.ts)"]
         HEALTH["GET /health & /api/v4/health"]
         TENANT["GET /api/v4/tenant/config"]
         QUERY["POST /api/v4/copilot/query"]
+        GEMINI["Google Gemini API (gemini-2.5-flash JSON Mode)"]
     end
 
-    subgraph UI ["React 19 + TypeScript Client"]
-        HERO["LandingHero & SmogSimulatorSection"]
-        RADAR["InversionRadar (24h Chart)"]
-        ROUTINES["DailyRoutineOptimizer & BreathReceiptModal"]
-        HACKS["IndoorAirHacks & SanctuaryCalibrationModal"]
-        PASS["SafeRecessPassModal (Printable Certificate)"]
-    end
+    METEO --> SYNC
+    BASE --> SYNC
+    SYNC --> INVERSION
+    SYNC --> UI
+    SANCTUARY --> MASS
+    MASS --> UI
+    INVERSION --> RADAR
+    ROUTINES --> MODALS
+    HACKS --> MODALS
+    COPILOT --> FIREWALL
+    QUERY --> GEMINI
+    EDGE -.->|"Edge Copilot Endpoint"| COPILOT
+```
 
-    METEO --> INVERSION
-    BASE --> INVERSION
-    INVERSION --> UI
-    MASS --> HACKS
-    SANCTUARY --> HACKS
-    UI --> FIREWALL
-    FIREWALL --> QUERY
-    EDGE --> UI
+### 5-Layer GenAI Firewall & Deterministic Physics Pipeline
+
+```mermaid
+sequenceDiagram
+    actor User as Family / School User
+    participant UI as HardenedCopilot UI
+    participant FW as 5-Layer Firewall (copilot-firewall.ts)
+    participant Edge as Cloudflare Worker (apps/edge-api)
+    participant LLM as Gemini 2.5 Flash (JSON Mode)
+
+    User->>UI: Ask smog / routine question
+    UI->>FW: Raw query + live PM2.5 & tenant context
+    Note over FW: Layer 1: Strip zero-width & HTML, 400-char cap, override/base64 checks
+    Note over FW: Layer 2: Wrap input in randomized XML delimiters
+    FW->>FW: Evaluate deterministic city & physics playbooks
+    Note over Edge,LLM: Edge API path (/api/v4/copilot/query) dispatches to Gemini 2.5 Flash
+    Edge->>LLM: Structured JSON request with schema & canary guard
+    LLM-->>Edge: JSON response
+    FW->>FW: Layer 3-5: Zod schema lock & canary token scrub
+    FW-->>UI: Verified routine advice + verified hack IDs
 ```
 
 ---
 
-## 3. Core Scientific & Practical Features
+## 3. Core Innovation & Scientific Features
+
+### Why ZeroBon Is Different from Generic AQI Apps
+1. **Diurnal Clean-Air Windows Instead of Static Panic**: Generic AQI widgets treat outdoor air as static all day. ZeroBon models nocturnal radiational inversion (<150 m lid) versus midday solar convection (~1,350 m PBLH) to pinpoint exact safe outdoor hours — cutting ground-level $PM_{2.5}$ exposure by up to **74.4%**.
+2. **Personalized Home Sanctuary Physics**: Instead of assuming indoor air equals outdoor air, ZeroBon solves a real-time single-zone mass-balance ODE calibrated to each household's building envelope, floor elevation, room volume, and active DIY interventions.
+3. **Zero-Hallucination Breath Receipts**: The LLM never invents health numbers. Every routine swap and indoor hack computes deterministic counterfactual lung dose ($\mu\text{g}\ PM_{2.5}$), cigarette equivalents spared, and $\text{CO}_2\text{e}$ / $\text{NO}_x$ avoided in TypeScript (`computeBreathReceipt`).
+4. **Defense-in-Depth GenAI Copilot**: Multi-tenant guidance (*Household Family*, *Solo Commuter*, *School Campus*, *Residential RWA*) is protected by a 5-layer anti-hijacking firewall and strict Zod output schema lock.
+5. **Community & School Actionability**: Bridges household behavior with institutional compliance via 1-page printable **Safe Recess Passes** and shareable impact receipts.
 
 ### Diurnal PBLH Dilution Model
-Generic AQI widgets treat outdoor air as static throughout the day. Nocturnal radiative cooling traps vehicle exhaust and biomass soot beneath a shallow inversion lid (~140 m) in the morning, while midday solar convection expands the Planetary Boundary Layer up to ~1,350 m — cutting ground-level particulate concentration by up to **74.4%**.
+Nocturnal radiative cooling traps vehicle exhaust and biomass soot beneath a shallow inversion lid (~140 m) in the morning, while midday solar convection expands the Planetary Boundary Layer up to ~1,350 m — cutting ground-level particulate concentration by up to **74.4%**.
 
 ### Personal Home Sanctuary Mass-Balance Solver
 Models indoor $PM_{2.5}$ concentration dynamically rather than assuming outdoor parity:
@@ -113,7 +151,7 @@ Generates a 1-page printable school protocol ([`SafeRecessPassModal.tsx`](src/co
 
 | Technology | Integration Point | Role in ZeroBon |
 | :--- | :--- | :--- |
-| **Google Gemini API (`gemini-2.5-flash`)** | [`src/engine/copilot-firewall.ts`](src/engine/copilot-firewall.ts) | Structured JSON copilot responses locked to Zod schemas with deterministic fallback playbooks. |
+| **Google Gemini API (`gemini-2.5-flash`)** | [`apps/edge-api/index.ts`](apps/edge-api/index.ts), [`src/engine/copilot-firewall.ts`](src/engine/copilot-firewall.ts) | Structured JSON copilot responses on the edge locked to Zod schemas with deterministic fallback playbooks. |
 | **Google Earth Engine / Copernicus Calibration** | [`src/engine/city-data.ts`](src/engine/city-data.ts) | Regional winter inversion curves and basin baseline parameters. |
 | **Google Chrome Canvas & WebGL2** | [`src/components/ui/GhostFibers.tsx`](src/components/ui/GhostFibers.tsx), [`noisy-gradient-backgrounds.tsx`](src/components/ui/noisy-gradient-backgrounds.tsx) | GPU-accelerated ambient fiber shaders and visibility/reduced-motion-aware 2D noise grain. |
 | **Chrome Accessibility & `axe-core`** | [`src/test/component-a11y-and-security.test.tsx`](src/test/component-a11y-and-security.test.tsx) | Automated WCAG 2.1 AA/AAA verification across mounted components and modals. |
