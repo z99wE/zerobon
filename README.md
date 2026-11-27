@@ -8,7 +8,7 @@
 
 [![Live Cloudflare Deployment](https://img.shields.io/badge/Deployed-Cloudflare%20Pages%20%26%20Edge-533afd?style=flat&logo=cloudflare)](https://zerobon.pages.dev)
 [![GitHub Actions CI](https://github.com/z99wE/zerobon/actions/workflows/ci.yml/badge.svg)](https://github.com/z99wE/zerobon/actions/workflows/ci.yml)
-[![Automated Test Suite](https://img.shields.io/badge/Vitest-83%2F83%20Passing%20(16%20Suites)-533afd?style=flat&logo=vitest)](src/test/)
+[![Automated Test Suite](https://img.shields.io/badge/Vitest-92%2F92%20Passing%20(17%20Suites)-533afd?style=flat&logo=vitest)](src/test/)
 [![Soloknuckle Security & A11y](https://img.shields.io/badge/Soloknuckle-100%2F100%20Security%20%26%20A11y-0d253d?style=flat)](public/_headers)
 [![Accessibility WCAG 2.1 AA](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA%20(axe--core%200%20Violations)-533afd?style=flat)](src/test/component-a11y-and-security.test.tsx)
 [![Google Gemini API](https://img.shields.io/badge/Google%20Gemini-2.5%20Flash%20Structured%20JSON-4285F4?style=flat&logo=google)](https://ai.google.dev/)
@@ -207,7 +207,7 @@ ZeroBon is engineered for total accessibility and assistive device compatibility
 
 ---
 
-## 🧪 7. Automated Test Suite (83/83 Tests Passing)
+## 🧪 7. Automated Test Suite (92/92 Tests Passing)
 
 ```bash
 $ pnpm test -- --run
@@ -227,10 +227,11 @@ $ pnpm test -- --run
  ✓ src/test/a11y.test.ts (5 tests)
  ✓ src/test/security-a11y-audit.test.ts (10 tests)
  ✓ src/test/live-air-intelligence.test.ts (12 tests)
- ✓ src/test/component-a11y-and-security.test.tsx (14 tests)
+ ✓ src/test/component-a11y-and-security.test.tsx (15 tests)
+ ✓ src/test/edge-api-and-interactions.test.tsx (8 tests)
 
- Test Files  16 passed (16)
-      Tests  83 passed (83)
+ Test Files  17 passed (17)
+      Tests  92 passed (92)
 ```
 
 ---
