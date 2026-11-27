@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { useAccessibleModal } from '../hooks/useAccessibleModal';
 
 const FocusHarness: React.FC<{ open: boolean; onClose: () => void }> = ({ open, onClose }) => {
@@ -33,6 +33,43 @@ describe('Modal Focus Management (WCAG 2.4.3)', () => {
     );
 
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'First action' }));
+  });
+
+  it('wraps focus between the last and first controls when Tab is pressed', () => {
+    render(
+      <>
+        <button type="button">Trigger</button>
+        <FocusHarness open onClose={() => undefined} />
+      </>
+    );
+
+    const dialog = screen.getByRole('dialog');
+    const first = screen.getByRole('button', { name: 'First action' });
+    const last = screen.getByRole('button', { name: 'Second action' });
+    // jsdom has no layout, so mark both controls as visible for the trap's filter.
+    for (const button of [first, last]) {
+      Object.defineProperty(button, 'offsetParent', { value: dialog, configurable: true });
+    }
+
+    first.focus();
+    fireEvent.keyDown(window, { key: 'Tab', shiftKey: true });
+    expect(document.activeElement).toBe(last);
+
+    fireEvent.keyDown(window, { key: 'Tab' });
+    expect(document.activeElement).toBe(first);
+  });
+
+  it('calls the close handler when Escape is pressed inside the dialog', () => {
+    const onClose = vi.fn();
+    render(
+      <>
+        <button type="button">Trigger</button>
+        <FocusHarness open onClose={onClose} />
+      </>
+    );
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   it('does not yank focus back to the first button when the parent re-renders', () => {

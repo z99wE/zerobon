@@ -64,6 +64,19 @@ async function check(browserType, browserName, viewport) {
       fullPage: false,
     });
 
+    // Exercise the tabbed views that hold the extracted components.
+    for (const tab of ['Daily Routines', 'Indoor Hacks', 'Air Forecast', 'AI Assistant']) {
+      const button = page.getByRole('button', { name: tab, exact: false }).first();
+      if (await button.count()) {
+        await button.click();
+        await page.waitForTimeout(120);
+      }
+    }
+    await page.screenshot({
+      path: `${OUTPUT_DIR}/${browserName}-${viewport.name}-tabs.png`,
+      fullPage: false,
+    });
+
     return { browser: browserName, viewport: viewport.name, ...audit, consoleErrors, pageErrors };
   } finally {
     await browser.close();

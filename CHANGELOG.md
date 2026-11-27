@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.6.1 (2026-11-28)
+- **Code Quality**: Layered `InversionRadar` into geometry/telemetry/strategy modules and `IndoorAirHacks` into flip-card and blueprint-dialog modules; both parent components roughly halved in size with no visual regression.
+- **Testing**: Added targeted branch tests for physics edges, optical turbulence, base64 guards, edge API routes, modal keyboard traps, and the live-air sync hook (suite: 155 tests across 22 files). Branch coverage rose from ~71% to ~83%.
+- **Browser Verification**: The browser check now clicks through every tab before capturing screenshots.
+
+
 ## v4.6.0 (2026-11-28)
 - **Code Quality**: Split `GhostFibers` into a settings/JSX component, a dedicated WebGL renderer hook, shader module, and explicit settings types; removed the unused duplicate Rust WASM physics crate so the TypeScript engine is the only implementation.
 - **Security**: Removed the invalid `X-Frame-Options` `<meta>` tag from `index.html` that both Chromium and WebKit rejected; the restriction is enforced by the real HTTP header in `public/_headers`.

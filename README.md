@@ -8,7 +8,7 @@
 
 [![Deployed on Cloudflare Pages](https://img.shields.io/badge/Deployed-Cloudflare%20Pages%20%26%20Edge-533afd?style=flat&logo=cloudflare)](https://zerobon.pages.dev)
 [![GitHub Actions CI](https://github.com/z99wE/zerobon/actions/workflows/ci.yml/badge.svg)](https://github.com/z99wE/zerobon/actions/workflows/ci.yml)
-[![Vitest](https://img.shields.io/badge/Vitest-130%2F130%20Passing%20(20%20Suites)-533afd?style=flat&logo=vitest)](src/test/)
+[![Vitest](https://img.shields.io/badge/Vitest-155%2F155%20Passing%20(22%20Suites)-533afd?style=flat&logo=vitest)](src/test/)
 [![WCAG 2.1 AA/AAA](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA%2FAAA%20(0%20Violations)-533afd?style=flat)](src/test/component-a11y-and-security.test.tsx)
 [![License: MIT](https://img.shields.io/badge/License-MIT-0d253d?style=flat)](LICENSE)
 
@@ -36,8 +36,9 @@ pnpm build && pnpm check:browsers
 - **Keyboard-accessible dialogs** — [`useAccessibleModal.ts`](src/hooks/useAccessibleModal.ts) moves focus into a dialog on open, traps Tab within it, and restores focus to the trigger on close.
 - **Layered rendering architecture** — [`GhostFibers`](src/components/ui/GhostFibers.tsx) is now a thin settings/JSX component; WebGL shaders live in [`shaders.ts`](src/components/ui/ghost-fibers/shaders.ts) and the renderer lifecycle (shader compilation, render targets, animation loop, observers, cleanup) lives in [`useGhostFibersRenderer.ts`](src/components/ui/ghost-fibers/useGhostFibersRenderer.ts).
 - **Single physics implementation** — the TypeScript engine in [`physics.ts`](src/engine/physics.ts) is the only source of truth; the unused duplicate Rust WASM crate has been removed.
-- **Coverage reporting** — `pnpm test:coverage` produces text, JSON summary, and HTML reports so untested branches are visible instead of guessed at.
-- **Real-browser verification** — `pnpm check:browsers` builds nothing itself but drives the preview build through Chromium and WebKit at desktop and mobile widths, checking headings, canvas sizing, horizontal overflow, document language, and console/page errors; screenshots are written to `browser-check/`.
+- **Layered feature components** — [`InversionRadar`](src/components/InversionRadar.tsx) now delegates chart geometry, hour telemetry, and strategy cards to [`inversion-radar/`](src/components/inversion-radar/); [`IndoorAirHacks`](src/components/IndoorAirHacks.tsx) delegates flip cards and the blueprint dialog to [`indoor-air-hacks/`](src/components/indoor-air-hacks/).
+- **Coverage reporting** — `pnpm test:coverage` produces text, JSON, JSON summary, and HTML reports so untested branches are visible instead of guessed at.
+- **Real-browser verification** — `pnpm check:browsers` drives the preview build through Chromium and WebKit at desktop and mobile widths, checks headings, canvas sizing, horizontal overflow, document language, and console/page errors, then clicks through every tab before capturing final screenshots in `browser-check/`.
 - **Automated audits on every commit** — [`pnpm verify`](package.json) runs lint, typecheck, the full test suite (including mounted-component `axe-core` accessibility audits and edge API security tests), and a clean production build in [CI](.github/workflows/ci.yml).
 
 ---
@@ -208,7 +209,7 @@ Generates a 1-page printable school protocol ([`SafeRecessPassModal.tsx`](src/co
 
 ## 6. Automated Testing
 
-All **20 test files (130 tests)** pass under Vitest (`pnpm test -- --run`):
+All **22 test files (155 tests)** pass under Vitest (`pnpm test -- --run`):
 - Engine physics, mass-balance stability, and performance benchmarks (`src/engine/__tests__/physics.test.ts`, `src/test/benchmark.test.ts`, `src/test/efficiency-physics.test.ts`)
 - Prompt-injection firewall, tenancy, and Zod schemas (`src/engine/__tests__/copilot-firewall.test.ts`, `tenancy.test.ts`, `sanctuary-engine.test.ts`)
 - Live air telemetry & retry handling (`src/test/live-air-intelligence.test.ts`)
@@ -216,7 +217,9 @@ All **20 test files (130 tests)** pass under Vitest (`pnpm test -- --run`):
 - Edge egress allow-list regression: unverified Gemini `iaq_hack_ids` are stripped before response (`src/test/edge-api-and-interactions.test.tsx`)
 - Boundary and invariant coverage: atmospheric window clamps, city-profile determinism, sanctuary intervention effects, tenancy fallbacks, optical turbidity limits, and mask-dose proportionality (`src/test/engine-boundary-invariants.test.ts`)
 - Shared security primitives and cross-layer consistency between the client firewall and the edge worker (`src/test/shared-security-gates.test.ts`)
-- Modal focus entry and restoration for keyboard users (`src/test/modal-focus-management.test.tsx`)
+- Modal focus entry, Tab wrapping, Escape handling and restoration for keyboard users (`src/test/modal-focus-management.test.tsx`)
+- Edge-case branches in physics, optical turbidity, base64 detection, and the edge API (`src/test/branch-coverage.test.ts`)
+- Live-air sync hook fallback, live update, and manual override paths (`src/test/live-air-sync-hook.test.tsx`)
 
 ---
 

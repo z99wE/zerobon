@@ -1,17 +1,10 @@
 import React, { useState } from 'react';
 import { useAccessibleModal } from '../hooks/useAccessibleModal';
-import { 
-  Share2, 
-  Wrench, 
-  Zap, 
-  ArrowDown,
-  ShieldCheck,
-  RotateCw,
-  Info
-} from 'lucide-react';
+import { Share2, Zap, ArrowDown, ShieldCheck } from 'lucide-react';
 import { BreathReceipt } from '../types';
 import { computeBreathReceipt } from '../engine/physics';
-import { GradientBackground } from './ui/noisy-gradient-backgrounds';
+import { HackFlipCard } from './indoor-air-hacks/HackFlipCard';
+import { DiyBuildModal } from './indoor-air-hacks/DiyBuildModal';
 import { HACK_DETAILS, DIYHackDetail } from '../data/indoor-hacks';
 
 interface IndoorAirHacksProps {
@@ -154,294 +147,26 @@ export const IndoorAirHacks: React.FC<IndoorAirHacksProps> = ({
 
       {/* 4 Interactive Hacks Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {HACK_DETAILS.map((hack) => {
-          const isActive = activeHacks[hack.id];
-          const isFlipped = !!flippedHacks[hack.id];
-
-          return (
-            <div
-              key={hack.id}
-              tabIndex={0}
-              role="region"
-              aria-label={`${hack.title}. Press Enter or Space to flip card.`}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  if ((e.target as HTMLElement).tagName === 'BUTTON') return;
-                  e.preventDefault();
-                  toggleFlip(hack.id);
-                }
-              }}
-              className="relative min-h-[460px] sm:min-h-[440px] rounded-3xl transition-all perspective-1000 group cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#533afd] focus:ring-offset-2"
-              onClick={(e) => {
-                if ((e.target as HTMLElement).closest('button')) return;
-                toggleFlip(hack.id);
-              }}
-            >
-              <div
-                className={`w-full h-full relative transition-transform duration-700 transform-style-3d ${
-                  isFlipped ? 'rotate-y-180' : ''
-                }`}
-              >
-                {/* FRONT FACE */}
-                <div
-                  className={`w-full h-full rounded-3xl p-6 bg-white border flex flex-col justify-between transition-all backface-hidden ${
-                    isActive
-                      ? 'border-[#533afd] shadow-lg ring-1 ring-[#533afd]/30'
-                      : 'border-[#e3e8ee] hover:border-[#533afd]/50 hover:shadow-lg shadow-sm'
-                  }`}
-                >
-                  <div>
-                    {/* Top Row: Badge & Flip & Toggle Switch */}
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className="text-xs font-semibold text-[#533afd]">
-                        {hack.categoryLabel}
-                      </span>
-
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          aria-label={`Flip card to view non-technical tips for ${hack.title}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleFlip(hack.id);
-                          }}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#f6f9fc] hover:bg-[#533afd] text-[#0d253d] hover:text-white text-xs font-semibold border border-[#e3e8ee] transition-all shadow-sm"
-                          title="Click to flip card"
-                        >
-                          <RotateCw className="w-3.5 h-3.5" />
-                          <span>Flip Card</span>
-                        </button>
-
-                        {/* Accessible Brand Toggle Switch */}
-                        <button
-                          role="switch"
-                          aria-checked={isActive}
-                          aria-label={`Toggle ${hack.title}`}
-                          onClick={() => onToggleHack(hack.id)}
-                          className={`relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#533afd] ${
-                            isActive ? 'bg-[#533afd]' : 'bg-[#e3e8ee]'
-                          }`}
-                        >
-                          <span
-                            aria-hidden="true"
-                            className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                              isActive ? 'translate-x-5' : 'translate-x-0'
-                            }`}
-                          />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Title & Performance */}
-                    <h3 className="font-heading-md text-lg text-[#0d253d] mb-1">
-                      {hack.title}
-                    </h3>
-                    <div className="flex items-center gap-2 mb-3 text-xs">
-                      <span className="font-semibold text-[#0d253d]">
-                        {hack.effectLabel}
-                      </span>
-                      <span className="text-[#a8c3de]">•</span>
-                      <span className="text-[#475569]">{hack.costEst}</span>
-                    </div>
-
-                    <p className="font-body-md text-xs text-[#475569] leading-relaxed mb-4">
-                      {hack.description}
-                    </p>
-
-                    {/* Materials Mini-Pill Tags */}
-                    <div className="flex flex-wrap gap-1.5 mb-5">
-                      {hack.materials.slice(0, 2).map((mat, i) => (
-                        <span
-                          key={i}
-                          className="px-2.5 py-1 rounded-lg bg-[#f6f9fc] text-[10px] text-[#475569] border border-[#e3e8ee]"
-                        >
-                          {mat}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Footer Actions */}
-                  <div className="flex items-center justify-between gap-3 pt-3 border-t border-[#e3e8ee]">
-                    <button
-                      type="button"
-                      aria-label={`View DIY build blueprint for ${hack.title}`}
-                      onClick={() => setSelectedHackModal(hack)}
-                      className="flex items-center gap-1.5 text-xs text-[#533afd] font-semibold hover:underline focus:outline-none focus:ring-1 focus:ring-[#533afd] rounded"
-                    >
-                      <Wrench className="w-3.5 h-3.5" />
-                      <span>Build Blueprint</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      aria-label={`Calculate breath receipt for ${hack.title}`}
-                      onClick={() => handleCreateReceiptForHack(hack)}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#0d253d] text-xs font-medium border border-[#e3e8ee] transition-all"
-                    >
-                      <Zap className="w-3 h-3 text-[#533afd]" />
-                      <span>Receipt</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* BACK FACE (Styled with Noisy Gradient Background) */}
-                <div
-                  className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden border border-[#533afd]/40 shadow-xl backface-hidden rotate-y-180"
-                >
-                  <GradientBackground
-                    className="w-full h-full p-6 text-white flex flex-col justify-between"
-                    gradientType="linear-gradient"
-                    gradientOrigin="top-left"
-                    noiseIntensity={0.5}
-                    noisePatternAlpha={25}
-                    noisePatternSize={80}
-                    noisePatternRefreshInterval={2}
-                  >
-                    <div>
-                      {/* Back Header */}
-                      <div className="flex items-center justify-between pb-3 border-b border-white/15 mb-3">
-                        <div className="flex items-center gap-2">
-                          <span className="w-2.5 h-2.5 rounded-full bg-[#533afd] ring-2 ring-white/60 animate-pulse" />
-                          <span className="text-xs font-semibold tracking-wide uppercase text-white/95">
-                            Household Sanctuary Tip
-                          </span>
-                        </div>
-                        <button
-                          type="button"
-                          aria-label="Flip back to front face"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleFlip(hack.id);
-                          }}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 hover:bg-white text-white hover:text-[#0d253d] text-xs font-semibold border border-white/30 transition-all backdrop-blur-sm shadow-sm"
-                        >
-                          <RotateCw className="w-3.5 h-3.5" />
-                          <span>Flip Back</span>
-                        </button>
-                      </div>
-
-                      <h4 className="font-heading-md text-lg text-white font-bold mb-2">
-                        {hack.title}
-                      </h4>
-
-                      {/* Plain Non-Technical D2C Insights */}
-                      <div className="space-y-2.5 text-xs leading-relaxed">
-                        <div className="p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
-                          <span className="font-semibold text-white/90 block mb-0.5">Why it matters:</span>
-                          <p className="text-white/80">{hack.humanExplanation}</p>
-                        </div>
-
-                        <div className="p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
-                          <span className="font-semibold text-white/90 block mb-0.5">Everyday Family Routine:</span>
-                          <p className="text-white/80">
-                            {hack.id === 'corsiRosenthal'
-                              ? 'Run continuously on medium speed in bedrooms overnight. Uses less power than a 40W lightbulb while scrubbing 85% of soot.'
-                              : hack.id === 'draftSealing'
-                              ? 'Stops cold outdoor smog from whistling under doors. Keeps warm indoor air trapped and clean air in.'
-                              : hack.id === 'kitchenExhaust'
-                              ? 'Flipping the vent switch before you cook prevents invisible frying fumes from settling into living room rugs.'
-                              : 'Crack windows wide for 15 minutes between 12:00 PM and 3:00 PM to bring in fresh oxygen, then close tightly before sunset.'}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Back Bottom Button */}
-                    <div className="pt-3 border-t border-white/15 flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-1 text-[11px] text-white/90">
-                        <Info className="w-3.5 h-3.5 text-white/90" />
-                        <span>Actionable home sanctuary hack</span>
-                      </div>
-                      <button
-                        type="button"
-                        aria-label={`Toggle ${hack.title} and flip back`}
-                        onClick={() => {
-                          onToggleHack(hack.id);
-                          toggleFlip(hack.id);
-                        }}
-                        className="px-4 py-1.5 rounded-full bg-white text-[#0d253d] font-semibold text-xs hover:bg-white/90 transition-all shadow-sm"
-                      >
-                        {isActive ? 'Turn Off & Flip' : 'Activate & Flip'}
-                      </button>
-                    </div>
-                  </GradientBackground>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        {HACK_DETAILS.map((hack) => (
+          <HackFlipCard
+            key={hack.id}
+            hack={hack}
+            isActive={!!activeHacks[hack.id]}
+            isFlipped={!!flippedHacks[hack.id]}
+            onToggleFlip={toggleFlip}
+            onToggleHack={onToggleHack}
+            onOpenBlueprint={setSelectedHackModal}
+            onCreateReceipt={handleCreateReceiptForHack}
+          />
+        ))}
       </div>
 
-      {/* DIY Build Instructions Modal */}
       {selectedHackModal && (
-        <div
-          ref={modalRef}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="diy-modal-title"
-          onMouseDown={(e) => {
-            if (e.target === e.currentTarget) setSelectedHackModal(null);
-          }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0d253d]/60 backdrop-blur-sm animate-fadeIn"
-        >
-          <div className="relative w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 border border-[#e3e8ee] shadow-2xl max-h-[90vh] overflow-y-auto">
-            <button
-              autoFocus
-              onClick={() => setSelectedHackModal(null)}
-              aria-label="Close DIY Guide (or press Escape)"
-              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#f6f9fc] hover:bg-[#e3e8ee] text-[#475569] flex items-center justify-center text-xs focus:outline-none focus:ring-2 focus:ring-[#533afd]"
-            >
-              ✕
-            </button>
-
-            <span className="text-xs font-semibold text-[#533afd] block mb-1">DIY Assembly Blueprint</span>
-
-            <h3 id="diy-modal-title" className="font-heading-lg text-xl text-[#0d253d] mb-1">
-              {selectedHackModal.title}
-            </h3>
-            <p className="text-xs text-[#475569] mb-4">
-              Estimated Cost: {selectedHackModal.costEst} • Performance: {selectedHackModal.effectLabel}
-            </p>
-
-            {/* Materials List */}
-            <div className="p-4 rounded-2xl bg-[#f6f9fc] border border-[#e3e8ee] mb-4">
-              <span className="text-xs font-bold text-[#0d253d] block mb-2">Materials & Supplies:</span>
-              <ul className="space-y-1.5 text-xs text-[#475569]">
-                {selectedHackModal.materials.map((m, idx) => (
-                  <li key={idx} className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#533afd]" />
-                    <span>{m}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Assembly Steps */}
-            <div className="space-y-3 mb-6">
-              <span className="text-xs font-bold text-[#0d253d] block">Step-by-Step Instructions:</span>
-              {selectedHackModal.steps.map((st, idx) => (
-                <div key={idx} className="flex items-start gap-2.5 text-xs text-[#273951]">
-                  <span className="w-5 h-5 rounded-full bg-[#533afd]/10 text-[#533afd] font-bold flex items-center justify-center flex-shrink-0 text-[11px]">
-                    {idx + 1}
-                  </span>
-                  <p className="pt-0.5">{st}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex items-center justify-end gap-2">
-              <button
-                type="button"
-                aria-label="Close DIY assembly guide"
-                onClick={() => setSelectedHackModal(null)}
-                className="px-5 py-2.5 rounded-full bg-[#533afd] text-white text-xs font-medium hover:bg-[#432ec9] transition-all"
-              >
-                Done
-              </button>
-            </div>
-          </div>
-        </div>
+        <DiyBuildModal
+          hack={selectedHackModal}
+          dialogRef={modalRef}
+          onClose={() => setSelectedHackModal(null)}
+        />
       )}
     </section>
   );
