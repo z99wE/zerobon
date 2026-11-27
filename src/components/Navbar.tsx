@@ -80,11 +80,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="relative">
             <button
               type="button"
+              aria-label={`Current city ${selectedCity}. Click to change city.`}
               aria-expanded={isCitySearchOpen}
               aria-haspopup="dialog"
               onClick={() => setIsCitySearchOpen(!isCitySearchOpen)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#f6f9fc] hover:bg-[#e3e8ee] border border-[#e3e8ee] text-xs font-medium text-[#0d253d] transition-all focus:ring-2 focus:ring-[#533afd]"
-              aria-label={`Current city ${selectedCity}. Click to change city.`}
             >
               <MapPin className="w-3.5 h-3.5 text-[#533afd]" />
               <span className="max-w-[120px] truncate">{selectedCity}</span>

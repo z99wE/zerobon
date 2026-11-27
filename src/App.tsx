@@ -38,6 +38,7 @@ import {
   calculateCalibratedPhysics
 } from './engine/sanctuary-engine';
 import { useLiveAirSync } from './hooks/useLiveAirSync';
+import { FEATURE_FLAGS } from './config/feature-flags';
 import { BreathReceipt } from './types';
 
 export const App: React.FC = () => {
@@ -314,7 +315,7 @@ export const App: React.FC = () => {
           )}
 
           {/* Tab 4: GenAI Clean Air Assistant */}
-          {activeTab === 'copilot' && (
+          {FEATURE_FLAGS.hardenedCopilot && activeTab === 'copilot' && (
             <ErrorBoundary>
               <HardenedCopilot 
                 indoorPm25={indoorPm25} 
@@ -351,8 +352,8 @@ export const App: React.FC = () => {
           />
         )}
 
-        {/* Retention Moat: Personal Home Sanctuary Calibration Modal */}
-        {showSanctuaryModal && (
+        {/* Personal Home Sanctuary Calibration Modal */}
+        {FEATURE_FLAGS.sanctuaryCalibration && showSanctuaryModal && (
           <SanctuaryCalibrationModal
             currentProfile={sanctuaryProfile}
             outdoorPm25={outdoorPm25}
@@ -361,8 +362,8 @@ export const App: React.FC = () => {
           />
         )}
 
-        {/* Institutional Moat: Safe Recess Pass Printable Certificate Modal */}
-        {showRecessModal && (
+        {/* Institutional Safe Recess Pass Printable Certificate Modal */}
+        {FEATURE_FLAGS.safeRecessPassPdf && showRecessModal && (
           <SafeRecessPassModal
             cityName={selectedCity}
             outdoorPm25={outdoorPm25}

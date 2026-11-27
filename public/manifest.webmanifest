@@ -1,0 +1,17 @@
+{
+  "name": "ZeroBon — Clean Air Atmospheric Infrastructure",
+  "short_name": "ZeroBon",
+  "description": "AI-powered atmospheric defense for families and communities navigating severe winter smog and urban air pollution.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#533afd",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23533afd'/><circle cx='50' cy='50' r='20' fill='%23ffffff'/></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

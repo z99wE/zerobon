@@ -143,6 +143,18 @@ export default {
       }
     }
 
+    // Route: GET /health
+    if (url.pathname === '/health' || url.pathname === '/api/v4/health') {
+      return new Response(
+        JSON.stringify({
+          status: 'ok',
+          service: 'zerobon-edge-api',
+          timestamp: new Date().toISOString(),
+        }),
+        { headers: secureHeaders }
+      );
+    }
+
     // Route: GET /api/v4/tenant/config
     if (url.pathname === '/api/v4/tenant/config') {
       return new Response(

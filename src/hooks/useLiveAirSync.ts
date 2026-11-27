@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { fetchLiveAirQuality, LiveAirReading } from '../engine/live-air-service';
+import { FEATURE_FLAGS } from '../config/feature-flags';
 
 interface UseLiveAirSyncResult {
   liveReading: LiveAirReading | null;
@@ -23,6 +24,7 @@ export function useLiveAirSync(
 
   const performSync = useCallback(
     async (isCancelled?: () => boolean) => {
+      if (!FEATURE_FLAGS.liveOpenMeteoSync) return;
       setIsLiveSyncing(true);
       try {
         const reading = await fetchLiveAirQuality(selectedCity);

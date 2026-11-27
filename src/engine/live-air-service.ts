@@ -34,6 +34,35 @@ function sanitizeCityQuery(cityName: string): string {
   return cityName.replace(/[<>{}[\]\\;`]/g, '').trim().slice(0, 64);
 }
 
+/**
+ * Resilient fetch with bounded exponential backoff retry on transient network/5xx errors.
+ */
+async function fetchWithRetry(
+  url: string,
+  options?: RequestInit,
+  retries = 1,
+  baseDelayMs = 250
+): Promise<Response> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url, options);
+      if (res.ok || res.status < 500 || attempt === retries) {
+        return res;
+      }
+      lastError = new Error(`HTTP ${res.status}`);
+    } catch (err) {
+      lastError = err;
+      if (attempt === retries || options?.signal?.aborted) {
+        throw err;
+      }
+    }
+    const backoff = baseDelayMs * Math.pow(2, attempt);
+    await new Promise((resolve) => setTimeout(resolve, backoff));
+  }
+  throw lastError instanceof Error ? lastError : new Error('Request failed after retries');
+}
+
 export interface LiveAirReading {
   cityName: string;
   country?: string;
@@ -273,8 +302,8 @@ export async function fetchLiveAirQuality(cityName: string): Promise<LiveAirRead
     const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m`;
 
     const [airRes, weatherRes] = await Promise.all([
-      fetch(airUrl, { signal: controller.signal }),
-      fetch(weatherUrl, { signal: controller.signal }).catch(() => null),
+      fetchWithRetry(airUrl, { signal: controller.signal }),
+      fetchWithRetry(weatherUrl, { signal: controller.signal }).catch(() => null),
     ]);
 
     clearTimeout(timeoutId);
