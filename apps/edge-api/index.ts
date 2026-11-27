@@ -5,6 +5,7 @@
 import { isVerifiedHackId } from '../../src/shared/verified-hack-ids';
 import {
   MAX_COPILOT_QUERY_LENGTH,
+  createCopilotDelimiters,
   detectInstructionOverride,
   sanitizeCopilotQuery,
 } from '../../src/shared/copilot-security';
@@ -200,8 +201,8 @@ export default {
         }
 
         // LAYER 2: Cryptographically Random Tag Delimiters
-        const randId = crypto.randomUUID().slice(0, 8);
-        const delimited = `<untrusted_query_${randId}>${sanitized}</untrusted_query_${randId}>`;
+        const { startTag, endTag } = createCopilotDelimiters();
+        const delimited = `${startTag}${sanitized}${endTag}`;
 
         // LAYER 3 & 4: Model Execution in Strict JSON Mode
         let structuredResult: Record<string, unknown> = {

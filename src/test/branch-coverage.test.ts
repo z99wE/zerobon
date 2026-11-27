@@ -168,6 +168,31 @@ describe('Edge API Remaining Branches', () => {
     vi.unstubAllGlobals();
   });
 
+  it('strips HTML markup from the query before it reaches the model', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          candidates: [{ content: { parts: [{ text: JSON.stringify({
+            intent_valid: true, routine_advice: ['ok'], iaq_hack_ids: [], pet_animation_state: 'calm',
+          }) }] } }],
+        }),
+        { status: 200 }
+      )
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    await postQuery('<script>alert(1)</script>best air hack', { GEMINI_API_KEY: 'test-key' });
+
+    const geminiCall = fetchMock.mock.calls.find(([url]) =>
+      String(url).includes('generativelanguage.googleapis.com')
+    );
+    expect(geminiCall).toBeDefined();
+    const body = JSON.parse(geminiCall![1].body);
+    expect(JSON.stringify(body)).not.toContain('<script>');
+    expect(body.contents[0].parts[0].text).toContain('best air hack');
+    vi.unstubAllGlobals();
+  });
+
   it('masks malformed Gemini JSON as an internal error', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({
       candidates: [{ content: { parts: [{ text: '{not-json' }] } }],

@@ -282,7 +282,7 @@ async function parseWeatherTelemetry(
  * (100% free, zero cost, no API keys, client-side execution).
  * Dynamically resolves coordinates for ANY city in the world.
  */
-export async function fetchLiveAirQuality(cityName: string): Promise<LiveAirReading> {
+async function fetchLiveAirQualityUncached(cityName: string): Promise<LiveAirReading> {
   const profile = getCityProfile(cityName);
   const now = Date.now();
 
@@ -373,4 +373,26 @@ export async function fetchLiveAirQuality(cityName: string): Promise<LiveAirRead
 
     return fallbackReading;
   }
+}
+
+// Concurrent callers for the same city share one in-flight network request.
+const inFlight = new Map<string, Promise<LiveAirReading>>();
+
+/**
+ * Returns cached telemetry when fresh, otherwise performs one shared fetch.
+ */
+export function fetchLiveAirQuality(cityName: string): Promise<LiveAirReading> {
+  const cached = cache.get(cityName);
+  if (cached && cached.expiresAt > Date.now()) {
+    return Promise.resolve(cached.data);
+  }
+
+  const pending = inFlight.get(cityName);
+  if (pending) return pending;
+
+  const request = fetchLiveAirQualityUncached(cityName).finally(() => {
+    inFlight.delete(cityName);
+  });
+  inFlight.set(cityName, request);
+  return request;
 }

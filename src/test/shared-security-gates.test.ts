@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import {
   MAX_COPILOT_QUERY_LENGTH,
   CANARY_SECRET_TOKEN,
+  createCopilotDelimiters,
   sanitizeCopilotQuery,
   detectInstructionOverride,
   looksLikeBase64Smuggle,
@@ -58,6 +59,14 @@ describe('Shared Copilot Security Primitives', () => {
   it('detects a raw base64 smuggling blob but not ordinary prose', () => {
     expect(looksLikeBase64Smuggle('A'.repeat(64))).toBe(true);
     expect(looksLikeBase64Smuggle('This is a perfectly normal question about winter smog.')).toBe(false);
+  });
+
+  it('generates unique CSPRNG delimiters that cannot be guessed by an injected payload', () => {
+    const first = createCopilotDelimiters();
+    const second = createCopilotDelimiters();
+    expect(first.startTag).toMatch(/^<untrusted_query_[0-9a-f]{12}>$/);
+    expect(first.endTag).toBe(`</${first.startTag.slice(1, -1)}>`);
+    expect(first.startTag).not.toBe(second.startTag);
   });
 
   it('blocks the same hostile query in both the client firewall and the edge worker', async () => {

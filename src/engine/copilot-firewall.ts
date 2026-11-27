@@ -2,6 +2,7 @@ import { CopilotResponse, CopilotResponseSchema, SecurityFirewallReport, VERIFIE
 import { getCityProfile } from './city-data';
 import {
   CANARY_SECRET_TOKEN,
+  createCopilotDelimiters,
   detectInstructionOverride,
   looksLikeBase64Smuggle,
   mentionsCanary,
@@ -31,9 +32,7 @@ export async function executeHardenedCopilotPipeline(
   context: CopilotExecutionContext
 ): Promise<{ response: CopilotResponse; report: SecurityFirewallReport }> {
   const timestamp = new Date().toISOString();
-  const randTagId = Math.random().toString(36).substring(2, 8);
-  const startTag = `<untrusted_query_${randTagId}>`;
-  const endTag = `</untrusted_query_${randTagId}>`;
+  const { startTag, endTag } = createCopilotDelimiters();
 
   // Layer 1: Pre-Inference Input Firewall (shared with the edge worker)
   const { sanitized, lengthWithinLimit } = sanitizeCopilotQuery(rawInput);

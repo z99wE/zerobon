@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.6.2 (2026-11-28)
+- **Security**: Replaced predictable `Math.random()` prompt delimiters with shared `crypto.randomUUID()`-based delimiters in both the client firewall and edge worker; added a regression test for delimiter uniqueness and shape.
+- **Efficiency**: Deduplicated concurrent `fetchLiveAirQuality` calls for the same city and removed the unused `three` dependency, its unreferenced builder module, and its build config entry.
+- **Code Quality**: Extracted the routine flip card from `DailyRoutineOptimizer` into a focused module (component reduced from 434 to 222 lines).
+- **Testing**: Added request-dedup, cache-reuse, and edge HTML-stripping tests; suite remains at 155 tests across 22 files.
+
+
 ## v4.6.1 (2026-11-28)
 - **Code Quality**: Layered `InversionRadar` into geometry/telemetry/strategy modules and `IndoorAirHacks` into flip-card and blueprint-dialog modules; both parent components roughly halved in size with no visual regression.
 - **Testing**: Added targeted branch tests for physics edges, optical turbulence, base64 guards, edge API routes, modal keyboard traps, and the live-air sync hook (suite: 155 tests across 22 files). Branch coverage rose from ~71% to ~83%.

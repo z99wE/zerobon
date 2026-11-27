@@ -66,3 +66,16 @@ export function mentionsCanary(text: string): boolean {
   const lower = text.toLowerCase();
   return lower.includes('canary') || lower.includes('zerobon_sec');
 }
+
+/**
+ * Creates cryptographically random XML delimiters for untrusted model input.
+ * A predictable tag can be guessed and closed by an injected payload, so both
+ * the client firewall and the edge worker use CSPRNG-generated tags.
+ */
+export function createCopilotDelimiters(): { startTag: string; endTag: string } {
+  const id = crypto.randomUUID().replace(/-/g, '').slice(0, 12);
+  return {
+    startTag: `<untrusted_query_${id}>`,
+    endTag: `</untrusted_query_${id}>`,
+  };
+}
