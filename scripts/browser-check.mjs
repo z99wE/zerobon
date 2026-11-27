@@ -56,6 +56,10 @@ async function check(browserType, browserName, viewport) {
         canvasCount: canvases.length,
         canvasesSized: canvases.every((c) => c.width > 0 && c.height > 0),
         lang: document.documentElement.lang,
+        loadMs: Math.round(performance.getEntriesByType('navigation')[0]?.loadEventEnd ?? 0),
+        domReadyMs: Math.round(
+          performance.getEntriesByType('navigation')[0]?.domContentLoadedEventEnd ?? 0
+        ),
       };
     });
 
@@ -63,6 +67,30 @@ async function check(browserType, browserName, viewport) {
       path: `${OUTPUT_DIR}/${browserName}-${viewport.name}.png`,
       fullPage: false,
     });
+
+    // End-to-end behaviour: hero CTA -> routines -> receipt dialog -> dismissal.
+    const e2e = { adoptedNavigation: false, receiptDialog: false, dismissed: false };
+    await page.getByRole('button', { name: /adopt low-emission daily routines/i }).first().click();
+    const routinesHeading = page.getByRole('heading', { name: /daily routine optimizer/i });
+    e2e.adoptedNavigation = await routinesHeading
+      .waitFor({ state: 'visible', timeout: 8000 })
+      .then(() => true)
+      .catch(() => false);
+
+    await page.getByRole('button', { name: /^Adopt .* routine$/i }).first().click();
+    const dialog = page.getByRole('dialog');
+    e2e.receiptDialog = await dialog
+      .waitFor({ state: 'visible', timeout: 8000 })
+      .then(() => true)
+      .catch(() => false);
+    await page.keyboard.press('Escape');
+    e2e.dismissed = await dialog
+      .waitFor({ state: 'hidden', timeout: 8000 })
+      .then(() => true)
+      .catch(() => false);
+
+    // Reset to a clean page before exercising the tabbed views.
+    await page.reload({ waitUntil: 'networkidle' });
 
     // Exercise the tabbed views that hold the extracted components.
     for (const tab of ['Daily Routines', 'Indoor Hacks', 'Air Forecast', 'AI Assistant']) {
@@ -77,7 +105,7 @@ async function check(browserType, browserName, viewport) {
       fullPage: false,
     });
 
-    return { browser: browserName, viewport: viewport.name, ...audit, consoleErrors, pageErrors };
+    return { browser: browserName, viewport: viewport.name, ...audit, e2e, consoleErrors, pageErrors };
   } finally {
     await browser.close();
   }
@@ -111,11 +139,14 @@ try {
       !r.horizontalOverflow &&
       r.canvasesSized &&
       r.lang.length > 0 &&
+      r.e2e.adoptedNavigation &&
+      r.e2e.receiptDialog &&
+      r.e2e.dismissed &&
       r.consoleErrors.length === 0 &&
       r.pageErrors.length === 0;
     if (!ok) failed = true;
     console.log(
-      `${ok ? 'PASS' : 'FAIL'} ${r.browser}/${r.viewport} | heading="${r.heading}" | canvases=${r.canvasCount} | overflow=${r.horizontalOverflow} | consoleErrors=${r.consoleErrors.length} | pageErrors=${r.pageErrors.length}`
+      `${ok ? 'PASS' : 'FAIL'} ${r.browser}/${r.viewport} | load=${r.loadMs}ms | domReady=${r.domReadyMs}ms | e2e=${JSON.stringify(r.e2e)} | canvases=${r.canvasCount} | overflow=${r.horizontalOverflow} | consoleErrors=${r.consoleErrors.length} | pageErrors=${r.pageErrors.length}`
     );
     for (const err of [...r.consoleErrors, ...r.pageErrors]) console.log(`   ${err}`);
   }

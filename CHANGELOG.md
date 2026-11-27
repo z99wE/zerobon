@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.6.4 (2026-11-28)
+- **Correctness**: `InversionRadar` was rendering a 700 m peak for cities whose baseline inversion is low while the UI claims 1,350 m of solar mixing. The forecast now receives the explicit solar-mixing ceiling; covered by a rendering regression test.
+- **Testing**: Browser check now records load/DOM-ready timings and runs end-to-end interactions (adopt a routine, open and dismiss the receipt dialog) across Chromium/WebKit at desktop and mobile widths (suite: 172 tests across 25 files).
+
+
 ## v4.6.3 (2026-11-28)
 - **Testing**: Added coverage-gap suites for tenant rules, telemetry fallbacks, profile validation, optical thresholds, feature-flag-off behavior, and focus edge cases (suite: 171 tests across 24 files). Coverage is ~95% statements and ~87% branches.
 - **Verification**: Lighthouse on the deployed site reports Accessibility, Best Practices, and SEO at 100.

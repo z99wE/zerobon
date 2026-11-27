@@ -8,7 +8,7 @@
 
 [![Deployed on Cloudflare Pages](https://img.shields.io/badge/Deployed-Cloudflare%20Pages%20%26%20Edge-533afd?style=flat&logo=cloudflare)](https://zerobon.pages.dev)
 [![GitHub Actions CI](https://github.com/z99wE/zerobon/actions/workflows/ci.yml/badge.svg)](https://github.com/z99wE/zerobon/actions/workflows/ci.yml)
-[![Vitest](https://img.shields.io/badge/Vitest-171%2F171%20Passing%20(24%20Suites)-533afd?style=flat&logo=vitest)](src/test/)
+[![Vitest](https://img.shields.io/badge/Vitest-172%2F172%20Passing%20(25%20Suites)-533afd?style=flat&logo=vitest)](src/test/)
 [![WCAG 2.1 AA/AAA](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA%2FAAA%20(0%20Violations)-533afd?style=flat)](src/test/component-a11y-and-security.test.tsx)
 [![License: MIT](https://img.shields.io/badge/License-MIT-0d253d?style=flat)](LICENSE)
 
@@ -41,7 +41,7 @@ pnpm build && pnpm check:browsers
 - **Shared network requests** — [`live-air-service.ts`](src/engine/live-air-service.ts) deduplicates concurrent fetches for the same city and keeps the short-TTL cache, so repeated tabs never double the API calls.
 - **No dead dependencies** — the unused `three` package and its unreferenced builder module were removed from the app, dependencies, lockfile and build config.
 - **Coverage reporting** — `pnpm test:coverage` produces text, JSON, JSON summary, and HTML reports so untested branches are visible instead of guessed at.
-- **Real-browser verification** — `pnpm check:browsers` drives the preview build through Chromium and WebKit at desktop and mobile widths, checks headings, canvas sizing, horizontal overflow, document language, and console/page errors, then clicks through every tab before capturing final screenshots in `browser-check/`.
+- **Real-browser verification** — `pnpm check:browsers` drives Chromium and WebKit at desktop and mobile widths, checking headings, canvas sizing, overflow, document language, console/page errors, and load timings. It also runs end-to-end interactions (hero CTA → routine adoption → receipt dialog → Escape dismissal) before clicking through every tab and capturing screenshots in `browser-check/`.
 - **Automated audits on every commit** — [`pnpm verify`](package.json) runs lint, typecheck, the full test suite (including mounted-component `axe-core` accessibility audits and edge API security tests), and a clean production build in [CI](.github/workflows/ci.yml).
 
 ---
@@ -212,7 +212,7 @@ Generates a 1-page printable school protocol ([`SafeRecessPassModal.tsx`](src/co
 
 ## 6. Automated Testing
 
-All **24 test files (171 tests)** pass under Vitest (`pnpm test -- --run`):
+All **25 test files (172 tests)** pass under Vitest (`pnpm test -- --run`):
 - Engine physics, mass-balance stability, and performance benchmarks (`src/engine/__tests__/physics.test.ts`, `src/test/benchmark.test.ts`, `src/test/efficiency-physics.test.ts`)
 - Prompt-injection firewall, tenancy, and Zod schemas (`src/engine/__tests__/copilot-firewall.test.ts`, `tenancy.test.ts`, `sanctuary-engine.test.ts`)
 - Live air telemetry & retry handling (`src/test/live-air-intelligence.test.ts`)

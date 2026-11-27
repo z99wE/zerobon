@@ -2,6 +2,9 @@ import { MassBalanceParams, InhaledDoseParams, BreathReceipt, HourlyAtmosphericF
 
 export const CIGARETTE_EQUIVALENT_PM25_UG = 22.0;
 
+/** Physical ceiling of the solar-mixed boundary layer used by the forecast chart. */
+export const SOLAR_MIXING_CEILING_METERS = 1350;
+
 export const DEFAULT_PHYSICS_PARAMS: MassBalanceParams = {
   p_penetration: 0.78,    // Typical residential window/wall penetration factor
   lambda_ach: 0.85,       // Baseline air exchange rate (h^-1)

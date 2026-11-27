@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { generate24HourAtmosphericForecast } from '../engine/physics';
+import { generate24HourAtmosphericForecast, SOLAR_MIXING_CEILING_METERS } from '../engine/physics';
 import { getCityProfile, CityAirProfile } from '../engine/city-data';
 import { HourlyAtmosphericForecast } from '../types';
 import { Sun } from 'lucide-react';
@@ -29,10 +29,10 @@ export const InversionRadar: React.FC<InversionRadarProps> = ({
     return generate24HourAtmosphericForecast(
       outdoorPm25,
       profile.terrainType,
-      profile.pblHeightMeters,
+      SOLAR_MIXING_CEILING_METERS,
       profile.temperatureC
     );
-  }, [outdoorPm25, profile.terrainType, profile.pblHeightMeters, profile.temperatureC]);
+  }, [outdoorPm25, profile.terrainType, profile.temperatureC]);
   
   // Real-time atmospheric selection: syncs to current local hour and updates dynamically when forecast changes
   const initialHourKey = useMemo(() => {
