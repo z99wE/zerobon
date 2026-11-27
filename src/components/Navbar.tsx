@@ -113,6 +113,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {isCitySearchOpen && (
               <div
                 role="dialog"
+                aria-modal="true"
                 aria-label="Select city or neighborhood"
                 onKeyDown={(e) => {
                   if (e.key === 'Escape') setIsCitySearchOpen(false);

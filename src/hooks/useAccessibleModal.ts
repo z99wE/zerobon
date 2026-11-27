@@ -16,6 +16,13 @@ export function useAccessibleModal(isOpen: boolean, onClose: () => void) {
     if (!isOpen) return;
     const previousFocus = document.activeElement as HTMLElement | null;
 
+    // WCAG 2.4.3: move focus into the dialog so keyboard and screen-reader
+    // users land inside it instead of remaining on the background page.
+    const container = containerRef.current;
+    if (container && !container.contains(document.activeElement)) {
+      container.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)?.focus();
+    }
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.stopPropagation();

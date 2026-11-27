@@ -1,4 +1,7 @@
 import { z } from 'zod';
+import { VERIFIED_HACK_IDS } from '../shared/verified-hack-ids';
+
+export { VERIFIED_HACK_IDS, type VerifiedHackId } from '../shared/verified-hack-ids';
 
 export type TenantRole = 'household_member' | 'tenant_admin';
 
@@ -87,15 +90,7 @@ export interface H3NeighborDome {
 }
 
 // 5-Layer Copilot Schema (Strict Zod validation)
-export const VERIFIED_HACK_IDS = [
-  'corsi_rosenthal_box',
-  'kitchen_exhaust_purge',
-  'magnetic_draft_stopper',
-  'midday_window_airing',
-  'n95_active_commute',
-  'induction_cook_swap',
-] as const;
-
+// VERIFIED_HACK_IDS is imported from the shared canonical module above.
 export const CopilotResponseSchema = z.object({
   intent_valid: z.boolean(),
   routine_advice: z.array(z.string().max(500)).max(5),

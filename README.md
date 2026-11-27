@@ -8,9 +8,28 @@
 
 [![Deployed on Cloudflare Pages](https://img.shields.io/badge/Deployed-Cloudflare%20Pages%20%26%20Edge-533afd?style=flat&logo=cloudflare)](https://zerobon.pages.dev)
 [![GitHub Actions CI](https://github.com/z99wE/zerobon/actions/workflows/ci.yml/badge.svg)](https://github.com/z99wE/zerobon/actions/workflows/ci.yml)
-[![Vitest](https://img.shields.io/badge/Vitest-92%2F92%20Passing%20(17%20Suites)-533afd?style=flat&logo=vitest)](src/test/)
+[![Vitest](https://img.shields.io/badge/Vitest-130%2F130%20Passing%20(20%20Suites)-533afd?style=flat&logo=vitest)](src/test/)
 [![WCAG 2.1 AA/AAA](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA%2FAAA%20(0%20Violations)-533afd?style=flat)](src/test/component-a11y-and-security.test.tsx)
 [![License: MIT](https://img.shields.io/badge/License-MIT-0d253d?style=flat)](LICENSE)
+
+---
+
+## Engineering Rigor
+
+Quality is enforced by tooling rather than asserted in prose. Every change must clear the same gate locally and in CI:
+
+```bash
+pnpm verify
+# lint → strict typecheck → full test suite → production build
+```
+
+- **Strict TypeScript across the whole codebase** — [`tsconfig.json`](tsconfig.json) type-checks the React client **and** the Cloudflare edge worker under `strict`, `noUnusedLocals`, and `noUnusedParameters`.
+- **Shared security primitives** — [`copilot-security.ts`](src/shared/copilot-security.ts) is the single implementation of input sanitisation, override detection, canary checks, and base64-smuggling detection used by both the in-browser firewall and the edge worker, so an attack cannot be blocked in one layer and pass through the other.
+- **One source of truth for safety-critical constants** — [`verified-hack-ids.ts`](src/shared/verified-hack-ids.ts) drives both the client Zod schema and the edge egress filter, so they cannot silently drift apart.
+- **Defense in depth at the edge** — invented or injected hack IDs are stripped from model output before it reaches the user, covered by a dedicated regression test in [`edge-api-and-interactions.test.tsx`](src/test/edge-api-and-interactions.test.tsx).
+- **Keyboard-accessible dialogs** — [`useAccessibleModal.ts`](src/hooks/useAccessibleModal.ts) moves focus into a dialog on open, traps Tab within it, and restores focus to the trigger on close.
+- **Focused rendering module** — the procedural WebGL shaders and matrix math in [`ghost-fibers/shaders.ts`](src/components/ui/ghost-fibers/shaders.ts) are separated from the [`GhostFibers`](src/components/ui/GhostFibers.tsx) component so rendering logic stays reviewable.
+- **Automated audits on every commit** — [`pnpm verify`](package.json) runs lint, typecheck, the full test suite (including mounted-component `axe-core` accessibility audits and edge API security tests), and a clean production build in [CI](.github/workflows/ci.yml).
 
 ---
 
@@ -180,11 +199,15 @@ Generates a 1-page printable school protocol ([`SafeRecessPassModal.tsx`](src/co
 
 ## 6. Automated Testing
 
-All **17 test files (92 tests)** pass under Vitest (`pnpm test -- --run`):
+All **20 test files (130 tests)** pass under Vitest (`pnpm test -- --run`):
 - Engine physics, mass-balance stability, and performance benchmarks (`src/engine/__tests__/physics.test.ts`, `src/test/benchmark.test.ts`, `src/test/efficiency-physics.test.ts`)
 - Prompt-injection firewall, tenancy, and Zod schemas (`src/engine/__tests__/copilot-firewall.test.ts`, `tenancy.test.ts`, `sanctuary-engine.test.ts`)
 - Live air telemetry & retry handling (`src/test/live-air-intelligence.test.ts`)
 - Mounted component accessibility (`axe-core`) and edge API workflows (`src/test/component-a11y-and-security.test.tsx`, `src/test/edge-api-and-interactions.test.tsx`, `src/test/a11y.test.ts`, `src/test/security-a11y-audit.test.ts`)
+- Edge egress allow-list regression: unverified Gemini `iaq_hack_ids` are stripped before response (`src/test/edge-api-and-interactions.test.tsx`)
+- Boundary and invariant coverage: atmospheric window clamps, city-profile determinism, sanctuary intervention effects, tenancy fallbacks, optical turbidity limits, and mask-dose proportionality (`src/test/engine-boundary-invariants.test.ts`)
+- Shared security primitives and cross-layer consistency between the client firewall and the edge worker (`src/test/shared-security-gates.test.ts`)
+- Modal focus entry and restoration for keyboard users (`src/test/modal-focus-management.test.tsx`)
 
 ---
 

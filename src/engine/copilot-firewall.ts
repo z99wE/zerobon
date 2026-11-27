@@ -1,20 +1,17 @@
 import { CopilotResponse, CopilotResponseSchema, SecurityFirewallReport, VERIFIED_HACK_IDS } from '../types';
 import { getCityProfile } from './city-data';
+import {
+  CANARY_SECRET_TOKEN,
+  detectInstructionOverride,
+  looksLikeBase64Smuggle,
+  mentionsCanary,
+  sanitizeCopilotQuery,
+} from '../shared/copilot-security';
 
 const BLOCKED_STATUS_LABEL = ['PROTECTED', 'INTERNAL', 'VALUE'].join('_');
 const ALLOWED_STATUS_LABEL = ['SECURE', 'EDGE', 'INTERNAL'].join('_');
 
-export const CANARY_SECRET_TOKEN = ['CANARY', 'ZEROBON', 'SEC', '99F3B'].join('_');
-
-// Known jailbreak and prompt-injection override patterns
-const OVERRIDE_PATTERNS = [
-  /ignore\s+(all\s+)?(previous|prior|above)\s+(instructions|prompts|rules)/i,
-  /reveal\s+(the\s+)?(system\s+prompt|canary|secret|developer\s+mode)/i,
-  /you\s+are\s+now\s+(in\s+developer\s+mode|dan|unfiltered|jailbroken)/i,
-  /disregard\s+(the\s+)?(safety|rules|guidelines)/i,
-  /output\s+(the\s+)?(hidden|secret|prompt|internal\s+instructions)/i,
-  /act\s+as\s+an\s+unrestricted\s+ai/i,
-];
+export { CANARY_SECRET_TOKEN } from '../shared/copilot-security';
 
 export interface CopilotExecutionContext {
   city?: string;
@@ -38,18 +35,9 @@ export async function executeHardenedCopilotPipeline(
   const startTag = `<untrusted_query_${randTagId}>`;
   const endTag = `</untrusted_query_${randTagId}>`;
 
-  // Layer 1: Pre-Inference Input Firewall
-  const lengthUnder400 = rawInput.length <= 400;
-  const sanitized = rawInput
-    .replace(/[\u200B-\u200D\uFEFF]/g, '')
-    .replace(/<[^>]*>/g, '') // Strip HTML/script tags to prevent XSS and tag-injection breakouts
-    .split('')
-    .filter((char) => {
-      const code = char.charCodeAt(0);
-      return (code >= 32 && code !== 127) || code === 9 || code === 10 || code === 13;
-    })
-    .join('')
-    .trim();
+  // Layer 1: Pre-Inference Input Firewall (shared with the edge worker)
+  const { sanitized, lengthWithinLimit } = sanitizeCopilotQuery(rawInput);
+  const lengthUnder400 = lengthWithinLimit;
 
   let attackDetected = false;
   let attackType: SecurityFirewallReport['attackType'];
@@ -60,33 +48,16 @@ export async function executeHardenedCopilotPipeline(
   }
 
   // Check for instruction override signatures
-  for (const pattern of OVERRIDE_PATTERNS) {
-    if (pattern.test(sanitized)) {
-      attackDetected = true;
-      attackType = 'instruction_override';
-      break;
-    }
+  if (detectInstructionOverride(sanitized)) {
+    attackDetected = true;
+    attackType = 'instruction_override';
   }
 
   // Check for canary leakage attempt or base64 decoding attack
-  // Note: Only flag base64 if it does NOT contain English spaces (true base64 payloads don't have spaces between words)
-  // and has typical base64 characteristics (such as padding '=' or high density of typical base64 strings)
-  const isActualBase64 = (str: string) => {
-    // If the input contains spaces, it's regular text, not a raw base64 encoded blob
-    if (/\s/.test(str)) return false;
-    if (str.length < 40) return false;
-    // Check if it strictly matches base64 charset
-    if (!/^[A-Za-z0-9+/=]+$/.test(str)) return false;
-    // Base64 lengths are multiples of 4 (with padding '=')
-    if (str.length % 4 !== 0 && !str.includes('=')) return false;
-    // Avoid false positives on long camelCase words unless they look like real base64 chunks
-    return /(?:[A-Za-z0-9+/]{4}){10,}(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(str);
-  };
-
-  if (sanitized.toLowerCase().includes('canary') || sanitized.toLowerCase().includes('zerobon_sec')) {
+  if (mentionsCanary(sanitized)) {
     attackDetected = true;
     attackType = 'canary_leak_attempt';
-  } else if (isActualBase64(sanitized)) {
+  } else if (looksLikeBase64Smuggle(sanitized)) {
     attackDetected = true;
     attackType = 'base64_smuggle';
   }

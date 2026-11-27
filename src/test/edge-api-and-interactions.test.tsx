@@ -87,6 +87,37 @@ describe('Edge Worker API, Resilient Retries & Interactive UI Flows', () => {
       expect(body.code).toBe('INTERNAL_ERROR');
       expect(body.error).toBe('Unable to process query safely');
     });
+
+    it('strips unverified hack IDs from model output at the Layer 5 egress allow-list', async () => {
+      const modelOutput = {
+        intent_valid: true,
+        routine_advice: ['Keep the Corsi-Rosenthal filter running.'],
+        iaq_hack_ids: ['corsi_rosenthal_box', 'invented_hack', 'drop_database'],
+        pet_animation_state: 'calm',
+      };
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue(
+          new Response(
+            JSON.stringify({ candidates: [{ content: { parts: [{ text: JSON.stringify(modelOutput) }] } }] }),
+            { status: 200 }
+          )
+        )
+      );
+
+      const req = new Request('https://api.zerobon.dev/api/v4/copilot/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: 'Which indoor air hack should I run during smog?' }),
+      });
+      const res = await worker.fetch(req, { GEMINI_API_KEY: 'test-key' }, {
+        waitUntil: vi.fn(),
+        passThroughOnException: vi.fn(),
+      });
+      const body = (await res.json()) as { iaq_hack_ids: string[] };
+      expect(body.iaq_hack_ids).toEqual(['corsi_rosenthal_box']);
+      vi.unstubAllGlobals();
+    });
   });
 
   describe('Live Air Service Retry & Backoff Resilience', () => {

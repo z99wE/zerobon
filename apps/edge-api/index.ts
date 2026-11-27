@@ -2,6 +2,12 @@
  * Cloudflare Worker Edge API: Zerobon Multi-Tenant & Anti-Hijacking Router
  * Runs on Cloudflare Free Tier (Sub-5ms Edge CPU target)
  */
+import { isVerifiedHackId } from '../../src/shared/verified-hack-ids';
+import {
+  MAX_COPILOT_QUERY_LENGTH,
+  detectInstructionOverride,
+  sanitizeCopilotQuery,
+} from '../../src/shared/copilot-security';
 
 export interface D1DatabaseBinding {
   prepare: (query: string) => {
@@ -48,14 +54,9 @@ export interface Env {
 
 const CANARY_REF = ['CANARY', 'ZEROBON', 'SEC', '99F3B'].join('_');
 
-export const VERIFIED_HACK_IDS = [
-  'corsi_rosenthal_box',
-  'kitchen_exhaust_purge',
-  'magnetic_draft_stopper',
-  'midday_window_airing',
-  'n95_active_commute',
-  'induction_cook_swap',
-] as const;
+// The egress allow-list below uses `isVerifiedHackId`, backed by the single
+// canonical VERIFIED_HACK_IDS module, so the edge filter and the client-side
+// Zod schema can never drift apart.
 
 interface GeminiResponseCandidate {
   content?: {
@@ -174,27 +175,19 @@ export default {
         const body = (await request.json()) as { query?: string } | null;
         const rawQuery = body?.query || '';
 
-        // LAYER 1: Pre-Inference Input Firewall
-        if (rawQuery.length > 400) {
+        // LAYER 1: Pre-Inference Input Firewall (shared with the client firewall)
+        const { sanitized, lengthWithinLimit } = sanitizeCopilotQuery(rawQuery);
+        if (!lengthWithinLimit) {
           return new Response(
-            JSON.stringify({ error: 'Payload exceeds 400 character security cap', code: 'OVERSIZE' }),
+            JSON.stringify({
+              error: `Payload exceeds ${MAX_COPILOT_QUERY_LENGTH} character security cap`,
+              code: 'OVERSIZE',
+            }),
             { status: 400, headers: secureHeaders }
           );
         }
 
-        const sanitized = rawQuery
-          .replace(/[\u200B-\u200D\uFEFF]/g, '')
-          .split('')
-          .filter((char) => {
-            const code = char.charCodeAt(0);
-            return (code >= 32 && code !== 127) || code === 9 || code === 10 || code === 13;
-          })
-          .join('')
-          .trim();
-
-        // Check for instruction override signatures
-        const overrideRegex = /(ignore\s+previous|system\s+prompt|developer\s+mode|dan\s+jailbreak)/i;
-        if (overrideRegex.test(sanitized)) {
+        if (detectInstructionOverride(sanitized)) {
           return new Response(
             JSON.stringify({
               intent_valid: false,
@@ -233,7 +226,11 @@ export default {
           }
         }
 
-        // LAYER 5: Egress Canary Scan
+        // LAYER 5: Egress Allow-list + Canary Scan
+        // Strip any hack ID the model invented before it can reach the client.
+        if (Array.isArray(structuredResult.iaq_hack_ids)) {
+          structuredResult.iaq_hack_ids = structuredResult.iaq_hack_ids.filter(isVerifiedHackId);
+        }
         const outputString = JSON.stringify(structuredResult);
         const canaryToCheck = env.CANARY_SECRET || CANARY_REF;
         if (outputString.includes(canaryToCheck)) {

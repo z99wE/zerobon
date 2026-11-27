@@ -10,6 +10,8 @@
     "test": "vitest run",
     "lint": "eslint src/ apps/",
     "lint:fix": "eslint src/ apps/ --fix",
+    "typecheck": "tsc --noEmit",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test -- --run && pnpm build",
     "test:watch": "vitest",
     "test:rust": "cd packages/physics-wasm && cargo test"
   },
