@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.6.5 (2026-11-28)
+- **Code Quality**: Split the remaining large files — `city-data.ts` (869 → 62), `LandingHero.tsx` (392 → 201), `App.tsx` (382 → 341) and `SafeRecessPassModal.tsx` (337 → 170) — into focused data/render modules. Verified with a new certificate-rendering test and full browser interaction checks.
+- **Testing**: Suite is now 173 tests across 26 files.
+
+
 ## v4.6.4 (2026-11-28)
 - **Correctness**: `InversionRadar` was rendering a 700 m peak for cities whose baseline inversion is low while the UI claims 1,350 m of solar mixing. The forecast now receives the explicit solar-mixing ceiling; covered by a rendering regression test.
 - **Testing**: Browser check now records load/DOM-ready timings and runs end-to-end interactions (adopt a routine, open and dismiss the receipt dialog) across Chromium/WebKit at desktop and mobile widths (suite: 172 tests across 25 files).

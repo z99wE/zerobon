@@ -8,7 +8,7 @@
 
 [![Deployed on Cloudflare Pages](https://img.shields.io/badge/Deployed-Cloudflare%20Pages%20%26%20Edge-533afd?style=flat&logo=cloudflare)](https://zerobon.pages.dev)
 [![GitHub Actions CI](https://github.com/z99wE/zerobon/actions/workflows/ci.yml/badge.svg)](https://github.com/z99wE/zerobon/actions/workflows/ci.yml)
-[![Vitest](https://img.shields.io/badge/Vitest-172%2F172%20Passing%20(25%20Suites)-533afd?style=flat&logo=vitest)](src/test/)
+[![Vitest](https://img.shields.io/badge/Vitest-173%2F173%20Passing%20(26%20Suites)-533afd?style=flat&logo=vitest)](src/test/)
 [![WCAG 2.1 AA/AAA](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA%2FAAA%20(0%20Violations)-533afd?style=flat)](src/test/component-a11y-and-security.test.tsx)
 [![License: MIT](https://img.shields.io/badge/License-MIT-0d253d?style=flat)](LICENSE)
 
@@ -36,7 +36,7 @@ pnpm build && pnpm check:browsers
 - **Keyboard-accessible dialogs** — [`useAccessibleModal.ts`](src/hooks/useAccessibleModal.ts) moves focus into a dialog on open, traps Tab within it, and restores focus to the trigger on close.
 - **Layered rendering architecture** — [`GhostFibers`](src/components/ui/GhostFibers.tsx) is now a thin settings/JSX component; WebGL shaders live in [`shaders.ts`](src/components/ui/ghost-fibers/shaders.ts) and the renderer lifecycle (shader compilation, render targets, animation loop, observers, cleanup) lives in [`useGhostFibersRenderer.ts`](src/components/ui/ghost-fibers/useGhostFibersRenderer.ts).
 - **Single physics implementation** — the TypeScript engine in [`physics.ts`](src/engine/physics.ts) is the only source of truth; the unused duplicate Rust WASM crate has been removed.
-- **Layered feature components** — [`InversionRadar`](src/components/InversionRadar.tsx), [`IndoorAirHacks`](src/components/IndoorAirHacks.tsx), [`DailyRoutineOptimizer`](src/components/DailyRoutineOptimizer.tsx) and [`GhostFibers`](src/components/ui/GhostFibers.tsx) each delegate their heavy rendering to focused modules and hooks.
+- **Layered feature components** — every formerly large component is now a thin orchestrator: [`city-data.ts`](src/engine/city-data.ts) is a 62-line lookup engine over [`city-profiles.ts`](src/data/city-profiles.ts); [`LandingHero`](src/components/LandingHero.tsx), [`App`](src/App.tsx), [`SafeRecessPassModal`](src/components/SafeRecessPassModal.tsx), [`InversionRadar`](src/components/InversionRadar.tsx), [`IndoorAirHacks`](src/components/IndoorAirHacks.tsx), [`DailyRoutineOptimizer`](src/components/DailyRoutineOptimizer.tsx) and [`GhostFibers`](src/components/ui/GhostFibers.tsx) delegate rendering to focused modules and hooks.
 - **CSPRNG prompt isolation** — [`copilot-security.ts`](src/shared/copilot-security.ts) generates untrusted-input XML delimiters with `crypto.randomUUID()` for both the browser firewall and the edge worker; predictable `Math.random()` tags are gone.
 - **Shared network requests** — [`live-air-service.ts`](src/engine/live-air-service.ts) deduplicates concurrent fetches for the same city and keeps the short-TTL cache, so repeated tabs never double the API calls.
 - **No dead dependencies** — the unused `three` package and its unreferenced builder module were removed from the app, dependencies, lockfile and build config.
@@ -212,7 +212,7 @@ Generates a 1-page printable school protocol ([`SafeRecessPassModal.tsx`](src/co
 
 ## 6. Automated Testing
 
-All **25 test files (172 tests)** pass under Vitest (`pnpm test -- --run`):
+All **26 test files (173 tests)** pass under Vitest (`pnpm test -- --run`):
 - Engine physics, mass-balance stability, and performance benchmarks (`src/engine/__tests__/physics.test.ts`, `src/test/benchmark.test.ts`, `src/test/efficiency-physics.test.ts`)
 - Prompt-injection firewall, tenancy, and Zod schemas (`src/engine/__tests__/copilot-firewall.test.ts`, `tenancy.test.ts`, `sanctuary-engine.test.ts`)
 - Live air telemetry & retry handling (`src/test/live-air-intelligence.test.ts`)
