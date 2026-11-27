@@ -35,6 +35,35 @@ describe('Modal Focus Management (WCAG 2.4.3)', () => {
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'First action' }));
   });
 
+  it('does not yank focus back to the first button when the parent re-renders', () => {
+    const { rerender } = render(
+      <>
+        <button type="button">Trigger</button>
+        <FocusHarness open={false} onClose={() => undefined} />
+      </>
+    );
+
+    screen.getByRole('button', { name: 'Trigger' }).focus();
+    rerender(
+      <>
+        <button type="button">Trigger</button>
+        <FocusHarness open onClose={() => undefined} />
+      </>
+    );
+
+    const second = screen.getByRole('button', { name: 'Second action' });
+    second.focus();
+    // A fresh inline handler on every render must not re-run the focus effect.
+    rerender(
+      <>
+        <button type="button">Trigger</button>
+        <FocusHarness open onClose={() => undefined} />
+      </>
+    );
+
+    expect(document.activeElement).toBe(second);
+  });
+
   it('restores focus to the triggering element when the dialog closes', () => {
     const onClose = vi.fn();
     const trigger = <button type="button">Trigger</button>;

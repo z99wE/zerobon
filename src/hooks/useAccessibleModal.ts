@@ -11,6 +11,10 @@ const FOCUSABLE_SELECTOR =
  */
 export function useAccessibleModal(isOpen: boolean, onClose: () => void) {
   const containerRef = useRef<HTMLDivElement>(null);
+  // Callers pass inline handlers, so keeping the callback in a ref prevents the
+  // effect from tearing down and re-running (which would move focus mid-flow).
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -26,7 +30,7 @@ export function useAccessibleModal(isOpen: boolean, onClose: () => void) {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.stopPropagation();
-        onClose();
+        onCloseRef.current();
         return;
       }
 
@@ -57,7 +61,7 @@ export function useAccessibleModal(isOpen: boolean, onClose: () => void) {
         previousFocus.focus();
       }
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   return containerRef;
 }
